@@ -1,0 +1,27 @@
+{
+  "private": true,
+  "name": "nodelib",
+  "version": "0.0.0",
+  "description": "A collection of standard libraries for Node.js",
+  "license": "MIT",
+  "engines": {
+    "node": ">= 6"
+  },
+  "scripts": {
+    "clean": "lerna run --parallel clean",
+    "lint": "lerna run --parallel lint",
+    "compile": "lerna run --parallel compile",
+    "test": "lerna run --parallel test",
+    "build": "lerna run --parallel build",
+    "watch": "lerna run --parallel watch"
+  },
+  "devDependencies": {
+    "@types/mocha": "^5.2.0",
+    "@types/node": "^9.6.6",
+    "lerna": "^3.0.0-beta.17",
+    "mocha": "^5.1.1",
+    "rimraf": "^2.6.2",
+    "tslint": "^5.9.1",
+    "typescript": "^2.8.3"
+  }
+}

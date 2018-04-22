@@ -1,0 +1,12 @@
+{
+	"version": "independent",
+	"packages": [
+		"packages/*"
+	],
+	"hoist": true,
+	"independent": true,
+	"conventional-commits": true,
+	"npmClientArgs": [
+		"--no-package-lock"
+	]
+}

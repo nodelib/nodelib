@@ -1,0 +1,30 @@
+sudo: false
+language: node_js
+
+notifications:
+  email: false
+
+cache:
+  directories:
+    - node_modules
+
+branches:
+  only:
+    - master
+    - /\d+\.\d+(\.\d+)?(-\S*)?$/
+
+matrix:
+  fast_finish: true
+
+node_js:
+  - 'node'
+  - '8'
+  - '6'
+
+os:
+  - linux
+  - osx
+
+script:
+  - node --version && npm --version
+  - npm run build

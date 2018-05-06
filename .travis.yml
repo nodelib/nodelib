@@ -25,6 +25,10 @@ os:
   - linux
   - osx
 
+install:
+  - npm install
+  - ./node_modules/.bin/lerna bootstrap
+
 script:
   - node --version && npm --version
   - npm run build

@@ -22,3 +22,5 @@ export function stat(path: fs.PathLike, opts?: Options): Promise<fs.Stats> {
 export function statSync(path: fs.PathLike, opts?: Options): fs.Stats {
 	return statProvider.sync(fsAdapterSync, path, optionsManager.prepare(opts));
 }
+
+export type Options = Options;

@@ -10,9 +10,9 @@
   "scripts": {
     "clean": "lerna run --parallel clean",
     "lint": "lerna run --parallel lint",
-    "compile": "lerna run --parallel compile",
+    "compile": "lerna run compile",
     "test": "lerna run --parallel test",
-    "build": "lerna run --parallel build",
+    "build": "lerna run build",
     "watch": "lerna run --parallel watch"
   },
   "devDependencies": {

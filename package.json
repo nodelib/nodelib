@@ -13,7 +13,8 @@
     "compile": "lerna run compile",
     "test": "lerna run --parallel test",
     "build": "lerna run build",
-    "watch": "lerna run --parallel watch"
+    "watch": "lerna run --parallel watch",
+    "ci": "npm run lint && npm run compile && npm run test"
   },
   "devDependencies": {
     "@types/mocha": "^5.2.0",

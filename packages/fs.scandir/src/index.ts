@@ -6,7 +6,7 @@ import * as optionsManager from './managers/options';
 
 import * as scandirProvider from './providers/scandir';
 
-import { Options } from './managers/options';
+import { FilterFunction, Options, PreFilterFunction, SortFunction } from './managers/options';
 import { DirEntry } from './types/entry';
 
 const fsAdapterAsync = new fsAdapter.FileSystemAsync();
@@ -25,3 +25,9 @@ export function scandir(path: fs.PathLike, opts?: Options): Promise<DirEntry[]> 
 export function scandirSync(path: fs.PathLike, opts?: Options): DirEntry[] {
 	return scandirProvider.sync(fsAdapterSync, path, optionsManager.prepare(opts));
 }
+
+export type DirEntry = DirEntry;
+export type Options = Options;
+export type PreFilterFunction = PreFilterFunction;
+export type FilterFunction = FilterFunction;
+export type SortFunction = SortFunction;

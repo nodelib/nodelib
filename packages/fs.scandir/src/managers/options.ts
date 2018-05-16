@@ -1,6 +1,6 @@
 import { DirEntry } from '../types/entry';
 
-export type PreFilterFunction = (name: string) => boolean;
+export type PreFilterFunction = (name: string, path: string) => boolean;
 export type FilterFunction = (entry: DirEntry) => boolean;
 export type SortFunction = (a: DirEntry, b: DirEntry) => number;
 

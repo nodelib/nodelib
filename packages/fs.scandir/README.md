@@ -72,10 +72,10 @@ Please, take a look at description inside the [`fs.stat`](https://github.com/nod
 
 ### preFilter
 
-  * Type: `Function` (`(name: string) => boolean`)
+  * Type: `Function` (`(name: string, path: string) => boolean`)
   * Default: `null`
 
-Name-based entries filter.
+Name- and Path-based entries filter.
 
 ### filter
 

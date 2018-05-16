@@ -36,10 +36,10 @@ describe('Providers → Scandir', () => {
 			assert.deepEqual(actual, expected);
 		});
 
-		it('should returns filtered array of entries by name ', () => {
+		it('should returns filtered array of entries by name and path', () => {
 			const fsAdapter = new tests.FileSystemSyncFake();
 			const options = optionsManager.prepare({
-				preFilter: (name) => name.startsWith('.')
+				preFilter: (name, path) => name.startsWith('.') && path.endsWith('.a')
 			});
 
 			const expected: string[] = ['.a'];

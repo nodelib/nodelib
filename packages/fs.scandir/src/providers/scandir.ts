@@ -12,11 +12,11 @@ export function sync(fsAdapter: FileSystemSync, root: fs.PathLike, options: Stri
 	const entries: DirEntry[] = [];
 
 	for (const name of names) {
-		if (options.preFilter && !options.preFilter(name)) {
+		const fullPath = path.join(root.toString(), name);
+
+		if (options.preFilter && !options.preFilter(name, fullPath)) {
 			continue;
 		}
-
-		const fullPath = path.join(root.toString(), name);
 
 		const stats = fsAdapter.stat(fullPath, {
 			followSymlinks: options.followSymlinks,
@@ -40,32 +40,42 @@ export function sync(fsAdapter: FileSystemSync, root: fs.PathLike, options: Stri
 }
 
 export async function async(fsAdapter: FileSystemAsync, root: fs.PathLike, options: StrictOptions): Promise<DirEntry[]> {
-	let names = await fsAdapter.readdir(root);
+	const names = await fsAdapter.readdir(root);
+
+	const fullPaths: string[] = names.map((name) => path.join(root.toString(), name));
+
+	let filteredNames: string[] = [];
+	let filteredFullPaths: string[] = [];
 
 	if (options.preFilter) {
-		names = names.filter(options.preFilter);
+		for (let index = 0; index < names.length; index++) {
+			const name = names[index];
+			const fullPath = fullPaths[index];
+
+			if (options.preFilter(name, fullPath)) {
+				filteredNames.push(name);
+				filteredFullPaths.push(fullPath);
+			}
+		}
+	} else {
+		filteredNames = names;
+		filteredFullPaths = fullPaths;
 	}
 
-	const fullPaths: string[] = [];
-	const promises: Array<Promise<fs.Stats>> = [];
-
-	for (const name of names) {
-		const fullPath = path.join(root.toString(), name);
-		const promise = fsAdapter.stat(fullPath, {
-			followSymlinks: options.followSymlinks,
-			throwErrorOnBrokenSymlinks: options.throwErrorOnBrokenSymlinks
-		});
-
-		fullPaths.push(fullPath);
-		promises.push(promise);
-	}
+	const promises: Array<Promise<fs.Stats>> = filteredFullPaths.map((fullPath) => fsAdapter.stat(fullPath, {
+		followSymlinks: options.followSymlinks,
+		throwErrorOnBrokenSymlinks: options.throwErrorOnBrokenSymlinks
+	}));
 
 	const stats = await Promise.all(promises);
 
 	const entries: DirEntry[] = [];
 
-	for (let index = 0; index < names.length; index++) {
-		const entry = makeDirEntry(names[index], fullPaths[index], stats[index], options);
+	for (let index = 0; index < filteredNames.length; index++) {
+		const name = filteredNames[index];
+		const fullPath = filteredFullPaths[index];
+
+		const entry = makeDirEntry(name, fullPath, stats[index], options);
 
 		if (options.filter && !options.filter(entry)) {
 			continue;

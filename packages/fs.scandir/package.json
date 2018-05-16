@@ -1,6 +1,6 @@
 {
   "name": "@nodelib/fs.scandir",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "List files and directories inside the specified path",
   "license": "MIT",
   "repository": "https://github.com/nodelib/nodelib/tree/master/packages/fs.scandir",

@@ -35,6 +35,10 @@ Returns a [`Promise<fs.Stats>`](https://nodejs.org/dist/latest/docs/api/fs.html#
 
 Returns a [`fs.Stats`](https://nodejs.org/dist/latest/docs/api/fs.html#fs_class_fs_stats) for provided path.
 
+### fsStat.statCallback(path, [options], callback)
+
+Returns a [`fs.Stats`](https://nodejs.org/dist/latest/docs/api/fs.html#fs_class_fs_stats) for provided path with standard callback-style.
+
 #### path
 
   * Type: `string | Buffer | URL`

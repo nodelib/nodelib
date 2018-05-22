@@ -13,7 +13,9 @@ const fsAdapterSync = new fsAdapter.FileSystemSync();
  * Asynchronous API.
  */
 export function stat(path: fs.PathLike, opts?: Options): Promise<fs.Stats> {
-	return statProvider.async(fsAdapterAsync, path, optionsManager.prepare(opts));
+	return new Promise((resolve, reject) => {
+		statProvider.async(fsAdapterAsync, path, optionsManager.prepare(opts), (err, stats) => err ? reject(err) : resolve(stats));
+	});
 }
 
 /**

@@ -1,4 +1,5 @@
 import * as assert from 'assert';
+import * as fs from 'fs';
 
 import * as tests from '../tests/index';
 
@@ -64,20 +65,23 @@ describe('Providers → Stat', () => {
 	});
 
 	describe('.async', () => {
-		it('should throw error for broken path', async () => {
+		it('should throw error for broken path', (done) => {
 			const options = optionsManager.prepare();
 
 			const fsAdapter = new tests.FileSystemAsyncFake({ throwLStatError: true });
 
-			try {
-				await provider.async(fsAdapter, 'broken_path', options);
-				throw new Error('wow');
-			} catch (err) {
-				assert.equal(err, 'Error: FileSystemAsyncFake');
-			}
+			provider.async(fsAdapter, 'broken_path', options, (err, stats) => {
+				if (!err) {
+					return done('Expected error not found.');
+				}
+
+				assert.strictEqual((err as Error).message, 'FileSystemAsyncFake');
+				assert.strictEqual(stats, undefined);
+				done();
+			});
 		});
 
-		it('should throw error for broken symlink', async () => {
+		it('should throw error for broken symlink', (done) => {
 			const options = optionsManager.prepare();
 
 			const fsAdapter = new tests.FileSystemAsyncFake({
@@ -85,36 +89,51 @@ describe('Providers → Stat', () => {
 				throwStatError: true
 			});
 
-			try {
-				await provider.async(fsAdapter, 'broken_symlink', options);
-				throw new Error('wow');
-			} catch (err) {
-				assert.equal(err, 'Error: FileSystemAsyncFake');
-			}
+			provider.async(fsAdapter, 'broken_symlink', options, (err, stats) => {
+				if (!err) {
+					return done('Expected error not found.');
+				}
+
+				assert.strictEqual((err as Error).message, 'FileSystemAsyncFake');
+				assert.strictEqual(stats, undefined);
+				done();
+			});
 		});
 
-		it('should returns lstat for non-symlink entry', async () => {
+		it('should returns lstat for non-symlink entry', (done) => {
 			const options = optionsManager.prepare();
 
 			const fsAdapter = new tests.FileSystemAsyncFake();
 
-			const actual = await provider.async(fsAdapter, 'non_symlink', options);
+			provider.async(fsAdapter, 'non_symlink', options, (err, stats) => {
+				if (err) {
+					return done('An unexpected error was found.');
+				}
 
-			assert.equal(actual.uid, tests.StatType.lstat);
+				assert.strictEqual(err, null);
+				assert.strictEqual((stats as fs.Stats).uid, tests.StatType.lstat);
+				done();
+			});
 		});
 
-		it('should returns stat for symlink entry', async () => {
+		it('should returns stat for symlink entry', (done) => {
 			const options = optionsManager.prepare();
 
 			const fsAdapter = new tests.FileSystemAsyncFake({ isSymbolicLink: true });
 
-			const actual = await provider.async(fsAdapter, 'symlink', options);
+			provider.async(fsAdapter, 'symlink', options, (err, stats) => {
+				if (err) {
+					return done('An unexpected error was found.');
+				}
 
-			assert.equal(actual.uid, tests.StatType.stat);
-			assert.ok(actual.isSymbolicLink());
+				assert.strictEqual(err, null);
+				assert.equal((stats as fs.Stats).uid, tests.StatType.stat);
+				assert.ok((stats as fs.Stats).isSymbolicLink());
+				done();
+			});
 		});
 
-		it('should returns lstat for broken symlink entry when it possible', async () => {
+		it('should returns lstat for broken symlink entry when it possible', (done) => {
 			const options = optionsManager.prepare({ throwErrorOnBrokenSymlinks: false });
 
 			const fsAdapter = new tests.FileSystemAsyncFake({
@@ -122,9 +141,15 @@ describe('Providers → Stat', () => {
 				throwStatError: true
 			});
 
-			const actual = await provider.async(fsAdapter, 'broken_symlink', options);
+			provider.async(fsAdapter, 'broken_symlink', options, (err, stats) => {
+				if (err) {
+					return done('An unexpected error was found.');
+				}
 
-			assert.equal(actual.uid, tests.StatType.lstat);
+				assert.strictEqual(err, null);
+				assert.equal((stats as fs.Stats).uid, tests.StatType.lstat);
+				done();
+			});
 		});
 	});
 

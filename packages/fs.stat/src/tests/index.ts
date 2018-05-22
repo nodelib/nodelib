@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 
-import FileSystem from '../adapters/fs';
+import FileSystem, { AsyncCallback } from '../adapters/fs';
 
 export enum StatType { lstat, stat }
 
@@ -38,7 +38,7 @@ export class FileSystemSyncFake extends FileSystem<fs.Stats> {
 	}
 }
 
-export class FileSystemAsyncFake extends FileSystem<Promise<fs.Stats>> {
+export class FileSystemAsyncFake extends FileSystem<void> {
 	private readonly opts: StrictFSMockOptions;
 
 	constructor(private readonly options?: FSMockOptions) {
@@ -47,28 +47,28 @@ export class FileSystemAsyncFake extends FileSystem<Promise<fs.Stats>> {
 		this.opts = getFileSystemFakeOptions(this.options);
 	}
 
-	public lstat(): Promise<fs.Stats> {
+	public lstat(_path: fs.PathLike, callback: AsyncCallback): void {
 		if (this.opts.throwLStatError) {
 			const error = new Error(this.constructor.name);
 
-			return Promise.reject(error);
+			return callback(error);
 		}
 
-		const stat = getFakeStats(StatType.lstat, this.opts.isSymbolicLink);
+		const lstat = getFakeStats(StatType.lstat, this.opts.isSymbolicLink);
 
-		return Promise.resolve(stat);
+		callback(null, lstat);
 	}
 
-	public stat(): Promise<fs.Stats> {
+	public stat(_path: fs.PathLike, callback: AsyncCallback): void {
 		if (this.opts.throwStatError) {
 			const error = new Error(this.constructor.name);
 
-			return Promise.reject(error);
+			return callback(error);
 		}
 
 		const stat = getFakeStats(StatType.stat, this.opts.isSymbolicLink);
 
-		return Promise.resolve(stat);
+		callback(null, stat);
 	}
 }
 

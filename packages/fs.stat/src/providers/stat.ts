@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 
-import { FileSystemAsync, FileSystemSync, AsyncCallback } from '../adapters/fs';
+import { AsyncCallback, FileSystemAsync, FileSystemSync } from '../adapters/fs';
 
 import { StrictOptions } from '../managers/options';
 

@@ -18,7 +18,7 @@ describe('Managers → Options', () => {
 
 			const actual = manager.prepare();
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should returns prepared options for provided object', () => {
@@ -26,7 +26,7 @@ describe('Managers → Options', () => {
 
 			const actual = manager.prepare({ throwErrorOnBrokenSymlinks: false });
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 	});
 });

@@ -36,7 +36,7 @@ describe('Providers → Stat', () => {
 
 			const actual = provider.sync(fsAdapter, 'non_symlink', options);
 
-			assert.equal(actual.uid, tests.StatType.lstat);
+			assert.strictEqual(actual.uid, tests.StatType.lstat);
 		});
 
 		it('should returns stat for symlink entry', () => {
@@ -46,7 +46,7 @@ describe('Providers → Stat', () => {
 
 			const actual = provider.sync(fsAdapter, 'symlink', options);
 
-			assert.equal(actual.uid, tests.StatType.stat);
+			assert.strictEqual(actual.uid, tests.StatType.stat);
 			assert.ok(actual.isSymbolicLink());
 		});
 
@@ -60,7 +60,7 @@ describe('Providers → Stat', () => {
 
 			const actual = provider.sync(fsAdapter, 'broken_symlink', options);
 
-			assert.equal(actual.uid, tests.StatType.lstat);
+			assert.strictEqual(actual.uid, tests.StatType.lstat);
 		});
 	});
 
@@ -127,7 +127,7 @@ describe('Providers → Stat', () => {
 				}
 
 				assert.strictEqual(err, null);
-				assert.equal((stats as fs.Stats).uid, tests.StatType.stat);
+				assert.strictEqual((stats as fs.Stats).uid, tests.StatType.stat);
 				assert.ok((stats as fs.Stats).isSymbolicLink());
 				done();
 			});
@@ -147,7 +147,7 @@ describe('Providers → Stat', () => {
 				}
 
 				assert.strictEqual(err, null);
-				assert.equal((stats as fs.Stats).uid, tests.StatType.lstat);
+				assert.strictEqual((stats as fs.Stats).uid, tests.StatType.lstat);
 				done();
 			});
 		});

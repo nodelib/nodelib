@@ -1,18 +1,16 @@
 import * as fs from 'fs';
 
-import { AsyncCallback, FileSystemAsync, FileSystemSync } from '../adapters/fs';
-
 import { StrictOptions } from '../managers/options';
 
-export function sync(fsAdapter: FileSystemSync, path: fs.PathLike, options: StrictOptions): fs.Stats {
-	const lstat = fsAdapter.lstat(path);
+export function sync(path: fs.PathLike, options: StrictOptions): fs.Stats {
+	const lstat = options.fs.lstatSync(path);
 
 	if (!isFollowedSymlink(lstat, options)) {
 		return lstat;
 	}
 
 	try {
-		const stat = fsAdapter.stat(path);
+		const stat = options.fs.statSync(path);
 
 		stat.isSymbolicLink = () => true;
 
@@ -26,22 +24,24 @@ export function sync(fsAdapter: FileSystemSync, path: fs.PathLike, options: Stri
 	}
 }
 
-export function async(fsAdapter: FileSystemAsync, path: fs.PathLike, options: StrictOptions, callback: AsyncCallback): void {
-	fsAdapter.lstat(path, (err0, lstat) => {
+export type AsyncCallback = (err: NodeJS.ErrnoException | null, stats?: fs.Stats) => void;
+
+export function async(path: fs.PathLike, options: StrictOptions, callback: AsyncCallback): void {
+	options.fs.lstat(path, (err0, lstat) => {
 		if (err0) {
-			return callback(err0);
+			return callback(err0, undefined);
 		}
 
-		if (!isFollowedSymlink(lstat as fs.Stats, options)) {
+		if (!isFollowedSymlink(lstat, options)) {
 			return callback(null, lstat);
 		}
 
-		fsAdapter.stat(path, (err1, stat) => {
+		options.fs.stat(path, (err1, stat) => {
 			if (err1) {
 				return options.throwErrorOnBrokenSymlinks ? callback(err1) : callback(null, lstat);
 			}
 
-			(stat as fs.Stats).isSymbolicLink = () => true;
+			stat.isSymbolicLink = () => true;
 
 			callback(null, stat);
 		});

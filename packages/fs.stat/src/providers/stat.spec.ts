@@ -1,8 +1,6 @@
 import * as assert from 'assert';
 import * as fs from 'fs';
 
-import * as tests from '../tests/index';
-
 import * as optionsManager from '../managers/options';
 
 import * as provider from './stat';
@@ -10,144 +8,175 @@ import * as provider from './stat';
 describe('Providers → Stat', () => {
 	describe('.sync', () => {
 		it('should throw error for broken path', () => {
-			const options = optionsManager.prepare();
+			const lstatSync: typeof fs.lstatSync = () => { throw new Error('lstat'); };
 
-			const fsAdapter = new tests.FileSystemSyncFake({ throwLStatError: true });
+			const options = optionsManager.prepare({
+				fs: { lstatSync }
+			});
 
-			assert.throws(() => provider.sync(fsAdapter, 'broken_path', options), /^Error: FileSystemSyncFake$/);
+			assert.throws(() => provider.sync('broken_path', options), /^Error: lstat$/);
 		});
 
 		it('should throw error for broken symlink', () => {
-			const options = optionsManager.prepare();
+			const lstatSync: typeof fs.lstatSync = () => ({ isSymbolicLink: () => true } as fs.Stats);
+			const statSync: typeof fs.statSync = () => { throw new Error('stat'); };
 
-			const fsAdapter = new tests.FileSystemSyncFake({
-				isSymbolicLink: true,
-				throwStatError: true
+			const options = optionsManager.prepare({
+				fs: { lstatSync, statSync }
 			});
 
-			assert.throws(() => provider.sync(fsAdapter, 'broken_symlink', options), /^Error: FileSystemSyncFake$/);
-
+			assert.throws(() => provider.sync('broken_symlink', options), /^Error: stat$/);
 		});
 
 		it('should returns lstat for non-symlink entry', () => {
-			const options = optionsManager.prepare();
+			const lstatSync: typeof fs.lstatSync = () => ({ uid: 0, isSymbolicLink: () => false } as fs.Stats);
 
-			const fsAdapter = new tests.FileSystemSyncFake();
+			const options = optionsManager.prepare({
+				fs: { lstatSync }
+			});
 
-			const actual = provider.sync(fsAdapter, 'non_symlink', options);
+			const expected = 0;
 
-			assert.strictEqual(actual.uid, tests.StatType.lstat);
+			const actual = provider.sync('non_symlink', options);
+
+			assert.strictEqual(actual.uid, expected);
 		});
 
 		it('should returns stat for symlink entry', () => {
-			const options = optionsManager.prepare();
+			const lstatSync: typeof fs.lstatSync = () => ({ uid: 0, isSymbolicLink: () => true } as fs.Stats);
+			const statSync: typeof fs.statSync = () => ({ uid: 1 } as fs.Stats);
 
-			const fsAdapter = new tests.FileSystemSyncFake({ isSymbolicLink: true });
+			const options = optionsManager.prepare({
+				fs: { lstatSync, statSync }
+			});
 
-			const actual = provider.sync(fsAdapter, 'symlink', options);
+			const expected = 1;
 
-			assert.strictEqual(actual.uid, tests.StatType.stat);
-			assert.ok(actual.isSymbolicLink());
+			const actual = provider.sync('symlink', options);
+
+			assert.strictEqual(actual.uid, expected);
 		});
 
 		it('should returns lstat for broken symlink entry when it possible', () => {
-			const options = optionsManager.prepare({ throwErrorOnBrokenSymlinks: false });
+			const lstatSync: typeof fs.lstatSync = () => ({ uid: 0, isSymbolicLink: () => true } as fs.Stats);
+			const statSync: typeof fs.statSync = () => { throw new Error('stat'); };
 
-			const fsAdapter = new tests.FileSystemSyncFake({
-				isSymbolicLink: true,
-				throwStatError: true
+			const options = optionsManager.prepare({
+				throwErrorOnBrokenSymlinks: false,
+				fs: { lstatSync, statSync }
 			});
 
-			const actual = provider.sync(fsAdapter, 'broken_symlink', options);
+			const expected = 0;
 
-			assert.strictEqual(actual.uid, tests.StatType.lstat);
+			const actual = provider.sync('broken_symlink', options);
+
+			assert.strictEqual(actual.uid, expected);
 		});
 	});
 
 	describe('.async', () => {
 		it('should throw error for broken path', (done) => {
-			const options = optionsManager.prepare();
+			const lstat: typeof fs.lstat = ((_path, cb) => cb(new Error('lstat'), {} as fs.Stats)) as typeof fs.lstat;
 
-			const fsAdapter = new tests.FileSystemAsyncFake({ throwLStatError: true });
+			const options = optionsManager.prepare({
+				fs: { lstat }
+			});
 
-			provider.async(fsAdapter, 'broken_path', options, (err, stats) => {
+			provider.async('broken_path', options, (err, stats) => {
 				if (!err) {
 					return done('Expected error not found.');
 				}
 
-				assert.strictEqual((err as Error).message, 'FileSystemAsyncFake');
+				assert.strictEqual(err.message, 'lstat');
 				assert.strictEqual(stats, undefined);
 				done();
 			});
 		});
 
 		it('should throw error for broken symlink', (done) => {
-			const options = optionsManager.prepare();
+			/* tslint:disable-next-line: no-any */
+			const lstat: typeof fs.lstat = ((_path, cb) => cb(null as any, { isSymbolicLink: () => true } as fs.Stats)) as typeof fs.lstat;
+			const stat: typeof fs.stat = ((_path, cb) => cb(new Error('stat'), {} as fs.Stats)) as typeof fs.stat;
 
-			const fsAdapter = new tests.FileSystemAsyncFake({
-				isSymbolicLink: true,
-				throwStatError: true
+			const options = optionsManager.prepare({
+				fs: { lstat, stat }
 			});
 
-			provider.async(fsAdapter, 'broken_symlink', options, (err, stats) => {
+			provider.async('broken_symlink', options, (err, stats) => {
 				if (!err) {
 					return done('Expected error not found.');
 				}
 
-				assert.strictEqual((err as Error).message, 'FileSystemAsyncFake');
+				assert.strictEqual(err.message, 'stat');
 				assert.strictEqual(stats, undefined);
 				done();
 			});
 		});
 
 		it('should returns lstat for non-symlink entry', (done) => {
-			const options = optionsManager.prepare();
+			/* tslint:disable-next-line: no-any */
+			const lstat: typeof fs.lstat = ((_path, cb) => cb(null as any, { uid: 0, isSymbolicLink: () => false } as fs.Stats)) as typeof fs.lstat;
 
-			const fsAdapter = new tests.FileSystemAsyncFake();
+			const options = optionsManager.prepare({
+				fs: { lstat }
+			});
 
-			provider.async(fsAdapter, 'non_symlink', options, (err, stats) => {
+			provider.async('non_symlink', options, (err, stats) => {
 				if (err) {
 					return done('An unexpected error was found.');
 				}
 
+				const expected = 0;
+
 				assert.strictEqual(err, null);
-				assert.strictEqual((stats as fs.Stats).uid, tests.StatType.lstat);
+				assert.strictEqual((stats as fs.Stats).uid, expected);
 				done();
 			});
 		});
 
 		it('should returns stat for symlink entry', (done) => {
-			const options = optionsManager.prepare();
+			/* tslint:disable-next-line: no-any */
+			const lstat: typeof fs.lstat = ((_path, cb) => cb(null as any, { uid: 0, isSymbolicLink: () => true } as fs.Stats)) as typeof fs.lstat;
+			/* tslint:disable-next-line: no-any */
+			const stat: typeof fs.lstat = ((_path, cb) => cb(null as any, { uid: 1 } as fs.Stats)) as typeof fs.stat;
 
-			const fsAdapter = new tests.FileSystemAsyncFake({ isSymbolicLink: true });
+			const options = optionsManager.prepare({
+				fs: { lstat, stat }
+			});
 
-			provider.async(fsAdapter, 'symlink', options, (err, stats) => {
+			provider.async('symlink', options, (err, stats) => {
 				if (err) {
 					return done('An unexpected error was found.');
 				}
 
+				const expected = 1;
+
 				assert.strictEqual(err, null);
-				assert.strictEqual((stats as fs.Stats).uid, tests.StatType.stat);
+				assert.strictEqual((stats as fs.Stats).uid, expected);
 				assert.ok((stats as fs.Stats).isSymbolicLink());
 				done();
 			});
 		});
 
 		it('should returns lstat for broken symlink entry when it possible', (done) => {
-			const options = optionsManager.prepare({ throwErrorOnBrokenSymlinks: false });
+			/* tslint:disable-next-line: no-any */
+			const lstat: typeof fs.lstat = ((_path, cb) => cb(null as any, { uid: 0, isSymbolicLink: () => true } as fs.Stats)) as typeof fs.lstat;
+			const stat: typeof fs.stat = ((_path, cb) => cb(new Error('stat'), {} as fs.Stats)) as typeof fs.stat;
 
-			const fsAdapter = new tests.FileSystemAsyncFake({
-				isSymbolicLink: true,
-				throwStatError: true
+			const options = optionsManager.prepare({
+				throwErrorOnBrokenSymlinks: false,
+				fs: { lstat, stat }
 			});
 
-			provider.async(fsAdapter, 'broken_symlink', options, (err, stats) => {
+			provider.async('broken_symlink', options, (err, stats) => {
 				if (err) {
 					return done('An unexpected error was found.');
 				}
 
+				const expected = 0;
+
 				assert.strictEqual(err, null);
-				assert.strictEqual((stats as fs.Stats).uid, tests.StatType.lstat);
+				assert.strictEqual((stats as fs.Stats).uid, expected);
 				done();
 			});
 		});
@@ -156,27 +185,24 @@ describe('Providers → Stat', () => {
 	describe('.isFollowedSymlink', () => {
 		it('should returns true for followed symlink', () => {
 			const options = optionsManager.prepare();
-			const stat = tests.getFakeStats(tests.StatType.lstat, true);
 
-			const actual = provider.isFollowedSymlink(stat, options);
+			const actual = provider.isFollowedSymlink({ isSymbolicLink: () => true } as fs.Stats, options);
 
 			assert.ok(actual);
 		});
 
 		it('should returns false for not symlink', () => {
 			const options = optionsManager.prepare();
-			const stat = tests.getFakeStats(tests.StatType.lstat, false);
 
-			const actual = provider.isFollowedSymlink(stat, options);
+			const actual = provider.isFollowedSymlink({ isSymbolicLink: () => false } as fs.Stats, options);
 
 			assert.ok(!actual);
 		});
 
 		it('should returns false for not followed symlink', () => {
 			const options = optionsManager.prepare({ followSymlinks: false });
-			const stat = tests.getFakeStats(tests.StatType.lstat, true);
 
-			const actual = provider.isFollowedSymlink(stat, options);
+			const actual = provider.isFollowedSymlink({ isSymbolicLink: () => true } as fs.Stats, options);
 
 			assert.ok(!actual);
 		});

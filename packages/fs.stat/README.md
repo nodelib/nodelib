@@ -35,6 +35,10 @@ Returns a [`Promise<fs.Stats>`](https://nodejs.org/dist/latest/docs/api/fs.html#
 
 Returns a [`fs.Stats`](https://nodejs.org/dist/latest/docs/api/fs.html#fs_class_fs_stats) for provided path.
 
+### fsStat.statCallback(path, [options], callback)
+
+Returns a [`fs.Stats`](https://nodejs.org/dist/latest/docs/api/fs.html#fs_class_fs_stats) for provided path with standard callback-style.
+
 #### path
 
   * Type: `string | Buffer | URL`
@@ -62,6 +66,22 @@ Throw an error or return information about symlink, when symlink is broken. When
   * Default: `true`
 
 By default, the methods of this package follows symlinks. If you do not want it, set this option to `false` or use the standard method [`fs.lstat`](https://nodejs.org/dist/latest/docs/api/fs.html#fs_fs_lstat_path_callback).
+
+### fs
+
+  * Type: `FileSystemAdapter`
+  * Default: `built-in FS methods`
+
+By default, the built-in Node.js module (`fs`) is used to work with the file system. You can replace each method with your own.
+
+```ts
+interface FileSystemAdapter {
+	lstat?: typeof fs.lstat;
+	stat?: typeof fs.stat;
+	lstatSync?: typeof fs.lstatSync;
+	statSync?: typeof fs.statSync;
+}
+```
 
 ## Changelog
 

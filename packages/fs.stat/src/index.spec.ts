@@ -34,6 +34,39 @@ describe('Package', () => {
 		});
 	});
 
+	describe('.statCallback', () => {
+		it('should throw error when callback is not a function', () => {
+			/* tslint:disable-next-line: no-any */
+			assert.throws(() => pkg.statCallback('fixtures/b', 'callback' as any), /TypeError: The "callback" argument must be of type Function./);
+		});
+
+		it('should return stat for followed symlink', (done) => {
+			pkg.statCallback('fixtures/b', (err, stats) => {
+				if (err) {
+					return done('An unexpected error was found.');
+				}
+
+				assert.strictEqual(err, null);
+				assert.ok((stats as fs.Stats).isDirectory());
+				assert.ok((stats as fs.Stats).isSymbolicLink());
+				done();
+			});
+		});
+
+		it('should return lstat for non-followed symlink', (done) => {
+			pkg.statCallback('fixtures/b', { followSymlinks: false }, (err, stats) => {
+				if (err) {
+					return done('An unexpected error was found.');
+				}
+
+				assert.strictEqual(err, null);
+				assert.ok(!(stats as fs.Stats).isDirectory());
+				assert.ok((stats as fs.Stats).isSymbolicLink());
+				done();
+			});
+		});
+	});
+
 	describe('.statSync', () => {
 		it('should return stat for followed symlink', () => {
 			const actual = pkg.statSync('fixtures/b');

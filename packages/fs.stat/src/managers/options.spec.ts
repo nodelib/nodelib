@@ -2,10 +2,13 @@ import * as assert from 'assert';
 
 import * as manager from './options';
 
+import * as fsAdapter from '../adapters/fs';
+
 import { Options, StrictOptions } from './options';
 
 function getOptions(options?: Options): StrictOptions {
 	return Object.assign<StrictOptions, Options | undefined>({
+		fs: fsAdapter.getFileSystemAdapter(options ? options.fs : undefined),
 		throwErrorOnBrokenSymlinks: true,
 		followSymlinks: true
 	}, options);
@@ -18,7 +21,7 @@ describe('Managers → Options', () => {
 
 			const actual = manager.prepare();
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should returns prepared options for provided object', () => {
@@ -26,7 +29,7 @@ describe('Managers → Options', () => {
 
 			const actual = manager.prepare({ throwErrorOnBrokenSymlinks: false });
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 	});
 });

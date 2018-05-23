@@ -67,6 +67,22 @@ Throw an error or return information about symlink, when symlink is broken. When
 
 By default, the methods of this package follows symlinks. If you do not want it, set this option to `false` or use the standard method [`fs.lstat`](https://nodejs.org/dist/latest/docs/api/fs.html#fs_fs_lstat_path_callback).
 
+### fs
+
+  * Type: `FileSystemAdapter`
+  * Default: `built-in FS methods`
+
+By default, the built-in Node.js module (`fs`) is used to work with the file system. You can replace each method with your own.
+
+```ts
+interface FileSystemAdapter {
+	lstat?: typeof fs.lstat;
+	stat?: typeof fs.stat;
+	lstatSync?: typeof fs.lstatSync;
+	statSync?: typeof fs.statSync;
+}
+```
+
 ## Changelog
 
 See the [Releases section of our GitHub project](https://github.com/nodelib/nodelib/releases) for changelogs for each release version.

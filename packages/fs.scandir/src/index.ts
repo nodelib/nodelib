@@ -1,7 +1,5 @@
 import * as fs from 'fs';
 
-import * as fsAdapter from './adapters/fs';
-
 import * as optionsManager from './managers/options';
 
 import * as scandirProvider from './providers/scandir';
@@ -9,21 +7,20 @@ import * as scandirProvider from './providers/scandir';
 import { FilterFunction, Options, PreFilterFunction, SortFunction } from './managers/options';
 import { DirEntry } from './types/entry';
 
-const fsAdapterAsync = new fsAdapter.FileSystemAsync();
-const fsAdapterSync = new fsAdapter.FileSystemSync();
-
 /**
  * Asynchronous API.
  */
 export function scandir(path: fs.PathLike, opts?: Options): Promise<DirEntry[]> {
-	return scandirProvider.async(fsAdapterAsync, path, optionsManager.prepare(opts));
+	return new Promise((resolve, reject) => {
+		return scandirProvider.async(path, optionsManager.prepare(opts), (err, stats) => err ? reject(err) : resolve(stats));
+	});
 }
 
 /**
  * Synchronous API.
  */
 export function scandirSync(path: fs.PathLike, opts?: Options): DirEntry[] {
-	return scandirProvider.sync(fsAdapterSync, path, optionsManager.prepare(opts));
+	return scandirProvider.sync(path, optionsManager.prepare(opts));
 }
 
 export type DirEntry = DirEntry;

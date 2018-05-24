@@ -2,10 +2,13 @@ import * as assert from 'assert';
 
 import * as manager from './options';
 
+import * as fsAdapter from '../adapters/fs';
+
 import { Options, StrictOptions } from './options';
 
 function getOptions(options?: Options): StrictOptions {
 	return Object.assign<StrictOptions, Options | undefined>({
+		fs: fsAdapter.getFileSystemAdapter(options ? options.fs : undefined),
 		stats: false,
 		followSymlinks: true,
 		throwErrorOnBrokenSymlinks: true,

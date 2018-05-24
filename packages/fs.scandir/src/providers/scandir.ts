@@ -1,13 +1,16 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { FileSystemAsync, FileSystemSync } from '../adapters/fs';
+import * as fsStat from '@nodelib/fs.stat';
+import rpl = require('run-parallel');
 
 import { StrictOptions } from '../managers/options';
 import { DirEntry } from '../types/entry';
 
-export function sync(fsAdapter: FileSystemSync, root: fs.PathLike, options: StrictOptions): DirEntry[] {
-	const names = fsAdapter.readdir(root);
+export function sync(root: fs.PathLike, options: StrictOptions): DirEntry[] {
+	const names = options.fs.readdirSync(root);
+
+	const fsStatOptions = getFsStatOptions(options);
 
 	const entries: DirEntry[] = [];
 
@@ -18,10 +21,7 @@ export function sync(fsAdapter: FileSystemSync, root: fs.PathLike, options: Stri
 			continue;
 		}
 
-		const stats = fsAdapter.stat(fullPath, {
-			followSymlinks: options.followSymlinks,
-			throwErrorOnBrokenSymlinks: options.throwErrorOnBrokenSymlinks
-		});
+		const stats = fsStat.statSync(fullPath, fsStatOptions);
 
 		const entry = makeDirEntry(name, fullPath, stats, options);
 
@@ -39,56 +39,71 @@ export function sync(fsAdapter: FileSystemSync, root: fs.PathLike, options: Stri
 	return entries;
 }
 
-export async function async(fsAdapter: FileSystemAsync, root: fs.PathLike, options: StrictOptions): Promise<DirEntry[]> {
-	const names = await fsAdapter.readdir(root);
+export type AsyncCallback = (err: NodeJS.ErrnoException | null, stats?: DirEntry[]) => void;
 
-	const fullPaths: string[] = names.map((name) => path.join(root.toString(), name));
+export function async(root: fs.PathLike, options: StrictOptions, callback: AsyncCallback): void {
+	const fsStatOptions = getFsStatOptions(options);
 
-	let filteredNames: string[] = [];
-	let filteredFullPaths: string[] = [];
-
-	if (options.preFilter) {
-		for (let index = 0; index < names.length; index++) {
-			const name = names[index];
-			const fullPath = fullPaths[index];
-
-			if (options.preFilter(name, fullPath)) {
-				filteredNames.push(name);
-				filteredFullPaths.push(fullPath);
-			}
+	options.fs.readdir(root, (err0, names) => {
+		if (err0) {
+			return callback(err0);
 		}
-	} else {
-		filteredNames = names;
-		filteredFullPaths = fullPaths;
-	}
 
-	const promises: Array<Promise<fs.Stats>> = filteredFullPaths.map((fullPath) => fsAdapter.stat(fullPath, {
+		const preFilteredNames: string[] = [];
+		const preFilteredPaths: string[] = [];
+		const tasks: Array<rpl.Task<fs.Stats>> = [];
+
+		for (const name of names) {
+			const fullPath = path.join(root.toString(), name);
+
+			if (options.preFilter && !options.preFilter(name, fullPath)) {
+				continue;
+			}
+
+			preFilteredNames.push(name);
+			preFilteredPaths.push(fullPath);
+
+			const task: rpl.Task<fs.Stats> = (done) => fsStat.statCallback(fullPath, fsStatOptions, done);
+
+			tasks.push(task);
+		}
+
+		rpl(tasks, (err1, stats) => {
+			if (err1) {
+				return callback(err1);
+			}
+
+			const entries: DirEntry[] = [];
+
+			for (let index = 0; index < preFilteredNames.length; index++) {
+				const name = preFilteredNames[index];
+				const fullPath = preFilteredPaths[index];
+				const stat = stats[index];
+
+				const entry = makeDirEntry(name, fullPath, stat, options);
+
+				if (options.filter && !options.filter(entry)) {
+					continue;
+				}
+
+				entries.push(entry);
+			}
+
+			if (options.sort) {
+				return callback(null, entries.sort(options.sort));
+			}
+
+			callback(null, entries);
+		});
+	});
+}
+
+function getFsStatOptions(options: fsStat.Options): fsStat.Options {
+	return {
+		fs: options.fs,
 		followSymlinks: options.followSymlinks,
 		throwErrorOnBrokenSymlinks: options.throwErrorOnBrokenSymlinks
-	}));
-
-	const stats = await Promise.all(promises);
-
-	const entries: DirEntry[] = [];
-
-	for (let index = 0; index < filteredNames.length; index++) {
-		const name = filteredNames[index];
-		const fullPath = filteredFullPaths[index];
-
-		const entry = makeDirEntry(name, fullPath, stats[index], options);
-
-		if (options.filter && !options.filter(entry)) {
-			continue;
-		}
-
-		entries.push(entry);
-	}
-
-	if (options.sort) {
-		return entries.sort(options.sort);
-	}
-
-	return entries;
+	};
 }
 
 export function makeDirEntry(name: string, full: string, stats: fs.Stats, options: StrictOptions): DirEntry {

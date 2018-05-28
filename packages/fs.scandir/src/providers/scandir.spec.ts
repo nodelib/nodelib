@@ -50,6 +50,23 @@ describe('Providers → Scandir', () => {
 			assert.deepStrictEqual(actual, expected);
 		});
 
+		it('should returns array of entries with root directory', () => {
+			const readdirSync: typeof fs.readdirSync = ((_path: fs.PathLike) => DEFAULT_DIRECTORY_NAMES) as typeof fs.readdirSync;
+			const lstatSync: typeof fs.lstatSync = tests.getFakeStats;
+
+			const options = optionsManager.prepare({
+				fs: { readdirSync, lstatSync },
+				includeRootDirectory: true
+			});
+
+			const expected: string[] = ['fake_path'].concat(DEFAULT_DIRECTORY_NAMES);
+
+			const entries = provider.sync('fake_path', options);
+			const actual = entries.map((entry) => entry.name);
+
+			assert.deepStrictEqual(actual, expected);
+		});
+
 		it('should returns filtered array of entries by name and path', () => {
 			const readdirSync: typeof fs.readdirSync = ((_path: fs.PathLike) => DEFAULT_DIRECTORY_NAMES) as typeof fs.readdirSync;
 			const lstatSync: typeof fs.lstatSync = tests.getFakeStats;
@@ -153,6 +170,32 @@ describe('Providers → Scandir', () => {
 			});
 
 			const expected: string[] = DEFAULT_DIRECTORY_NAMES;
+
+			provider.async('fake_path', options, (err, entries) => {
+				if (err) {
+					return done('An unexpected error was found.');
+				}
+
+				const actual = (entries as DirEntry[]).map((entry) => entry.name);
+
+				assert.strictEqual(err, null);
+				assert.deepStrictEqual(actual, expected);
+				done();
+			});
+		});
+
+		it('should returns array of entries with root directory', (done) => {
+			/* tslint:disable-next-line: no-any */
+			const readdir: typeof fs.readdir = ((_path: fs.PathLike, cb: any) => cb(null, DEFAULT_DIRECTORY_NAMES)) as typeof fs.readdir;
+			/* tslint:disable-next-line: no-any */
+			const lstat: typeof fs.lstat = ((_path, cb) => cb(null as any, tests.getFakeStats())) as typeof fs.lstat;
+
+			const options = optionsManager.prepare({
+				fs: { readdir, lstat },
+				includeRootDirectory: true
+			});
+
+			const expected: string[] = ['fake_path'].concat(DEFAULT_DIRECTORY_NAMES);
 
 			provider.async('fake_path', options, (err, entries) => {
 				if (err) {

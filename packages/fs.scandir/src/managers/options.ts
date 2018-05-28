@@ -9,6 +9,7 @@ export type SortFunction = (a: DirEntry, b: DirEntry) => number;
 
 export interface Options {
 	fs?: Partial<FileSystemAdapter>;
+	includeRootDirectory?: boolean;
 	stats?: boolean;
 	followSymlinks?: boolean;
 	throwErrorOnBrokenSymlinks?: boolean;
@@ -22,6 +23,7 @@ export type StrictOptions = { fs: FileSystemAdapter } & Required<Options>;
 export function prepare(opts?: Options): StrictOptions {
 	const options = Object.assign<StrictOptions, Options | undefined>({
 		fs: fsAdapter.getFileSystemAdapter(opts ? opts.fs : undefined),
+		includeRootDirectory: false,
 		stats: false,
 		followSymlinks: true,
 		throwErrorOnBrokenSymlinks: true,

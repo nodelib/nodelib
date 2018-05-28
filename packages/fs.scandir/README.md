@@ -53,6 +53,13 @@ See [options](#options-1) section for more detailed information.
 
 ## Options
 
+### includeRootDirectory
+
+  * Type: `boolean`
+  * Default: `false`
+
+Include root directory to result array of [`DirEntry`](#direntry-interface) items.
+
 ### stats
 
   * Type: `boolean`

@@ -9,6 +9,7 @@ import { Options, StrictOptions } from './options';
 function getOptions(options?: Options): StrictOptions {
 	return Object.assign<StrictOptions, Options | undefined>({
 		fs: fsAdapter.getFileSystemAdapter(options ? options.fs : undefined),
+		includeRootDirectory: false,
 		stats: false,
 		followSymlinks: true,
 		throwErrorOnBrokenSymlinks: true,

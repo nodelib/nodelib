@@ -8,7 +8,11 @@ import { StrictOptions } from '../managers/options';
 import { DirEntry } from '../types/entry';
 
 export function sync(root: fs.PathLike, options: StrictOptions): DirEntry[] {
-	const names = options.fs.readdirSync(root);
+	let names = options.fs.readdirSync(root);
+
+	if (options.includeRootDirectory) {
+		names = [root.toString()].concat(names);
+	}
 
 	const fsStatOptions = getFsStatOptions(options);
 
@@ -47,6 +51,10 @@ export function async(root: fs.PathLike, options: StrictOptions, callback: Async
 	options.fs.readdir(root, (err0, names) => {
 		if (err0) {
 			return callback(err0);
+		}
+
+		if (options.includeRootDirectory) {
+			names = [root.toString()].concat(names); /* tslint:disable-line no-parameter-reassignment */
 		}
 
 		const preFilteredNames: string[] = [];

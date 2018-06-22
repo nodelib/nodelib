@@ -33,7 +33,7 @@ describe('Providers → Scandir', () => {
 			const entries = provider.sync(fsAdapter, 'fake_path', options);
 			const actual = entries.map((entry) => entry.name);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should returns filtered array of entries by name and path', () => {
@@ -47,7 +47,7 @@ describe('Providers → Scandir', () => {
 			const entries = provider.sync(fsAdapter, 'fake_path', options);
 			const actual = entries.map((entry) => entry.name);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should returns filtered array of entries by entry name', () => {
@@ -61,7 +61,7 @@ describe('Providers → Scandir', () => {
 			const entries = provider.sync(fsAdapter, 'fake_path', options);
 			const actual = entries.map((entry) => entry.name);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should returns sorted array of entries by name length', () => {
@@ -75,7 +75,7 @@ describe('Providers → Scandir', () => {
 			const entries = provider.sync(fsAdapter, 'fake_path', options);
 			const actual = entries.map((entry) => entry.name);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 	});
 
@@ -87,7 +87,7 @@ describe('Providers → Scandir', () => {
 			try {
 				await provider.async(fsAdapter, 'fake_path', options);
 			} catch (err) {
-				assert.equal(err, 'Error: FileSystemAsyncFake');
+				assert.strictEqual(err.message, 'FileSystemAsyncFake');
 			}
 		});
 
@@ -98,7 +98,7 @@ describe('Providers → Scandir', () => {
 			try {
 				await provider.async(fsAdapter, 'fake_path', options);
 			} catch (err) {
-				assert.equal(err, 'Error: FileSystemAsyncFake');
+				assert.strictEqual(err.message, 'FileSystemAsyncFake');
 			}
 		});
 
@@ -111,7 +111,7 @@ describe('Providers → Scandir', () => {
 			const entries = await provider.async(fsAdapter, 'fake_path', options);
 			const actual = entries.map((entry) => entry.name);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should returns filtered array of entries by name', async () => {
@@ -125,7 +125,7 @@ describe('Providers → Scandir', () => {
 			const entries = await provider.async(fsAdapter, 'fake_path', options);
 			const actual = entries.map((entry) => entry.name);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should returns filtered array of entries by entry name', async () => {
@@ -139,7 +139,7 @@ describe('Providers → Scandir', () => {
 			const entries = await provider.async(fsAdapter, 'fake_path', options);
 			const actual = entries.map((entry) => entry.name);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should returns sorted array of entries by name length', async () => {
@@ -153,7 +153,7 @@ describe('Providers → Scandir', () => {
 			const entries = await provider.async(fsAdapter, 'fake_path', options);
 			const actual = entries.map((entry) => entry.name);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 	});
 
@@ -173,7 +173,7 @@ describe('Providers → Scandir', () => {
 
 			const actual = provider.makeDirEntry('name', 'root/name', stats, options);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should returns DirEntry with fs.Stats', () => {
@@ -184,7 +184,7 @@ describe('Providers → Scandir', () => {
 
 			const actual = provider.makeDirEntry('name', 'root/name', stats, options);
 
-			assert.equal(actual.stats!.ino, expected); /* tslint:disable-line no-non-null-assertion */
+			assert.strictEqual(actual.stats!.ino, expected); /* tslint:disable-line no-non-null-assertion */
 		});
 	});
 });

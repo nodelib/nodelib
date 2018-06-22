@@ -39,7 +39,7 @@ describe('Package', () => {
 				}
 			];
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 	});
 
@@ -62,7 +62,7 @@ describe('Package', () => {
 				}
 			];
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 	});
 });

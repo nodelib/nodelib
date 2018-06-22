@@ -35,6 +35,10 @@ Returns a [`Promise<DirEntry[]>`](#direntry-interface) for provided path.
 
 Returns a [`DirEntry[]`](#direntry-interface) for provided path.
 
+### fsScandir.scandirCallback(path, [options], callback)
+
+Returns a [`DirEntry[]`](#direntry-interface) for provided path with standard callback-style.
+
 #### path
 
   * Type: `string | Buffer | URL`
@@ -48,6 +52,13 @@ The path to scan.
 See [options](#options-1) section for more detailed information.
 
 ## Options
+
+### includeRootDirectory
+
+  * Type: `boolean`
+  * Default: `false`
+
+Include root directory to result array of [`DirEntry`](#direntry-interface) items.
 
 ### stats
 
@@ -90,6 +101,24 @@ Name- and Path-based entries filter.
   * Default: `null`
 
 Sort entries on the basis of [`DirEntry`](#direntry-interface). Uses the standard [`sort`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) method.
+
+### fs
+
+  * Type: `FileSystemAdapter`
+  * Default: `built-in FS methods`
+
+By default, the built-in Node.js module (`fs`) is used to work with the file system. You can replace each method with your own.
+
+```ts
+interface FileSystemAdapter {
+	lstat?: typeof fs.lstat,
+	stat?: typeof fs.stat,
+	lstatSync?: typeof fs.lstatSync,
+	statSync?: typeof fs.statSync,
+	readdir?: typeof fs.readdir,
+	readdirSync?: typeof fs.readdirSync
+}
+```
 
 ## `DirEntry` interface
 

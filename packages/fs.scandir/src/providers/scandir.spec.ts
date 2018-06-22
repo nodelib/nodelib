@@ -1,4 +1,5 @@
 import * as assert from 'assert';
+import * as fs from 'fs';
 
 import * as tests from '../tests/index';
 
@@ -8,71 +9,110 @@ import * as provider from './scandir';
 
 import { DirEntry } from '../types/entry';
 
+const DEFAULT_DIRECTORY_NAMES: string[] = ['.a', 'bbb', 'c', 'd', 'eeee', 'f'];
+
 describe('Providers → Scandir', () => {
 	describe('.sync', () => {
 		it('should throw error for broken root path', () => {
-			const fsAdapter = new tests.FileSystemSyncFake({ throwReaddirError: true });
-			const options = optionsManager.prepare();
+			const readdirSync: typeof fs.readdirSync = () => { throw new Error('readdir'); };
 
-			assert.throws(() => provider.sync(fsAdapter, 'fake_path', options), /^Error: FileSystemSyncFake$/);
+			const options = optionsManager.prepare({
+				fs: { readdirSync }
+			});
+
+			assert.throws(() => provider.sync('fake_path', options), /^Error: readdir/);
 		});
 
 		it('should throw error for broken entry', () => {
-			const fsAdapter = new tests.FileSystemSyncFake({ throwStatError: true });
-			const options = optionsManager.prepare();
+			const readdirSync: typeof fs.readdirSync = ((_path: fs.PathLike) => ['entry']) as typeof fs.readdirSync;
+			const lstatSync: typeof fs.lstatSync = () => { throw new Error('lstat'); };
 
-			assert.throws(() => provider.sync(fsAdapter, 'fake_path', options), /^Error: FileSystemSyncFake$/);
+			const options = optionsManager.prepare({
+				fs: { readdirSync, lstatSync }
+			});
+
+			assert.throws(() => provider.sync('fake_path', options), /^Error: lstat$/);
 		});
 
 		it('should returns array of entries', () => {
-			const fsAdapter = new tests.FileSystemSyncFake();
-			const options = optionsManager.prepare();
+			const readdirSync: typeof fs.readdirSync = ((_path: fs.PathLike) => DEFAULT_DIRECTORY_NAMES) as typeof fs.readdirSync;
+			const lstatSync: typeof fs.lstatSync = tests.getFakeStats;
 
-			const expected: string[] = ['.a', 'bbb', 'c', 'd', 'eeee', 'f'];
+			const options = optionsManager.prepare({
+				fs: { readdirSync, lstatSync }
+			});
 
-			const entries = provider.sync(fsAdapter, 'fake_path', options);
+			const expected: string[] = DEFAULT_DIRECTORY_NAMES;
+
+			const entries = provider.sync('fake_path', options);
+			const actual = entries.map((entry) => entry.name);
+
+			assert.deepStrictEqual(actual, expected);
+		});
+
+		it('should returns array of entries with root directory', () => {
+			const readdirSync: typeof fs.readdirSync = ((_path: fs.PathLike) => DEFAULT_DIRECTORY_NAMES) as typeof fs.readdirSync;
+			const lstatSync: typeof fs.lstatSync = tests.getFakeStats;
+
+			const options = optionsManager.prepare({
+				fs: { readdirSync, lstatSync },
+				includeRootDirectory: true
+			});
+
+			const expected: string[] = ['fake_path'].concat(DEFAULT_DIRECTORY_NAMES);
+
+			const entries = provider.sync('fake_path', options);
 			const actual = entries.map((entry) => entry.name);
 
 			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should returns filtered array of entries by name and path', () => {
-			const fsAdapter = new tests.FileSystemSyncFake();
+			const readdirSync: typeof fs.readdirSync = ((_path: fs.PathLike) => DEFAULT_DIRECTORY_NAMES) as typeof fs.readdirSync;
+			const lstatSync: typeof fs.lstatSync = tests.getFakeStats;
+
 			const options = optionsManager.prepare({
+				fs: { readdirSync, lstatSync },
 				preFilter: (name, path) => name.startsWith('.') && path.endsWith('.a')
 			});
 
 			const expected: string[] = ['.a'];
 
-			const entries = provider.sync(fsAdapter, 'fake_path', options);
+			const entries = provider.sync('fake_path', options);
 			const actual = entries.map((entry) => entry.name);
 
 			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should returns filtered array of entries by entry name', () => {
-			const fsAdapter = new tests.FileSystemSyncFake();
+			const readdirSync: typeof fs.readdirSync = ((_path: fs.PathLike) => DEFAULT_DIRECTORY_NAMES) as typeof fs.readdirSync;
+			const lstatSync: typeof fs.lstatSync = tests.getFakeStats;
+
 			const options = optionsManager.prepare({
-				filter: (entry) => entry.name.startsWith('.')
+				fs: { readdirSync, lstatSync },
+				filter: (entry) => entry.name.startsWith('.') && entry.path.endsWith('.a')
 			});
 
 			const expected: string[] = ['.a'];
 
-			const entries = provider.sync(fsAdapter, 'fake_path', options);
+			const entries = provider.sync('fake_path', options);
 			const actual = entries.map((entry) => entry.name);
 
 			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should returns sorted array of entries by name length', () => {
-			const fsAdapter = new tests.FileSystemSyncFake();
+			const readdirSync: typeof fs.readdirSync = ((_path: fs.PathLike) => DEFAULT_DIRECTORY_NAMES) as typeof fs.readdirSync;
+			const lstatSync: typeof fs.lstatSync = tests.getFakeStats;
+
 			const options = optionsManager.prepare({
+				fs: { readdirSync, lstatSync },
 				sort: (a, b) => b.name.length - a.name.length
 			});
 
 			const expected: string[] = ['eeee', 'bbb', '.a', 'c', 'd', 'f'];
 
-			const entries = provider.sync(fsAdapter, 'fake_path', options);
+			const entries = provider.sync('fake_path', options);
 			const actual = entries.map((entry) => entry.name);
 
 			assert.deepStrictEqual(actual, expected);
@@ -80,80 +120,172 @@ describe('Providers → Scandir', () => {
 	});
 
 	describe('.async', () => {
-		it('should throw error for broken root path', async () => {
-			const fsAdapter = new tests.FileSystemAsyncFake({ throwReaddirError: true });
-			const options = optionsManager.prepare();
+		it('should throw error for broken root path', (done) => {
+			/* tslint:disable-next-line: no-any */
+			const readdir: typeof fs.readdir = ((_path: fs.PathLike, cb: any) => cb(new Error('readdir'), undefined)) as typeof fs.readdir;
 
-			try {
-				await provider.async(fsAdapter, 'fake_path', options);
-			} catch (err) {
-				assert.strictEqual(err.message, 'FileSystemAsyncFake');
-			}
-		});
-
-		it('should throw error for broken entry', async () => {
-			const fsAdapter = new tests.FileSystemAsyncFake({ throwStatError: true });
-			const options = optionsManager.prepare();
-
-			try {
-				await provider.async(fsAdapter, 'fake_path', options);
-			} catch (err) {
-				assert.strictEqual(err.message, 'FileSystemAsyncFake');
-			}
-		});
-
-		it('should returns array of entries', async () => {
-			const fsAdapter = new tests.FileSystemAsyncFake();
-			const options = optionsManager.prepare();
-
-			const expected: string[] = ['.a', 'bbb', 'c', 'd', 'eeee', 'f'];
-
-			const entries = await provider.async(fsAdapter, 'fake_path', options);
-			const actual = entries.map((entry) => entry.name);
-
-			assert.deepStrictEqual(actual, expected);
-		});
-
-		it('should returns filtered array of entries by name', async () => {
-			const fsAdapter = new tests.FileSystemAsyncFake();
 			const options = optionsManager.prepare({
-				preFilter: (name) => name.startsWith('.')
+				fs: { readdir }
+			});
+
+			provider.async('fake_path', options, (err, entries) => {
+				if (!err) {
+					return done('Expected error not found.');
+				}
+
+				assert.strictEqual(err.message, 'readdir');
+				assert.strictEqual(entries, undefined);
+				done();
+			});
+		});
+
+		it('should throw error for broken entry', (done) => {
+			/* tslint:disable-next-line: no-any */
+			const readdir: typeof fs.readdir = ((_path: fs.PathLike, cb: any) => cb(null, ['entry'])) as typeof fs.readdir;
+			const lstat: typeof fs.lstat = ((_path, cb) => cb(new Error('lstat'), {} as fs.Stats)) as typeof fs.lstat;
+
+			const options = optionsManager.prepare({
+				fs: { readdir, lstat }
+			});
+
+			provider.async('fake_path', options, (err, entries) => {
+				if (!err) {
+					return done('Expected error not found.');
+				}
+
+				assert.strictEqual(err.message, 'lstat');
+				assert.strictEqual(entries, undefined);
+				done();
+			});
+		});
+
+		it('should returns array of entries', (done) => {
+			/* tslint:disable-next-line: no-any */
+			const readdir: typeof fs.readdir = ((_path: fs.PathLike, cb: any) => cb(null, DEFAULT_DIRECTORY_NAMES)) as typeof fs.readdir;
+			/* tslint:disable-next-line: no-any */
+			const lstat: typeof fs.lstat = ((_path, cb) => cb(null as any, tests.getFakeStats())) as typeof fs.lstat;
+
+			const options = optionsManager.prepare({
+				fs: { readdir, lstat }
+			});
+
+			const expected: string[] = DEFAULT_DIRECTORY_NAMES;
+
+			provider.async('fake_path', options, (err, entries) => {
+				if (err) {
+					return done('An unexpected error was found.');
+				}
+
+				const actual = (entries as DirEntry[]).map((entry) => entry.name);
+
+				assert.strictEqual(err, null);
+				assert.deepStrictEqual(actual, expected);
+				done();
+			});
+		});
+
+		it('should returns array of entries with root directory', (done) => {
+			/* tslint:disable-next-line: no-any */
+			const readdir: typeof fs.readdir = ((_path: fs.PathLike, cb: any) => cb(null, DEFAULT_DIRECTORY_NAMES)) as typeof fs.readdir;
+			/* tslint:disable-next-line: no-any */
+			const lstat: typeof fs.lstat = ((_path, cb) => cb(null as any, tests.getFakeStats())) as typeof fs.lstat;
+
+			const options = optionsManager.prepare({
+				fs: { readdir, lstat },
+				includeRootDirectory: true
+			});
+
+			const expected: string[] = ['fake_path'].concat(DEFAULT_DIRECTORY_NAMES);
+
+			provider.async('fake_path', options, (err, entries) => {
+				if (err) {
+					return done('An unexpected error was found.');
+				}
+
+				const actual = (entries as DirEntry[]).map((entry) => entry.name);
+
+				assert.strictEqual(err, null);
+				assert.deepStrictEqual(actual, expected);
+				done();
+			});
+		});
+
+		it('should returns filtered array of entries by name', (done) => {
+			/* tslint:disable-next-line: no-any */
+			const readdir: typeof fs.readdir = ((_path: fs.PathLike, cb: any) => cb(null, DEFAULT_DIRECTORY_NAMES)) as typeof fs.readdir;
+			/* tslint:disable-next-line: no-any */
+			const lstat: typeof fs.lstat = ((_path, cb) => cb(null as any, tests.getFakeStats())) as typeof fs.lstat;
+
+			const options = optionsManager.prepare({
+				fs: { readdir, lstat },
+				preFilter: (name, path) => name.startsWith('.') && path.endsWith('.a')
 			});
 
 			const expected: string[] = ['.a'];
 
-			const entries = await provider.async(fsAdapter, 'fake_path', options);
-			const actual = entries.map((entry) => entry.name);
+			provider.async('fake_path', options, (err, entries) => {
+				if (err) {
+					return done('An unexpected error was found.');
+				}
 
-			assert.deepStrictEqual(actual, expected);
+				const actual = (entries as DirEntry[]).map((entry) => entry.name);
+
+				assert.strictEqual(err, null);
+				assert.deepStrictEqual(actual, expected);
+				done();
+			});
 		});
 
-		it('should returns filtered array of entries by entry name', async () => {
-			const fsAdapter = new tests.FileSystemAsyncFake();
+		it('should returns filtered array of entries by entry name', (done) => {
+			/* tslint:disable-next-line: no-any */
+			const readdir: typeof fs.readdir = ((_path: fs.PathLike, cb: any) => cb(null, DEFAULT_DIRECTORY_NAMES)) as typeof fs.readdir;
+			/* tslint:disable-next-line: no-any */
+			const lstat: typeof fs.lstat = ((_path, cb) => cb(null as any, tests.getFakeStats())) as typeof fs.lstat;
+
 			const options = optionsManager.prepare({
-				filter: (entry) => entry.name.startsWith('.')
+				fs: { readdir, lstat },
+				filter: (entry) => entry.name.startsWith('.') && entry.path.endsWith('.a')
 			});
 
 			const expected: string[] = ['.a'];
 
-			const entries = await provider.async(fsAdapter, 'fake_path', options);
-			const actual = entries.map((entry) => entry.name);
+			provider.async('fake_path', options, (err, entries) => {
+				if (err) {
+					return done('An unexpected error was found.');
+				}
 
-			assert.deepStrictEqual(actual, expected);
+				const actual = (entries as DirEntry[]).map((entry) => entry.name);
+
+				assert.strictEqual(err, null);
+				assert.deepStrictEqual(actual, expected);
+				done();
+			});
 		});
 
-		it('should returns sorted array of entries by name length', async () => {
-			const fsAdapter = new tests.FileSystemAsyncFake();
+		it('should returns sorted array of entries by name length', (done) => {
+			/* tslint:disable-next-line: no-any */
+			const readdir: typeof fs.readdir = ((_path: fs.PathLike, cb: any) => cb(null, DEFAULT_DIRECTORY_NAMES)) as typeof fs.readdir;
+			/* tslint:disable-next-line: no-any */
+			const lstat: typeof fs.lstat = ((_path, cb) => cb(null as any, tests.getFakeStats())) as typeof fs.lstat;
+
 			const options = optionsManager.prepare({
+				fs: { readdir, lstat },
 				sort: (a, b) => b.name.length - a.name.length
 			});
 
 			const expected: string[] = ['eeee', 'bbb', '.a', 'c', 'd', 'f'];
 
-			const entries = await provider.async(fsAdapter, 'fake_path', options);
-			const actual = entries.map((entry) => entry.name);
+			provider.async('fake_path', options, (err, entries) => {
+				if (err) {
+					return done('An unexpected error was found.');
+				}
 
-			assert.deepStrictEqual(actual, expected);
+				const actual = (entries as DirEntry[]).map((entry) => entry.name);
+
+				assert.strictEqual(err, null);
+				assert.deepStrictEqual(actual, expected);
+				done();
+			});
 		});
 	});
 

@@ -14,17 +14,20 @@
     "test": "lerna run --parallel test",
     "build": "lerna run build",
     "watch": "lerna run --parallel watch",
-    "ci": "npm run lint && npm run compile && npm run test"
+    "ci": "npm run lint && npm run compile && npm run test",
+    "scripts": "node ./scripts"
   },
   "devDependencies": {
     "@types/mocha": "^5.2.0",
     "@types/node": "^9.6.6",
     "@types/rimraf": "^2.0.2",
+    "@types/yargs": "^11.0.0",
     "lerna": "^3.0.0-beta.17",
     "mocha": "^5.1.1",
     "rimraf": "^2.6.2",
     "tslint": "^5.9.1",
     "tslint-config-mrmlnc": "^1.0.0",
-    "typescript": "^2.8.3"
+    "typescript": "^2.8.3",
+    "yargs": "^11.0.0"
   }
 }

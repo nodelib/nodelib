@@ -1,7 +1,7 @@
 import Group from '../group';
 import Visitor from '../visitor';
 
-import * as utils from '../utils';
+import * as utils from '../../common/utils';
 
 export type GroupQueueItem = Group;
 export type GroupQueue = GroupQueueItem[];

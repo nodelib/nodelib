@@ -2,7 +2,7 @@ import * as assert from 'assert';
 
 import * as utils from './race';
 
-import Race from '../race';
+import Race from '../../client/race';
 
 describe('Client → Utils → Race', () => {
 	describe('.isRace', () => {

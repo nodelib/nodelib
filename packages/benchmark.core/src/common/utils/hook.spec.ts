@@ -13,6 +13,22 @@ const hooks = [
 ];
 
 describe('Worker → Utils → Hook', () => {
+	describe('.isHook', () => {
+		it('should return true', () => {
+			const hook = new Hook(HookType.Before, () => undefined);
+
+			const actual = utils.isHook(hook);
+
+			assert.ok(actual);
+		});
+
+		it('should return false', () => {
+			const actual = utils.isHook(Object);
+
+			assert.ok(!actual);
+		});
+	});
+
 	describe('.getHooksWithTypes', () => {
 		it('should return empty array', () => {
 			const expected: Hook[] = [];

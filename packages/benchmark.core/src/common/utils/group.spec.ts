@@ -7,7 +7,23 @@ import Hook, { HookType } from '../../client/hook';
 
 const noop = () => undefined;
 
-describe('Worker → Utils → Group', () => {
+describe('Common → Utils → Group', () => {
+	describe('.isGroup', () => {
+		it('should return true', () => {
+			const group = new Group('title', [], {});
+
+			const actual = utils.isGroup(group);
+
+			assert.ok(actual);
+		});
+
+		it('should return false', () => {
+			const actual = utils.isGroup(Object);
+
+			assert.ok(!actual);
+		});
+	});
+
 	describe('.getRelatedHooks', () => {
 		it('should return empty array for groups withput hooks', () => {
 			const parentGroup = new Group('title', []);

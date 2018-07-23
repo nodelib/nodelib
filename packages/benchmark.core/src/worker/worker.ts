@@ -4,7 +4,7 @@ import Race from '../client/race';
 
 import Meter from '../common/meter';
 
-import * as utils from './utils';
+import * as utils from '../common/utils';
 
 import { GroupQueue } from '../client/converters/group-queue';
 

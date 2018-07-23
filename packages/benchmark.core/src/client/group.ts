@@ -5,7 +5,7 @@ import Visitable from './contexts/visitable';
 
 import Visitor from './visitor';
 
-import * as utils from './utils';
+import * as utils from '../common/utils';
 
 export type GroupChildrenItem = Group | Hook | Race;
 export type GroupChildren = GroupChildrenItem[];

@@ -2,7 +2,16 @@ import Group, { StrictGroupSettings } from '../../client/group';
 import Hook from '../../client/hook';
 import Race from '../../client/race';
 
+import * as commonUtils from '.';
+
 import * as hookUtils from './hook';
+
+/**
+ * Returns true if something is a group.
+ */
+export function isGroup(something: Object): something is Group {
+	return something instanceof Group;
+}
 
 /**
  * Returns all hooks that related to the specified group.
@@ -10,7 +19,7 @@ import * as hookUtils from './hook';
 export function getRelatedHooks(group: Group): Hook[] {
 	let hooks: Hook[] = group.hooks;
 
-	const parents = getParents(group, /* includeTopGroup */ false).reverse();
+	const parents = commonUtils.group.getParents(group, /* includeTopGroup */ false).reverse();
 
 	for (const parent of parents) {
 		const nestedHooks = parent.hooks.filter(hookUtils.isNestedHook);

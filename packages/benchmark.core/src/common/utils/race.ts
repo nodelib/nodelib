@@ -1,4 +1,4 @@
-import Race from '../race';
+import Race from '../../client/race';
 
 /**
  * Returns true if something is a race.

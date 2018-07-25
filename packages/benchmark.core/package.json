@@ -21,5 +21,9 @@
     "test": "mocha \"out/**/*.spec.js\" -s 0",
     "build": "npm run clean && npm run lint && npm run compile && npm test",
     "watch": "npm run clean && npm run compile -- --sourceMap --watch"
+  },
+  "dependencies": {
+    "execa": "^0.10.0",
+    "p-map": "^1.2.0"
   }
 }

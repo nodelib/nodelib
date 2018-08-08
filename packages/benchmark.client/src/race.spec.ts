@@ -1,8 +1,10 @@
 import * as assert from 'assert';
 
+import { Meter } from '@nodelib/benchmark.meter';
+
 import * as tests from './tests/index';
 
-import Race from './race';
+import Race, { NSRace } from './race';
 
 describe('Race', () => {
 	describe('Constructor', () => {
@@ -28,6 +30,18 @@ describe('Race', () => {
 			const actual = await race.run();
 
 			assert.ok(actual);
+		});
+
+		it('should call the callback function with right context', async () => {
+			const race = new Race('title', (ctx) => Promise.resolve(ctx));
+
+			const expected: NSRace.CallbackContext = {
+				meter: new Meter()
+			};
+
+			const actual = await race.run();
+
+			assert.deepStrictEqual(actual, expected);
 		});
 	});
 

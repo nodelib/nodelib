@@ -1,3 +1,5 @@
+import { Meter } from '@nodelib/benchmark.meter';
+
 import Group from './group';
 
 import Groupable from './contexts/groupable';
@@ -7,10 +9,15 @@ import Visitable, { Visitor } from './contexts/visitable';
 export namespace NSRace {
 	export type Context = Visitable & Runnable & Groupable;
 
-	export type Callback = (this: Race) => void;
+	export type Callback = (this: Race, ctx: CallbackContext) => void;
+	export interface CallbackContext {
+		meter: Meter;
+	}
 }
 
 export default class Race implements NSRace.Context {
+	private readonly _meter: Meter = new Meter();
+
 	private _group?: Group;
 
 	constructor(
@@ -44,11 +51,18 @@ export default class Race implements NSRace.Context {
 	}
 
 	/**
+	 * Instance of the Meter.
+	 */
+	public get meter(): Meter {
+		return this._meter;
+	}
+
+	/**
 	 * Call the callback function.
 	 */
 	// tslint:disable-next-line no-any
 	public async run(): Promise<any> {
-		return this._callback.call(this);
+		return this._callback.call(this, { meter: this._meter });
 	}
 
 	/**

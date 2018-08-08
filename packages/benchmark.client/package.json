@@ -22,5 +22,8 @@
     "test": "mocha \"out/**/*.spec.js\" -s 0",
     "build": "npm run clean && npm run lint && npm run compile && npm test",
     "watch": "npm run clean && npm run compile -- --sourceMap --watch"
+  },
+  "dependencies": {
+    "@nodelib/benchmark.meter": "^0.0.0"
   }
 }

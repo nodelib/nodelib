@@ -29,7 +29,8 @@ platform:
 install:
   - ps: Install-Product node $env:nodejs_version
   - npm install
-  - ./node_modules/.bin/lerna bootstrap
+  - ./node_modules/.bin/lerna clean --yes
+  - ./node_modules/.bin/lerna bootstrap --no-ci
 
 test_script:
   - node --version && npm --version

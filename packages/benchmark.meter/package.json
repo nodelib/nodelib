@@ -1,6 +1,6 @@
 {
   "name": "@nodelib/benchmark.meter",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "The utilities for work with metrics for @nodelib/benchmark",
   "license": "MIT",
   "repository": "https://github.com/nodelib/nodelib/tree/master/packages/benchmark.meter",

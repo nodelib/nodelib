@@ -24,6 +24,6 @@
     "watch": "npm run clean && npm run compile -- --sourceMap --watch"
   },
   "dependencies": {
-    "@nodelib/benchmark.meter": "^0.0.0"
+    "@nodelib/benchmark.meter": "^1.0.0"
   }
 }

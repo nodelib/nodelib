@@ -23,7 +23,7 @@
     "compile": "tsc -p .",
     "test": "mocha \"out/**/*.spec.js\" -s 0",
     "build": "npm run clean && npm run lint && npm run compile && npm test",
-    "watch": "npm run clean && npm run compile -- --sourceMap --watch"
+    "watch": "npm run clean && npm run compile -- --watch"
   },
   "dependencies": {
     "@nodelib/fs.stat": "^1.1.1",

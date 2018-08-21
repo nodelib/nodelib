@@ -9,7 +9,7 @@ tslint.json
 # Builded files
 out/benchmark
 out/tests
-out/**/*.js.map
+out/**/*.map
 out/**/*.spec.{d.ts,js}
 
 # Editor directories

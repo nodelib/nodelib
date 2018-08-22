@@ -18,10 +18,11 @@
   "scripts": {
     "clean": "rimraf out",
     "lint": "tslint \"src/**/*.ts\" -p . -t stylish",
-    "compile": "tsc -p .",
+    "compile": "tsc -b .",
+    "compile:watch": "tsc -p . --watch",
     "test": "mocha \"out/**/*.spec.js\" -s 0",
     "build": "npm run clean && npm run lint && npm run compile && npm test",
-    "watch": "npm run clean && npm run compile -- --sourceMap --watch"
+    "watch": "npm run clean && npm run compile:watch"
   },
   "dependencies": {
     "@nodelib/benchmark.meter": "^1.0.0"

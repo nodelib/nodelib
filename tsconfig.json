@@ -21,7 +21,11 @@
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
 		"downlevelIteration": true,
+
+		"composite": true,
 		"declaration": true,
+		"declarationMap": true,
+		"sourceMap": true,
 
 		"pretty": true
 	}

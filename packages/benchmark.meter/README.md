@@ -17,7 +17,7 @@ const meter = new Meter();
 
 meter.time('fill_map_time');
 Array(100).fill(0).map((_, index) => index);
-meter.time('fill_map_memory');
+meter.memory('fill_map_memory');
 meter.time('fill_map_time');
 meter.common('custom_marker', 1);
 ```

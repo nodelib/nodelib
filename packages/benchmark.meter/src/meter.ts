@@ -75,7 +75,7 @@ export default class Meter {
 	 * Displays a message in the output.
 	 */
 	protected _output(message: string): void {
-		console.log(message);
+		console.debug(message);
 	}
 
 	/**

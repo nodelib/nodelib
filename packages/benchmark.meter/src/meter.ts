@@ -99,7 +99,7 @@ export default class Meter {
 	/**
 	 * Validate type beetwen metric's with same label.
 	 */
-	private _validateType(label: string, type: NSMeter.Type): void |never {
+	private _validateType(label: string, type: NSMeter.Type): void | never {
 		const item = this._storage.get(label);
 		if (item === undefined) {
 			this._storage.set(label, type);

@@ -1,6 +1,6 @@
 {
   "name": "@nodelib/benchmark.worker",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "A worker that runs iterations of races for @nodelib/benchmark",
   "license": "MIT",
   "repository": "https://github.com/nodelib/nodelib/tree/master/packages/benchmark.worker",
@@ -25,8 +25,8 @@
     "watch": "npm run clean && npm run compile:watch"
   },
   "dependencies": {
-    "@nodelib/benchmark.client": "^1.0.0",
-    "@nodelib/benchmark.meter": "^1.0.0",
-    "@nodelib/benchmark.queue": "^1.0.0"
+    "@nodelib/benchmark.client": "^1.0.1",
+    "@nodelib/benchmark.meter": "^1.0.1",
+    "@nodelib/benchmark.queue": "^1.0.1"
   }
 }

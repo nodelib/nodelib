@@ -1,6 +1,6 @@
 {
   "name": "@nodelib/benchmark.client",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A «client» side code for @nodelib/benchmark",
   "license": "MIT",
   "repository": "https://github.com/nodelib/nodelib/tree/master/packages/benchmark.client",
@@ -25,6 +25,6 @@
     "watch": "npm run clean && npm run compile:watch"
   },
   "dependencies": {
-    "@nodelib/benchmark.meter": "^1.0.0"
+    "@nodelib/benchmark.meter": "^1.0.1"
   }
 }

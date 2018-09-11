@@ -25,9 +25,9 @@ class TestRunner extends Runner {
 
 function getWorkerResult(): NSWorkerAnalyzer.Result {
 	return [
-		{ IterationTime: 100, IterationEmptyMethodTime: 10, some: 40 },
-		{ IterationTime: 100, IterationEmptyMethodTime: 10, some: 40 },
-		{ IterationTime: 100, IterationEmptyMethodTime: 10, some: 40 }
+		{ IterationTime: 100, some: 40 },
+		{ IterationTime: 100, some: 40 },
+		{ IterationTime: 100, some: 40 }
 	];
 }
 

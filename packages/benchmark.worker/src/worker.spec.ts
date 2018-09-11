@@ -84,7 +84,6 @@ describe('Worker', () => {
 
 			assert.strictEqual(actual.length, 2);
 
-			assert.ok('IterationEmptyMethodTime' in actual[0]);
 			assert.ok('IterationTime' in actual[0]);
 		});
 

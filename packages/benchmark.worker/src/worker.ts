@@ -10,8 +10,7 @@ export namespace NSWorker {
 		IterationStart = 'IterationStart',
 		IterationEnd = 'IterationEnd',
 
-		IterationTime = 'IterationTime',
-		IterationEmptyMethodTime = 'IterationEmptyMethodTime'
+		IterationTime = 'IterationTime'
 	}
 }
 
@@ -101,19 +100,8 @@ export default class Worker {
 	 * Runs the race.
 	 */
 	private async _runRaceOnce(race: Race): Promise<void> {
-		this._meter.time(NSWorker.Symbols.IterationEmptyMethodTime);
-		await this._emptyMethod();
-		this._meter.time(NSWorker.Symbols.IterationEmptyMethodTime);
-
 		this._meter.time(NSWorker.Symbols.IterationTime);
 		await race.run();
 		this._meter.time(NSWorker.Symbols.IterationTime);
-	}
-
-	/**
-	 * An empty method required to evaluate the noise of an asynchronous wrapper.
-	 */
-	private async _emptyMethod(): Promise<void> {
-		return undefined;
 	}
 }

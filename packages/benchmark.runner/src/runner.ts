@@ -96,7 +96,6 @@ export default class Runner extends events.EventEmitter {
 		const totalTime = markers[NSWorker.Symbols.IterationTime];
 
 		delete markers[NSWorker.Symbols.IterationTime];
-		delete markers[NSWorker.Symbols.IterationEmptyMethodTime];
 
 		return { totalTime, markers };
 	}

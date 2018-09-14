@@ -6,17 +6,17 @@ import convert, { NSQueue } from './converter';
 
 describe('Converter', () => {
 	it('should return queue', () => {
-		const nestedRace = new Race('Nested', () => undefined);
-		const nested = new Group('Nested', [nestedRace]);
+		const firstRace = new Race('Nested', () => undefined);
+		const first = new Group('Nested', [firstRace]);
 
-		const parentRace = new Race('Parent', () => undefined);
-		const parent = new Group('Parent', [parentRace, nested, parentRace, nested]);
+		const secondRace = new Race('Nested', () => undefined);
+		const second = new Group('Nested', [secondRace]);
+
+		const parent = new Group('Parent', [first, second]);
 
 		const expected: NSQueue.Queue = [
-			parentRace,
-			parentRace,
-			nestedRace,
-			nestedRace
+			firstRace,
+			secondRace
 		];
 
 		const actual = convert(parent);

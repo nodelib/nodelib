@@ -14,14 +14,21 @@ describe('Group', () => {
 			assert.ok(group instanceof Group);
 		});
 
-		it('should set parent group for all children items', () => {
+		it('should throw an error when child items contains groups and races at the same time', () => {
 			const race = new Race('title', () => undefined);
+			const group = new Group('Group', []);
+
+			const expectedErrorMessageRe = /A group cannot contain groups and races at the same time/;
+
+			assert.throws(() => new Group('Group', [race, group]), expectedErrorMessageRe);
+		});
+
+		it('should set parent group for all children items', () => {
 			const hook = new Hook(NSHook.Type.Before, () => undefined);
 
 			const nestedGroup = new Group('Nested', []);
-			const parentGroup = new Group('Parent', [nestedGroup, race, hook]);
+			const parentGroup = new Group('Parent', [nestedGroup, hook]);
 
-			assert.strictEqual(race.group, parentGroup);
 			assert.strictEqual(hook.group, parentGroup);
 			assert.strictEqual(nestedGroup.group, parentGroup);
 		});
@@ -31,7 +38,6 @@ describe('Group', () => {
 		it('should return children groups', () => {
 			const nestedGroup = new Group('Nested', []);
 			const parentGroup = new Group('Parent', [
-				new Race('title', () => undefined),
 				new Hook(NSHook.Type.Before, () => undefined),
 				nestedGroup
 			]);
@@ -49,7 +55,6 @@ describe('Group', () => {
 			const hook = new Hook(NSHook.Type.Before, () => undefined);
 			const parentGroup = new Group('Parent', [
 				new Group('Nested', []),
-				new Race('title', () => undefined),
 				hook
 			]);
 
@@ -65,7 +70,6 @@ describe('Group', () => {
 		it('should return children races', () => {
 			const race = new Race('title', () => undefined);
 			const parentGroup = new Group('Parent', [
-				new Group('Nested', []),
 				new Hook(NSHook.Type.Before, () => undefined),
 				race
 			]);

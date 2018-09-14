@@ -30,6 +30,7 @@ export default class Group implements NSGroup.Context {
 		readonly _children: NSGroup.Children,
 		private readonly _settings?: NSGroup.Settings
 	) {
+		this._validateVarietyOfChildItems();
 		this._setParentGroupToChildrenItems();
 	}
 
@@ -94,7 +95,16 @@ export default class Group implements NSGroup.Context {
 	}
 
 	/**
-	 * Sets the current group as the parent of all children items.
+	 * Check for a valid type intersection.
+	 */
+	private _validateVarietyOfChildItems(): void {
+		if (this.groups.length !== 0 && this.races.length !== 0) {
+			throw new TypeError('A group cannot contain groups and races at the same time.');
+		}
+	}
+
+	/**
+	 * Sets the current group as the tparent of all children items.
 	 */
 	private _setParentGroupToChildrenItems(): void {
 		this._children.forEach((item) => item.group = this);

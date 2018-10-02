@@ -3,7 +3,7 @@
   "version": "1.0.2",
   "description": "The queue converter for @nodelib/benchmark",
   "license": "MIT",
-  "repository": "https://github.com/nodelib/nodelib/tree/master/packages/benchmark.queue",
+  "repository": "https://github.com/nodelib/nodelib/tree/master/packages/benchmark/benchmark.queue",
   "keywords": [
     "NodeLib",
     "benchmark",

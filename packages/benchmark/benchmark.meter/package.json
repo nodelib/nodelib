@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "description": "The utilities for work with metrics for @nodelib/benchmark",
   "license": "MIT",
-  "repository": "https://github.com/nodelib/nodelib/tree/master/packages/benchmark.meter",
+  "repository": "https://github.com/nodelib/nodelib/tree/master/packages/benchmark/benchmark.meter",
   "keywords": [
     "NodeLib",
     "benchmark",

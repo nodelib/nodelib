@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "description": "A worker that runs iterations of races for @nodelib/benchmark",
   "license": "MIT",
-  "repository": "https://github.com/nodelib/nodelib/tree/master/packages/benchmark.worker",
+  "repository": "https://github.com/nodelib/nodelib/tree/master/packages/benchmark/benchmark.worker",
   "keywords": [
     "NodeLib",
     "benchmark",

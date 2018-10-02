@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "description": "A «client» side code for @nodelib/benchmark",
   "license": "MIT",
-  "repository": "https://github.com/nodelib/nodelib/tree/master/packages/benchmark.client",
+  "repository": "https://github.com/nodelib/nodelib/tree/master/packages/benchmark/benchmark.client",
   "keywords": [
     "NodeLib",
     "benchmark",

@@ -1,5 +1,5 @@
 {
-	"extends": "../../tsconfig.json",
+	"extends": "../../../tsconfig.json",
 	"compilerOptions": {
 		"rootDir": "src",
 		"outDir": "out"
@@ -7,6 +7,12 @@
 	"references": [
 		{
 			"path": "../benchmark.client"
+		},
+		{
+			"path": "../benchmark.meter"
+		},
+		{
+			"path": "../benchmark.queue"
 		}
 	]
 }

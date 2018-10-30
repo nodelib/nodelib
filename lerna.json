@@ -8,5 +8,10 @@
 	"conventional-commits": true,
 	"npmClientArgs": [
 		"--no-package-lock"
-	]
+	],
+	"command": {
+		"bootstrap": {
+			"ci": false
+		}
+	}
 }

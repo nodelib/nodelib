@@ -10,6 +10,9 @@
 		"--no-package-lock"
 	],
 	"command": {
+		"add": {
+			"exact": true
+		},
 		"bootstrap": {
 			"ci": false
 		}

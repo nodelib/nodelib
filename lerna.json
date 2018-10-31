@@ -16,5 +16,9 @@
 		"bootstrap": {
 			"ci": false
 		}
-	}
+	},
+	"ignoreChanges": [
+		"*.spec.ts",
+		"**/tests/**"
+	]
 }

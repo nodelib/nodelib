@@ -15,6 +15,11 @@
 		},
 		"bootstrap": {
 			"ci": false
+		},
+		"publish": {
+			"allowBranch": "master",
+			"exact": true,
+			"message": "build(release): publish"
 		}
 	},
 	"ignoreChanges": [

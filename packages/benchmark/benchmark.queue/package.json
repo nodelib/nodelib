@@ -1,6 +1,6 @@
 {
   "name": "@nodelib/benchmark.queue",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "The queue converter for @nodelib/benchmark",
   "license": "MIT",
   "repository": "https://github.com/nodelib/nodelib/tree/master/packages/benchmark/benchmark.queue",
@@ -26,6 +26,6 @@
     "watch": "npm run clean && npm run compile:watch"
   },
   "dependencies": {
-    "@nodelib/benchmark.client": "^2.0.0"
+    "@nodelib/benchmark.client": "2.0.1"
   }
 }

@@ -11,7 +11,7 @@ steps:
     inputs:
       command: install
 
-  - script: ./node_modules/.bin/lerna bootstrap --no-ci
+  - script: ./node_modules/.bin/lerna bootstrap
     displayName: Link packages
 
   - script: ./node_modules/.bin/lerna run --parallel lint

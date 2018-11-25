@@ -2,16 +2,7 @@
 	"files": [],
 	"references": [
 		{
-			"path": "./benchmark.client"
-		},
-		{
 			"path": "./benchmark.meter"
-		},
-		{
-			"path": "./benchmark.queue"
-		},
-		{
-			"path": "./benchmark.worker"
 		}
 	]
 }

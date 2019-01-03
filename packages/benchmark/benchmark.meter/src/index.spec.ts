@@ -7,7 +7,11 @@ describe('Package', () => {
 		const expected: typeof pkg = {
 			Meter: pkg.Meter,
 
-			NSMeter: pkg.NSMeter
+			Reporter: pkg.Reporter,
+			StdoutReporter: pkg.StdoutReporter,
+
+			ReportParser: pkg.ReportParser,
+			StdoutReportParser: pkg.StdoutReportParser
 		};
 
 		const actual = pkg;

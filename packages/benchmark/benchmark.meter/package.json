@@ -1,7 +1,7 @@
 {
   "name": "@nodelib/benchmark.meter",
   "version": "1.0.2",
-  "description": "The utilities for work with metrics for @nodelib/benchmark",
+  "description": "The reporter/parser of markers of metrics for @nodelib/benchmark",
   "license": "MIT",
   "repository": "https://github.com/nodelib/nodelib/tree/master/packages/benchmark/benchmark.meter",
   "keywords": [
@@ -11,7 +11,7 @@
     "meter"
   ],
   "engines": {
-    "node": ">= 6"
+    "node": ">= 8"
   },
   "main": "out/index.js",
   "typings": "out/index.d.ts",

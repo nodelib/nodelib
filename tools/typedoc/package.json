@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "name": "@nodelib/tools.typedoc",
+  "version": "0.0.0",
+  "bin": {
+    "tools.typedoc": "typedoc.js"
+  },
+  "dependencies": {
+    "typedoc": "^0.14.0",
+    "typedoc-plugin-example-tag": "^1.0.2"
+  }
+}

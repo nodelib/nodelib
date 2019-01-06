@@ -30,7 +30,7 @@ export function getSettings(race: Race): NSGroup.StrictSettings {
 	const groups = getGroups(race);
 	const settings = groups.map((group) => group.settings);
 
-	return Object.assign({}, ...settings);
+	return Object.assign({}, ...settings) as NSGroup.StrictSettings;
 }
 
 /**

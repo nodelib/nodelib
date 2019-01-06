@@ -7,11 +7,12 @@ import * as fsAdapter from '../adapters/fs';
 import { Options, StrictOptions } from './options';
 
 function getOptions(options?: Options): StrictOptions {
-	return Object.assign<StrictOptions, Options | undefined>({
+	return {
 		fs: fsAdapter.getFileSystemAdapter(options ? options.fs : undefined),
 		throwErrorOnBrokenSymlinks: true,
-		followSymlinks: true
-	}, options);
+		followSymlinks: true,
+		...options
+	} as unknown as StrictOptions;
 }
 
 describe('Managers → Options', () => {

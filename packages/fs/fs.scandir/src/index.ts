@@ -28,7 +28,7 @@ export function scandirCallback(path: fs.PathLike, optsOrCallback?: Options | As
 		callback = optsOrCallback; /* tslint:disable-line: no-parameter-reassignment */
 		optsOrCallback = undefined; /* tslint:disable-line: no-parameter-reassignment */
 	}
-	if (typeof callback === 'undefined') {
+	if (callback === undefined) {
 		throw new TypeError('The "callback" argument must be of type Function.');
 	}
 

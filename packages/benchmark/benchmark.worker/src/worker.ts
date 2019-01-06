@@ -114,6 +114,6 @@ export default class Worker {
 	 * An empty method required to evaluate the noise of an asynchronous wrapper.
 	 */
 	private async _emptyMethod(): Promise<void> {
-		return undefined;
+		return;
 	}
 }

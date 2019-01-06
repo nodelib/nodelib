@@ -87,7 +87,7 @@ describe('Meter', () => {
 		it('should set common marker with custom type', () => {
 			const meter = new TestMeter();
 
-			enum CustomMeterType {
+			const enum CustomMeterType {
 				Custom = 4
 			}
 

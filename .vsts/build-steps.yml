@@ -20,5 +20,8 @@ steps:
   - script: ./node_modules/.bin/lerna run --parallel lint
     displayName: Run Hygiene Checks
 
+  - script: npm run lint:dependencies
+    displayName: Run Dependencies Checks
+
   - script: ./node_modules/.bin/lerna run --parallel test
     displayName: Run Unit Tests

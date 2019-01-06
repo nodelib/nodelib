@@ -10,6 +10,7 @@
   "scripts": {
     "clean": "lerna run --parallel clean",
     "lint": "lerna run --parallel lint",
+    "lint:dependencies": "depend --lerna . --bail --hint --strategy=conservative",
     "compile": "lerna run compile",
     "test": "lerna run --parallel test",
     "build": "lerna run build",
@@ -20,6 +21,7 @@
   },
   "devDependencies": {
     "@nodelib/tools.typedoc": "file:tools/typedoc",
+    "@times-components/depend": "^2.1.13",
     "@types/mocha": "^5.2.5",
     "@types/node": "^10.12.18",
     "@types/rimraf": "^2.0.2",

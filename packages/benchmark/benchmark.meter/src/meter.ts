@@ -68,7 +68,7 @@ export default class Meter {
 			global.gc();
 		}
 
-		return process.memoryUsage().heapUsed; // @todo: rss?
+		return process.memoryUsage().heapUsed;
 	}
 
 	/**

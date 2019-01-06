@@ -121,7 +121,7 @@ describe('Providers → Scandir', () => {
 
 	describe('.async', () => {
 		it('should throw error for broken root path', (done) => {
-			/* tslint:disable-next-line: no-any */
+			/* tslint:disable-next-line: no-any no-unsafe-any */
 			const readdir: typeof fs.readdir = ((_path: fs.PathLike, cb: any) => cb(new Error('readdir'), undefined)) as typeof fs.readdir;
 
 			const options = optionsManager.prepare({
@@ -140,7 +140,7 @@ describe('Providers → Scandir', () => {
 		});
 
 		it('should throw error for broken entry', (done) => {
-			/* tslint:disable-next-line: no-any */
+			/* tslint:disable-next-line: no-any no-unsafe-any */
 			const readdir: typeof fs.readdir = ((_path: fs.PathLike, cb: any) => cb(null, ['entry'])) as typeof fs.readdir;
 			const lstat: typeof fs.lstat = ((_path, cb) => cb(new Error('lstat'), {} as fs.Stats)) as typeof fs.lstat;
 
@@ -160,7 +160,7 @@ describe('Providers → Scandir', () => {
 		});
 
 		it('should returns array of entries', (done) => {
-			/* tslint:disable-next-line: no-any */
+			/* tslint:disable-next-line: no-any no-unsafe-any */
 			const readdir: typeof fs.readdir = ((_path: fs.PathLike, cb: any) => cb(null, DEFAULT_DIRECTORY_NAMES)) as typeof fs.readdir;
 			/* tslint:disable-next-line: no-any */
 			const lstat: typeof fs.lstat = ((_path, cb) => cb(null as any, tests.getFakeStats())) as typeof fs.lstat;
@@ -185,7 +185,7 @@ describe('Providers → Scandir', () => {
 		});
 
 		it('should returns array of entries with root directory', (done) => {
-			/* tslint:disable-next-line: no-any */
+			/* tslint:disable-next-line: no-any no-unsafe-any */
 			const readdir: typeof fs.readdir = ((_path: fs.PathLike, cb: any) => cb(null, DEFAULT_DIRECTORY_NAMES)) as typeof fs.readdir;
 			/* tslint:disable-next-line: no-any */
 			const lstat: typeof fs.lstat = ((_path, cb) => cb(null as any, tests.getFakeStats())) as typeof fs.lstat;
@@ -211,7 +211,7 @@ describe('Providers → Scandir', () => {
 		});
 
 		it('should returns filtered array of entries by name', (done) => {
-			/* tslint:disable-next-line: no-any */
+			/* tslint:disable-next-line: no-any no-unsafe-any */
 			const readdir: typeof fs.readdir = ((_path: fs.PathLike, cb: any) => cb(null, DEFAULT_DIRECTORY_NAMES)) as typeof fs.readdir;
 			/* tslint:disable-next-line: no-any */
 			const lstat: typeof fs.lstat = ((_path, cb) => cb(null as any, tests.getFakeStats())) as typeof fs.lstat;
@@ -237,7 +237,7 @@ describe('Providers → Scandir', () => {
 		});
 
 		it('should returns filtered array of entries by entry name', (done) => {
-			/* tslint:disable-next-line: no-any */
+			/* tslint:disable-next-line: no-any no-unsafe-any */
 			const readdir: typeof fs.readdir = ((_path: fs.PathLike, cb: any) => cb(null, DEFAULT_DIRECTORY_NAMES)) as typeof fs.readdir;
 			/* tslint:disable-next-line: no-any */
 			const lstat: typeof fs.lstat = ((_path, cb) => cb(null as any, tests.getFakeStats())) as typeof fs.lstat;
@@ -263,7 +263,7 @@ describe('Providers → Scandir', () => {
 		});
 
 		it('should returns sorted array of entries by name length', (done) => {
-			/* tslint:disable-next-line: no-any */
+			/* tslint:disable-next-line: no-any no-unsafe-any */
 			const readdir: typeof fs.readdir = ((_path: fs.PathLike, cb: any) => cb(null, DEFAULT_DIRECTORY_NAMES)) as typeof fs.readdir;
 			/* tslint:disable-next-line: no-any */
 			const lstat: typeof fs.lstat = ((_path, cb) => cb(null as any, tests.getFakeStats())) as typeof fs.lstat;

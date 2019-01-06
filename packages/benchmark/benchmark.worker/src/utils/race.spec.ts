@@ -5,12 +5,14 @@ import * as utils from './race';
 import { Group, Hook, NSGroup, NSHook, Race } from '@nodelib/benchmark.client';
 
 function makeSettings(general?: NSGroup.Settings, settings?: NSGroup.Settings): NSGroup.StrictSettings {
-	return Object.assign({
+	return {
 		iterationCount: 1,
 		launchCount: 1,
 		parallel: 1,
-		warmupCount: 1
-	} as NSGroup.StrictSettings, general, settings);
+		warmupCount: 1,
+		...general,
+		...settings
+	};
 }
 
 const noop = () => undefined;

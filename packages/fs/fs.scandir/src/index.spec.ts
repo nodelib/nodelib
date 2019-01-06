@@ -150,7 +150,7 @@ describe('Package', () => {
 				{
 					name: 'a',
 					path: path.join('fixtures', 'a'),
-					ino: (actual as DirEntry[])[0].ino,
+					ino: actual[0].ino,
 					isDirectory: true, isFile: false, isSymlink: false
 				}
 			];

@@ -8,14 +8,14 @@ import { NSQueue } from '@nodelib/benchmark.queue';
 import Worker from './worker';
 
 class TestWorker extends Worker {
-	public reportStub: sinon.SinonStub = sinon.stub();
+	public reportStub: sinon.SinonStub<Object[][]> = sinon.stub();
 
 	constructor(protected readonly _queue: NSQueue.Queue) {
 		super(_queue);
 	}
 
 	protected _report(obj: Object): void {
-		return this.reportStub(obj);
+		this.reportStub(obj);
 	}
 }
 
@@ -63,7 +63,7 @@ describe('Worker', () => {
 				await worker.start(0);
 				throw new Error('An unexpected error was found.');
 			} catch (err) {
-				assert.strictEqual(err.message, 'Race with index 0 does not exist. The current queue has only 0 races.');
+				assert.strictEqual((err as Error).message, 'Race with index 0 does not exist. The current queue has only 0 races.');
 			}
 		});
 

@@ -21,7 +21,7 @@ export interface Options {
 export type StrictOptions = { fs: FileSystemAdapter } & Required<Options>;
 
 export function prepare(opts?: Options): StrictOptions {
-	const options = Object.assign<StrictOptions, Options | undefined>({
+	return {
 		fs: fsAdapter.getFileSystemAdapter(opts ? opts.fs : undefined),
 		includeRootDirectory: false,
 		stats: false,
@@ -29,8 +29,7 @@ export function prepare(opts?: Options): StrictOptions {
 		throwErrorOnBrokenSymlinks: true,
 		preFilter: null,
 		filter: null,
-		sort: null
-	}, opts);
-
-	return options;
+		sort: null,
+		...opts
+	} as unknown as StrictOptions;
 }

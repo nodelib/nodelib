@@ -17,9 +17,10 @@ describe('Adapters → FileSystem', () => {
 	it('should return custom FS methods', () => {
 		const customLstatSyncMethod: typeof fs.lstatSync = () => ({} as fs.Stats);
 
-		const expected: FileSystemAdapter = Object.assign({}, adapter.FILE_SYSTEM_ADAPTER, {
+		const expected: FileSystemAdapter = {
+			...adapter.FILE_SYSTEM_ADAPTER,
 			lstatSync: customLstatSyncMethod
-		});
+		};
 
 		const actual = adapter.getFileSystemAdapter({
 			lstatSync: customLstatSyncMethod

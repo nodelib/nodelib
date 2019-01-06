@@ -11,11 +11,10 @@ export interface Options {
 export type StrictOptions = { fs: FileSystemAdapter } & Required<Options>;
 
 export function prepare(opts?: Options): StrictOptions {
-	const options = Object.assign<StrictOptions, Options | undefined>({
+	return {
 		fs: fsAdapter.getFileSystemAdapter(opts ? opts.fs : undefined),
 		throwErrorOnBrokenSymlinks: true,
-		followSymlinks: true
-	}, opts);
-
-	return options;
+		followSymlinks: true,
+		...opts
+	} as unknown as StrictOptions;
 }

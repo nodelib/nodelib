@@ -19,5 +19,8 @@ export function getFileSystemAdapter(fsMethods?: Partial<FileSystemAdapter>): Fi
 		return FILE_SYSTEM_ADAPTER;
 	}
 
-	return Object.assign({}, FILE_SYSTEM_ADAPTER, fsMethods);
+	return {
+		...FILE_SYSTEM_ADAPTER,
+		...fsMethods
+	};
 }

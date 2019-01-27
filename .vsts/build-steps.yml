@@ -14,14 +14,14 @@ steps:
   - script: ./node_modules/.bin/lerna bootstrap
     displayName: Link packages
 
-  - script: ./node_modules/.bin/lerna run compile
+  - script: npm run compile
     displayName: Compile Sources
 
-  - script: ./node_modules/.bin/lerna run --parallel lint
+  - script: npm run lint
     displayName: Run Hygiene Checks
 
   - script: npm run lint:dependencies
     displayName: Run Dependencies Checks
 
-  - script: ./node_modules/.bin/lerna run --parallel test
+  - script: npm run test
     displayName: Run Unit Tests

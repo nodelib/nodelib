@@ -11,13 +11,12 @@
     "clean": "lerna run --parallel clean",
     "lint": "lerna run --parallel lint",
     "lint:dependencies": "depend --lerna . --bail --hint --strategy=conservative",
-    "compile": "lerna run compile",
+    "compile": "tsc -b ./packages --verbose",
     "test": "lerna run --parallel test",
     "build": "npm run clean && npm run compile && npm run lint && npm run test",
     "watch": "lerna run --parallel watch",
     "docs:build": "lerna exec tools.typedoc --parallel --no-private",
-    "docs:publish": "gh-pages --dist . --src \"{docs/**,README.md}\" --message \"Update documentation\"",
-    "ci": "npm run compile && npm run lint && npm run test"
+    "docs:publish": "gh-pages --dist . --src \"{docs/**,README.md}\" --message \"Update documentation\""
   },
   "devDependencies": {
     "@nodelib/tools.typedoc": "file:tools/typedoc",

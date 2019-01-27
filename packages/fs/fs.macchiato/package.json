@@ -1,0 +1,30 @@
+{
+  "name": "@nodelib/fs.macchiato",
+  "version": "0.0.0",
+  "description": "A set of classes for easy testing of built-in structures of FS",
+  "license": "MIT",
+  "repository": "https://github.com/nodelib/nodelib/tree/master/packages/fs/fs.macchiato",
+  "keywords": [
+    "NodeLib",
+    "fs",
+    "FileSystem",
+    "file system",
+    "mock",
+    "stat",
+    "dirent"
+  ],
+  "engines": {
+    "node": ">= 8.1"
+  },
+  "main": "out/index.js",
+  "typings": "out/index.d.ts",
+  "scripts": {
+    "clean": "rimraf out",
+    "lint": "tslint \"src/**/*.ts\" -p . -t stylish",
+    "compile": "tsc -b .",
+    "compile:watch": "tsc -p . --watch --sourceMap",
+    "test": "mocha \"out/**/*.spec.js\" -s 0",
+    "build": "npm run clean && npm run lint && npm run compile && npm test",
+    "watch": "npm run clean && npm run compile:watch"
+  }
+}

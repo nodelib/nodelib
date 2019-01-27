@@ -11,7 +11,7 @@ describe('Package', () => {
 
 		fs.mkdirSync('fixtures');
 		fs.mkdirSync('fixtures/a');
-		fs.symlinkSync('a', 'fixtures/b');
+		fs.symlinkSync('a', 'fixtures/b', 'junction');
 	});
 
 	after(() => {

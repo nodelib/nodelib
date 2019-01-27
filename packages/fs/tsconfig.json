@@ -1,0 +1,14 @@
+{
+	"files": [],
+	"references": [
+		{
+			"path": "./fs.macchiato"
+		},
+		{
+			"path": "./fs.scandir"
+		},
+		{
+			"path": "./fs.stat"
+		}
+	]
+}

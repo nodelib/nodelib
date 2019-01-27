@@ -1,9 +1,14 @@
 import * as assert from 'assert';
 import * as fs from 'fs';
 
-import * as optionsManager from '../managers/options';
+import { Stats } from '../../../fs.macchiato';
 
+import * as optionsManager from '../managers/options';
 import * as provider from './stat';
+
+const SYMBOLIC_LINK_LSTAT = new Stats({ isSymbolicLink: true });
+const SYMBOLIC_LINK_STAT = new Stats({ ino: 1 });
+const FILE_LSTAT = new Stats();
 
 describe('Providers → Stat', () => {
 	describe('.sync', () => {
@@ -18,7 +23,7 @@ describe('Providers → Stat', () => {
 		});
 
 		it('should throw error for broken symlink', () => {
-			const lstatSync: typeof fs.lstatSync = () => ({ isSymbolicLink: () => true } as fs.Stats);
+			const lstatSync: typeof fs.lstatSync = () => SYMBOLIC_LINK_LSTAT;
 			const statSync: typeof fs.statSync = () => { throw new Error('stat'); };
 
 			const options = optionsManager.prepare({
@@ -29,7 +34,7 @@ describe('Providers → Stat', () => {
 		});
 
 		it('should returns lstat for non-symlink entry', () => {
-			const lstatSync: typeof fs.lstatSync = () => ({ uid: 0, isSymbolicLink: () => false } as fs.Stats);
+			const lstatSync: typeof fs.lstatSync = () => FILE_LSTAT;
 
 			const options = optionsManager.prepare({
 				fs: { lstatSync }
@@ -39,12 +44,12 @@ describe('Providers → Stat', () => {
 
 			const actual = provider.sync('non_symlink', options);
 
-			assert.strictEqual(actual.uid, expected);
+			assert.strictEqual(actual.ino, expected);
 		});
 
 		it('should returns stat for symlink entry', () => {
-			const lstatSync: typeof fs.lstatSync = () => ({ uid: 0, isSymbolicLink: () => true } as fs.Stats);
-			const statSync: typeof fs.statSync = () => ({ uid: 1 } as fs.Stats);
+			const lstatSync: typeof fs.lstatSync = () => SYMBOLIC_LINK_LSTAT;
+			const statSync: typeof fs.statSync = () => SYMBOLIC_LINK_STAT;
 
 			const options = optionsManager.prepare({
 				fs: { lstatSync, statSync }
@@ -54,11 +59,11 @@ describe('Providers → Stat', () => {
 
 			const actual = provider.sync('symlink', options);
 
-			assert.strictEqual(actual.uid, expected);
+			assert.strictEqual(actual.ino, expected);
 		});
 
 		it('should returns lstat for broken symlink entry when it possible', () => {
-			const lstatSync: typeof fs.lstatSync = () => ({ uid: 0, isSymbolicLink: () => true } as fs.Stats);
+			const lstatSync: typeof fs.lstatSync = () => SYMBOLIC_LINK_LSTAT;
 			const statSync: typeof fs.statSync = () => { throw new Error('stat'); };
 
 			const options = optionsManager.prepare({
@@ -70,13 +75,13 @@ describe('Providers → Stat', () => {
 
 			const actual = provider.sync('broken_symlink', options);
 
-			assert.strictEqual(actual.uid, expected);
+			assert.strictEqual(actual.ino, expected);
 		});
 	});
 
 	describe('.async', () => {
 		it('should throw error for broken path', (done) => {
-			const lstat: typeof fs.lstat = ((_path, cb) => cb(new Error('lstat'), {} as fs.Stats)) as typeof fs.lstat;
+			const lstat: typeof fs.lstat = ((_path, cb) => cb(new Error('lstat'), FILE_LSTAT)) as typeof fs.lstat;
 
 			const options = optionsManager.prepare({
 				fs: { lstat }
@@ -95,8 +100,8 @@ describe('Providers → Stat', () => {
 
 		it('should throw error for broken symlink', (done) => {
 			/* tslint:disable-next-line: no-any */
-			const lstat: typeof fs.lstat = ((_path, cb) => cb(null as any, { isSymbolicLink: () => true } as fs.Stats)) as typeof fs.lstat;
-			const stat: typeof fs.stat = ((_path, cb) => cb(new Error('stat'), {} as fs.Stats)) as typeof fs.stat;
+			const lstat: typeof fs.lstat = ((_path, cb) => cb(null as any, SYMBOLIC_LINK_LSTAT)) as typeof fs.lstat;
+			const stat: typeof fs.stat = ((_path, cb) => cb(new Error('stat'), FILE_LSTAT)) as typeof fs.stat;
 
 			const options = optionsManager.prepare({
 				fs: { lstat, stat }
@@ -115,7 +120,7 @@ describe('Providers → Stat', () => {
 
 		it('should returns lstat for non-symlink entry', (done) => {
 			/* tslint:disable-next-line: no-any */
-			const lstat: typeof fs.lstat = ((_path, cb) => cb(null as any, { uid: 0, isSymbolicLink: () => false } as fs.Stats)) as typeof fs.lstat;
+			const lstat: typeof fs.lstat = ((_path, cb) => cb(null as any, FILE_LSTAT)) as typeof fs.lstat;
 
 			const options = optionsManager.prepare({
 				fs: { lstat }
@@ -129,16 +134,16 @@ describe('Providers → Stat', () => {
 				const expected = 0;
 
 				assert.strictEqual(err, null);
-				assert.strictEqual((stats as fs.Stats).uid, expected);
+				assert.strictEqual((stats as fs.Stats).ino, expected);
 				done();
 			});
 		});
 
 		it('should returns stat for symlink entry', (done) => {
 			/* tslint:disable-next-line: no-any */
-			const lstat: typeof fs.lstat = ((_path, cb) => cb(null as any, { uid: 0, isSymbolicLink: () => true } as fs.Stats)) as typeof fs.lstat;
+			const lstat: typeof fs.lstat = ((_path, cb) => cb(null as any, SYMBOLIC_LINK_LSTAT)) as typeof fs.lstat;
 			/* tslint:disable-next-line: no-any */
-			const stat: typeof fs.lstat = ((_path, cb) => cb(null as any, { uid: 1 } as fs.Stats)) as typeof fs.stat;
+			const stat: typeof fs.stat = ((_path, cb) => cb(null as any, SYMBOLIC_LINK_STAT)) as typeof fs.stat;
 
 			const options = optionsManager.prepare({
 				fs: { lstat, stat }
@@ -152,7 +157,7 @@ describe('Providers → Stat', () => {
 				const expected = 1;
 
 				assert.strictEqual(err, null);
-				assert.strictEqual((stats as fs.Stats).uid, expected);
+				assert.strictEqual((stats as fs.Stats).ino, expected);
 				assert.ok((stats as fs.Stats).isSymbolicLink());
 				done();
 			});
@@ -160,8 +165,8 @@ describe('Providers → Stat', () => {
 
 		it('should returns lstat for broken symlink entry when it possible', (done) => {
 			/* tslint:disable-next-line: no-any */
-			const lstat: typeof fs.lstat = ((_path, cb) => cb(null as any, { uid: 0, isSymbolicLink: () => true } as fs.Stats)) as typeof fs.lstat;
-			const stat: typeof fs.stat = ((_path, cb) => cb(new Error('stat'), {} as fs.Stats)) as typeof fs.stat;
+			const lstat: typeof fs.lstat = ((_path, cb) => cb(null as any, SYMBOLIC_LINK_LSTAT)) as typeof fs.lstat;
+			const stat: typeof fs.stat = ((_path, cb) => cb(new Error('stat'), FILE_LSTAT)) as typeof fs.stat;
 
 			const options = optionsManager.prepare({
 				throwErrorOnBrokenSymlinks: false,
@@ -176,7 +181,7 @@ describe('Providers → Stat', () => {
 				const expected = 0;
 
 				assert.strictEqual(err, null);
-				assert.strictEqual((stats as fs.Stats).uid, expected);
+				assert.strictEqual((stats as fs.Stats).ino, expected);
 				done();
 			});
 		});
@@ -186,7 +191,7 @@ describe('Providers → Stat', () => {
 		it('should returns true for followed symlink', () => {
 			const options = optionsManager.prepare();
 
-			const actual = provider.isFollowedSymlink({ isSymbolicLink: () => true } as fs.Stats, options);
+			const actual = provider.isFollowedSymlink(SYMBOLIC_LINK_LSTAT, options);
 
 			assert.ok(actual);
 		});
@@ -194,7 +199,7 @@ describe('Providers → Stat', () => {
 		it('should returns false for not symlink', () => {
 			const options = optionsManager.prepare();
 
-			const actual = provider.isFollowedSymlink({ isSymbolicLink: () => false } as fs.Stats, options);
+			const actual = provider.isFollowedSymlink(FILE_LSTAT, options);
 
 			assert.ok(!actual);
 		});
@@ -202,7 +207,7 @@ describe('Providers → Stat', () => {
 		it('should returns false for not followed symlink', () => {
 			const options = optionsManager.prepare({ followSymlinks: false });
 
-			const actual = provider.isFollowedSymlink({ isSymbolicLink: () => true } as fs.Stats, options);
+			const actual = provider.isFollowedSymlink(SYMBOLIC_LINK_LSTAT, options);
 
 			assert.ok(!actual);
 		});

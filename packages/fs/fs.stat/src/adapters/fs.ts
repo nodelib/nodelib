@@ -14,7 +14,7 @@ export const FILE_SYSTEM_ADAPTER: FileSystemAdapter = {
 	statSync: fs.statSync
 };
 
-export function getFileSystemAdapter(fsMethods?: Partial<FileSystemAdapter>): FileSystemAdapter {
+export function createFileSystemAdapter(fsMethods?: Partial<FileSystemAdapter>): FileSystemAdapter {
 	if (!fsMethods) {
 		return FILE_SYSTEM_ADAPTER;
 	}

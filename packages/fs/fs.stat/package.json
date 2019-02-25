@@ -12,7 +12,7 @@
     "stat"
   ],
   "engines": {
-    "node": ">= 6"
+    "node": ">= 8"
   },
   "main": "out/index.js",
   "typings": "out/index.d.ts",

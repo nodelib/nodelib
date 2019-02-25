@@ -14,7 +14,7 @@
     "dirent"
   ],
   "engines": {
-    "node": ">= 8.1"
+    "node": ">= 8"
   },
   "main": "out/index.js",
   "typings": "out/index.d.ts",

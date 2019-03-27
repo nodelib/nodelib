@@ -1,51 +1,47 @@
-import * as fs from 'fs';
-
-import * as optionsManager from './managers/options';
-
-import * as scandirProvider from './providers/scandir';
-
 import { FileSystemAdapter } from './adapters/fs';
-import { FilterFunction, Options, PreFilterFunction, SortFunction } from './managers/options';
-import { AsyncCallback } from './providers/scandir';
-import { DirEntry } from './types/entry';
+import * as async from './providers/async';
+import * as sync from './providers/sync';
+import Settings, { Options } from './settings';
+import { Dirent, Entry } from './types';
 
-/**
- * Asynchronous API.
- */
-export function scandir(path: fs.PathLike, opts?: Options): Promise<DirEntry[]> {
-	return new Promise((resolve, reject) => {
-		return scandirProvider.async(path, optionsManager.prepare(opts), (err, stats) => err ? reject(err) : resolve(stats));
-	});
-}
+type AsyncCallback = async.AsyncCallback;
 
-/**
- * Callback API.
- */
-export function scandirCallback(path: fs.PathLike, callback: AsyncCallback): void;
-export function scandirCallback(path: fs.PathLike, opts: Options, callback: AsyncCallback): void;
-export function scandirCallback(path: fs.PathLike, optsOrCallback?: Options | AsyncCallback, callback?: AsyncCallback): void {
-	if (typeof optsOrCallback === 'function') {
-		callback = optsOrCallback; /* tslint:disable-line: no-parameter-reassignment */
-		optsOrCallback = undefined; /* tslint:disable-line: no-parameter-reassignment */
-	}
-	if (callback === undefined) {
-		throw new TypeError('The "callback" argument must be of type Function.');
+function scandir(path: string, callback: AsyncCallback): void;
+function scandir(path: string, optionsOrSettings: Options | Settings, callback: AsyncCallback): void;
+function scandir(path: string, optionsOrSettingsOrCallback: Options | Settings | AsyncCallback, callback?: AsyncCallback): void {
+	if (typeof optionsOrSettingsOrCallback === 'function') {
+		return async.read(path, getSettings(), optionsOrSettingsOrCallback);
 	}
 
-	scandirProvider.async(path, optionsManager.prepare(optsOrCallback), callback);
+	async.read(path, getSettings(optionsOrSettingsOrCallback), callback as AsyncCallback);
 }
 
-/**
- * Synchronous API.
- */
-export function scandirSync(path: fs.PathLike, opts?: Options): DirEntry[] {
-	return scandirProvider.sync(path, optionsManager.prepare(opts));
+declare namespace scandir {
+	function __promisify__(path: string, optionsOrSettings?: Options | Settings): Promise<Entry[]>;
 }
 
-export type DirEntry = DirEntry;
-export type Options = Options;
-export type ScandirAsyncCallback = AsyncCallback;
-export type FileSystemAdapter = FileSystemAdapter;
-export type PreFilterFunction = PreFilterFunction;
-export type FilterFunction = FilterFunction;
-export type SortFunction = SortFunction;
+function scandirSync(path: string, optionsOrSettings?: Options | Settings): Entry[] {
+	const settings = getSettings(optionsOrSettings);
+
+	return sync.read(path, settings);
+}
+
+function getSettings(settingsOrOptions: Settings | Options = {}): Settings {
+	if (settingsOrOptions instanceof Settings) {
+		return settingsOrOptions;
+	}
+
+	return new Settings(settingsOrOptions);
+}
+
+export {
+	scandir,
+	scandirSync,
+	Settings,
+
+	AsyncCallback,
+	Dirent,
+	Entry,
+	FileSystemAdapter,
+	Options
+};

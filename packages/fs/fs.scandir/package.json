@@ -18,7 +18,7 @@
   "main": "out/index.js",
   "typings": "out/index.d.ts",
   "scripts": {
-    "clean": "rimraf out",
+    "clean": "rimraf {tsconfig.tsbuildinfo,out}",
     "lint": "tslint \"src/**/*.ts\" -p . -t stylish",
     "compile": "tsc -b .",
     "compile:watch": "tsc -p . --watch --sourceMap",

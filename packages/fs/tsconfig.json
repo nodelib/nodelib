@@ -9,6 +9,9 @@
 		},
 		{
 			"path": "./fs.stat"
+		},
+		{
+			"path": "./fs.walk"
 		}
 	]
 }

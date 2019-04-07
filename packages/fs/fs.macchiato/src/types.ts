@@ -6,7 +6,7 @@ export type UnboxReturnTypeFromClassItem<T> =
 	/**
 	 * Unbox return type from class method.
 	 */
-	T extends (...args: Array<unknown>) => infer U ? U :
+	T extends (...args: unknown[]) => infer U ? U :
 	/**
 	 * Unbox return type from class property.
 	 */

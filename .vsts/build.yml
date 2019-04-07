@@ -15,7 +15,7 @@ jobs:
         (Node.js 10): { node_version: 10.x }
         (Node.js 11): { node_version: 11.x }
     pool:
-      vmImage: 'vs2017-win2016'
+      vmImage: 'windows-2019'
     steps:
       - template: build-steps.yml
         parameters:
@@ -41,7 +41,7 @@ jobs:
         (Node.js 10): { node_version: 10.x }
         (Node.js 11): { node_version: 11.x }
     pool:
-      vmImage: 'xcode9-macos10.13'
+      vmImage: 'macOS-10.13'
     steps:
       - template: build-steps.yml
         parameters:

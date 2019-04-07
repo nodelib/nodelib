@@ -5,6 +5,7 @@
 .vsts
 tsconfig.json
 tslint.json
+tsconfig.tsbuildinfo
 
 # Builded files
 out/benchmark

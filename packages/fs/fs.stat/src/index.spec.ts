@@ -19,67 +19,52 @@ describe('Package', () => {
 	});
 
 	describe('.stat', () => {
-		it('should return stat for followed symlink', async () => {
-			const actual = await pkg.stat('fixtures/b');
-
-			assert.ok(actual.isDirectory());
-			assert.ok(actual.isSymbolicLink());
-		});
-
-		it('should return lstat for non-followed symlink', async () => {
-			const actual = await pkg.stat('fixtures/b', { followSymlinks: false });
-
-			assert.ok(!actual.isDirectory());
-			assert.ok(actual.isSymbolicLink());
-		});
-	});
-
-	describe('.statCallback', () => {
-		it('should throw error when callback is not a function', () => {
-			/* tslint:disable-next-line: no-any */
-			assert.throws(() => pkg.statCallback('fixtures/b', 'callback' as any), /TypeError: The "callback" argument must be of type Function./);
-		});
-
-		it('should return stat for followed symlink', (done) => {
-			pkg.statCallback('fixtures/b', (err, stats) => {
-				if (err) {
-					return done('An unexpected error was found.');
-				}
-
-				assert.strictEqual(err, null);
-				assert.ok((stats as fs.Stats).isDirectory());
-				assert.ok((stats as fs.Stats).isSymbolicLink());
+		it('should work without options or settings', (done) => {
+			pkg.stat('fixtures/b', (error, stats) => {
+				assert.strictEqual(error, null);
+				assert.ok(stats);
 				done();
 			});
 		});
 
-		it('should return lstat for non-followed symlink', (done) => {
-			pkg.statCallback('fixtures/b', { followSymlinks: false }, (err, stats) => {
-				if (err) {
-					return done('An unexpected error was found.');
-				}
+		it('should work with options', (done) => {
+			pkg.stat('fixtures/b', { markSymbolicLink: true }, (error, stats) => {
+				assert.strictEqual(error, null);
+				assert.strictEqual(stats.isSymbolicLink(), true);
+				done();
+			});
+		});
 
-				assert.strictEqual(err, null);
-				assert.ok(!(stats as fs.Stats).isDirectory());
-				assert.ok((stats as fs.Stats).isSymbolicLink());
+		it('should work with settings', (done) => {
+			const settings = new pkg.Settings({ markSymbolicLink: true });
+
+			pkg.stat('fixtures/b', settings, (error, stats) => {
+				assert.strictEqual(error, null);
+				assert.strictEqual(stats.isSymbolicLink(), true);
 				done();
 			});
 		});
 	});
 
 	describe('.statSync', () => {
-		it('should return stat for followed symlink', () => {
+		it('should work without options or settings', () => {
 			const actual = pkg.statSync('fixtures/b');
 
-			assert.ok(actual.isDirectory());
-			assert.ok(actual.isSymbolicLink());
+			assert.ok(actual);
 		});
 
-		it('should return lstat for non-followed symlink', () => {
-			const actual = pkg.statSync('fixtures/b', { followSymlinks: false });
+		it('should work with options', () => {
+			const actual = pkg.statSync('fixtures/b', { markSymbolicLink: true });
 
-			assert.ok(!actual.isDirectory());
-			assert.ok(actual.isSymbolicLink());
+			assert.strictEqual(actual.isSymbolicLink(), true);
+		});
+
+		it('should work with settings', () => {
+			const settings = new pkg.Settings({ markSymbolicLink: true });
+
+			const actual = pkg.statSync('fixtures/b', settings);
+
+			assert.strictEqual(actual.isSymbolicLink(), true);
 		});
 	});
 });

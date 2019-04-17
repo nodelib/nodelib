@@ -71,7 +71,7 @@ export function async(root: fs.PathLike, options: StrictOptions, callback: Async
 			preFilteredNames.push(name);
 			preFilteredPaths.push(fullPath);
 
-			const task: rpl.Task<fs.Stats> = (done) => fsStat.statCallback(fullPath, fsStatOptions, done);
+			const task: rpl.Task<fs.Stats> = (done) => fsStat.stat(fullPath, fsStatOptions, done);
 
 			tasks.push(task);
 		}
@@ -109,8 +109,8 @@ export function async(root: fs.PathLike, options: StrictOptions, callback: Async
 function getFsStatOptions(options: fsStat.Options): fsStat.Options {
 	return {
 		fs: options.fs,
-		followSymlinks: options.followSymlinks,
-		throwErrorOnBrokenSymlinks: options.throwErrorOnBrokenSymlinks
+		followSymbolicLink: options.followSymbolicLink,
+		throwErrorOnBrokenSymbolicLink: options.throwErrorOnBrokenSymbolicLink
 	};
 }
 

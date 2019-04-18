@@ -1,132 +1,147 @@
 # @nodelib/fs.scandir
 
-> List files and directories inside the specified path.
+> List files and directories inside the specified directory.
 
 ## :bulb: Highlights
 
 The package is aimed at obtaining information about entries in the directory.
 
-  * :dart: Filter system.
-  * :gear: Ready for the future development of Node.js ([#15699](https://github.com/nodejs/node/issues/15699)).
+* :moneybag: Returns useful information: `name`, `path`, `dirent` and `stats` (optional).
+* :gear: On Node.js 10.10+ uses the mechanism without additional calls to determine the entry type.
+* :link: Can safely work with broken symbolic links.
 
 ## Install
 
-```
-$ npm install @nodelib/fs.scandir
+```console
+npm install @nodelib/fs.scandir
 ```
 
 ## Usage
 
-```js
-const fsScandir = require('@nodelib/fs.scandir');
+```ts
+import * as fsScandir from '@nodelib/fs.scandir';
 
-fsScandir.scandir('root').then((entries) => {
-    console.log(entries); // => [{ name: 'name', path: 'root/name', ino: 0, is... }]
+fsScandir.scandir('path', (error, stats) => {
+	// …
 });
 ```
 
 ## API
 
-### fsScandir.scandir(path, [options])
+### .scandir(path, [optionsOrSettings], callback)
 
-Returns a [`Promise<DirEntry[]>`](#direntry-interface) for provided path.
+Returns an array of plain objects ([`Entry`](#entry)) with information about entry for provided path with standard callback-style.
 
-### fsScandir.scandirSync(path, [options])
+```ts
+fsScandir.scandir('path', (error, entries) => { /* … */ });
+fsScandir.scandir('path', {}, (error, entries) => { /* … */ });
+fsScandir.scandir('path', new fsScandir.Settings(), (error, entries) => { /* … */ });
+```
 
-Returns a [`DirEntry[]`](#direntry-interface) for provided path.
+### .scandirSync(path, [optionsOrSettings])
 
-### fsScandir.scandirCallback(path, [options], callback)
+Returns an array of plain objects ([`Entry`](#entry)) with information about entry for provided path.
 
-Returns a [`DirEntry[]`](#direntry-interface) for provided path with standard callback-style.
+```ts
+const entries = fsScandir.scandirSync('path');
+const entries = fsScandir.scandirSync('path', {});
+const entries = fsScandir.scandirSync(('path', new fsScandir.Settings());
+```
 
 #### path
 
-  * Type: `string | Buffer | URL`
+* Required: `true`
+* Type: `string | Buffer | URL`
 
-The path to scan.
+A path to a file. If a URL is provided, it must use the `file:` protocol.
 
-#### options
+#### optionsOrSettings
 
-  * Type: `Object`
+* Required: `false`
+* Type: `Options | Settings`
+* Default: An instance of `Settings` class
 
-See [options](#options-1) section for more detailed information.
+An [`Options`](#options) object or an instance of [`Settings`](#settingsoptions) class.
 
-## Options
+> :book: When you pass a plain object, an instance of the `Settings` class will be created automatically. If you plan to call the method frequently, use a pre-created instance of the `Settings` class.
 
-### includeRootDirectory
+### Settings([options])
 
-  * Type: `boolean`
-  * Default: `false`
-
-Include root directory to result array of [`DirEntry`](#direntry-interface) items.
-
-### stats
-
-  * Type: `boolean`
-  * Default: `false`
-
-Include information ([`fs.Stats`](https://nodejs.org/dist/latest/docs/api/fs.html#fs_class_fs_stats)) about the file or not.
-
-### followSymlinks
-
-  * Type: `boolean`
-  * Default: `true`
-
-Please, take a look at description inside the [`fs.stat`](https://github.com/nodelib/nodelib/tree/master/packages/fs.stat#followsymlinks) package.
-
-### throwErrorOnBrokenSymlinks
-
-  * Type: `boolean`
-  * Default: `false`
-
-Please, take a look at description inside the [`fs.stat`](https://github.com/nodelib/nodelib/tree/master/packages/fs.stat#throwerroronbrokensymlinks) package.
-
-### preFilter
-
-  * Type: `Function` (`(name: string, path: string) => boolean`)
-  * Default: `null`
-
-Name- and Path-based entries filter.
-
-### filter
-
-  * Type: `Function` (`(entry: DirEntry) => boolean`)
-  * Default: `null`
-
-[`DirEntry`](#direntry-interface)-based entries filter.
-
-### sort
-
-  * Type: `Function` (`(a: DirEntry, b: DirEntry) => number`)
-  * Default: `null`
-
-Sort entries on the basis of [`DirEntry`](#direntry-interface). Uses the standard [`sort`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) method.
-
-### fs
-
-  * Type: `FileSystemAdapter`
-  * Default: `built-in FS methods`
-
-By default, the built-in Node.js module (`fs`) is used to work with the file system. You can replace each method with your own.
+A class of full settings of the package.
 
 ```ts
-interface FileSystemAdapter {
-	lstat?: typeof fs.lstat,
-	stat?: typeof fs.stat,
-	lstatSync?: typeof fs.lstatSync,
-	statSync?: typeof fs.statSync,
-	readdir?: typeof fs.readdir,
-	readdirSync?: typeof fs.readdirSync
+const settings = new fsScandir.Settings({ followSymbolicLinks: false });
+
+const entries = fsScandir.scandirSync('path', settings);
+```
+
+## Entry
+
+* `name` — The name of the entry (`unknown.txt`).
+* `path` — The path of the entry relative to call directory (`root/unknown.txt`).
+* `dirent` — An instance of [`fs.Dirent`](./src/types/index.ts) class. On Node.js below 10.10 will be emulated by [`DirentFromStats`](./src/utils/fs.ts) class.
+* `stats` (optional) — An instance of `fs.Stats` class.
+
+For example, the `scandir` call for `tools` directory with one directory inside:
+
+```ts
+{
+	dirent: Dirent { name: 'typedoc', /* … */ },
+	name: 'typedoc',
+	path: 'tools/typedoc'
 }
 ```
 
-## `DirEntry` interface
+## Options
 
-Please, take a look at [`types/entry.ts`](./src/types/entry.ts) file.
+### stats
+
+* Type: `boolean`
+* Default: `false`
+
+Adds an instance of `fs.Stats` class to the [`Entry`](#entry).
+
+> :book: Always use `fs.readdir` without the `withFileTypes` option. ??TODO??
+
+### followSymbolicLinks
+
+* Type: `boolean`
+* Default: `false`
+
+Follow symbolic links or not. Call `fs.stat` on symbolic link if `true`.
+
+### `throwErrorOnBrokenSymbolicLink`
+
+* Type: `boolean`
+* Default: `true`
+
+Throw an error when symbolic link is broken if `true` or safely use `lstat` call if `false`.
+
+### `fs`
+
+* Type: [`FileSystemAdapter`](./src/adapters/fs.ts)
+* Default: A default FS methods
+
+By default, the built-in Node.js module (`fs`) is used to work with the file system. You can replace any method with your own.
+
+```ts
+interface FileSystemAdapter {
+	lstat?: typeof fs.lstat;
+	stat?: typeof fs.stat;
+	lstatSync?: typeof fs.lstatSync;
+	statSync?: typeof fs.statSync;
+	readdir?: typeof fs.readdir;
+	readdirSync?: typeof fs.readdirSync;
+}
+
+const settings = new fsScandir.Settings({
+	fs: { lstat: fakeLstat }
+});
+```
 
 ## Changelog
 
-See the [Releases section of our GitHub project](https://github.com/nodelib/nodelib/releases) for changelogs for each release version.
+See the [Releases section of our GitHub project](https://github.com/nodelib/nodelib/releases) for changelog for each release version.
 
 ## License
 

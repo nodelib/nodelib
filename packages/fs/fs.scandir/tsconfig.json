@@ -6,6 +6,9 @@
 	},
 	"references": [
 		{
+			"path": "../fs.macchiato"
+		},
+		{
 			"path": "../fs.stat"
 		}
 	]

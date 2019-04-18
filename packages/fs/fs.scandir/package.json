@@ -1,7 +1,7 @@
 {
   "name": "@nodelib/fs.scandir",
   "version": "1.2.3",
-  "description": "List files and directories inside the specified path",
+  "description": "List files and directories inside the specified directory",
   "license": "MIT",
   "repository": "https://github.com/nodelib/nodelib/tree/master/packages/fs/fs.scandir",
   "keywords": [
@@ -10,7 +10,8 @@
     "FileSystem",
     "file system",
     "scandir",
-    "readdir"
+    "readdir",
+    "dirent"
   ],
   "engines": {
     "node": ">= 8"
@@ -27,7 +28,7 @@
     "watch": "npm run clean && npm run compile:watch"
   },
   "dependencies": {
-    "@nodelib/fs.stat": "1.1.3",
-    "run-parallel": "^1.1.9"
+    "run-parallel": "^1.1.9",
+    "@nodelib/fs.stat": "1.1.3"
   }
 }

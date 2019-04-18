@@ -1,8 +1,10 @@
 import * as fs from 'fs';
 
-import * as fsStat from '@nodelib/fs.stat';
-
-export interface FileSystemAdapter extends fsStat.FileSystemAdapter {
+export interface FileSystemAdapter {
+	lstat: typeof fs.lstat;
+	stat: typeof fs.stat;
+	lstatSync: typeof fs.lstatSync;
+	statSync: typeof fs.statSync;
 	readdir: typeof fs.readdir;
 	readdirSync: typeof fs.readdirSync;
 }
@@ -16,7 +18,7 @@ export const FILE_SYSTEM_ADAPTER: FileSystemAdapter = {
 	readdirSync: fs.readdirSync
 };
 
-export function getFileSystemAdapter(fsMethods?: Partial<FileSystemAdapter>): FileSystemAdapter {
+export function createFileSystemAdapter(fsMethods?: Partial<FileSystemAdapter>): FileSystemAdapter {
 	if (!fsMethods) {
 		return FILE_SYSTEM_ADAPTER;
 	}

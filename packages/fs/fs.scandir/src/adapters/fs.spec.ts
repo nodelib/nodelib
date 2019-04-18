@@ -9,7 +9,7 @@ describe('Adapters → FileSystem', () => {
 	it('should return original FS methods', () => {
 		const expected: FileSystemAdapter = adapter.FILE_SYSTEM_ADAPTER;
 
-		const actual = adapter.getFileSystemAdapter();
+		const actual = adapter.createFileSystemAdapter();
 
 		assert.deepStrictEqual(actual, expected);
 	});
@@ -22,7 +22,7 @@ describe('Adapters → FileSystem', () => {
 			lstatSync: customLstatSyncMethod
 		};
 
-		const actual = adapter.getFileSystemAdapter({
+		const actual = adapter.createFileSystemAdapter({
 			lstatSync: customLstatSyncMethod
 		});
 

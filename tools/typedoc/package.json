@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "@nodelib/tools.typedoc",
+  "name": "@nodelib-internal/tools.typedoc",
   "version": "0.0.0",
   "bin": {
     "tools.typedoc": "typedoc.js"

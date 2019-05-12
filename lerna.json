@@ -1,8 +1,7 @@
 {
 	"version": "independent",
 	"packages": [
-		"packages/**",
-		"tools/**"
+		"packages/**"
 	],
 	"hoist": true,
 	"independent": true,

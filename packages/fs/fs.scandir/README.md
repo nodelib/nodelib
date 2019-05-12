@@ -7,7 +7,7 @@
 The package is aimed at obtaining information about entries in the directory.
 
 * :moneybag: Returns useful information: `name`, `path`, `dirent` and `stats` (optional).
-* :gear: On Node.js 10.10+ uses the mechanism without additional calls to determine the entry type.
+* :gear: On Node.js 10.10+ uses the mechanism without additional calls to determine the entry type. See [`old` and `modern` mode](#old-and-modern-mode).
 * :link: Can safely work with broken symbolic links.
 
 ## Install
@@ -138,6 +138,24 @@ const settings = new fsScandir.Settings({
 	fs: { lstat: fakeLstat }
 });
 ```
+
+## `old` and `modern` mode
+
+This package has two modes that are used depending on the environment and parameters of use.
+
+### old
+
+* Node.js below `10.10` or when the `stats` option is enabled
+
+When working in the old mode, the directory is read first (`fs.readdir`), then the type of entries is determined (`fs.lstat` and/or `fs.stat` for symbolic links).
+
+### modern
+
+* Node.js 10.10+ and the `stats` option is disabled
+
+In the modern mode, reading the directory (`fs.readdir` with the `withFileTypes` option) is combined with obtaining information about its entries. An additional call for symbolic links (`fs.stat`) is still present.
+
+This mode makes fewer calls to the file system. It's faster.
 
 ## Changelog
 

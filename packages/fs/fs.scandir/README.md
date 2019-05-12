@@ -21,9 +21,7 @@ npm install @nodelib/fs.scandir
 ```ts
 import * as fsScandir from '@nodelib/fs.scandir';
 
-fsScandir.scandir('path', (error, stats) => {
-	// …
-});
+fsScandir.scandir('path', (error, stats) => { /* … */ });
 ```
 
 ## API

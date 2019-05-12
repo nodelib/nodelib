@@ -2,6 +2,7 @@ steps:
   - task: NodeTool@0
     inputs:
       versionSpec: '${{parameters.node_version}}'
+      checkLatest: true
 
   - script: node --version && npm --version
     displayName: Environment information

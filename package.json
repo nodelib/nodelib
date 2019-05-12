@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "@nodelib/tools.typedoc": "file:tools/typedoc",
-    "@times-components/depend": "^2.1.13",
+    "@times-components/depend": "2.1.15",
     "@types/mocha": "^5.2.6",
     "@types/node": "^11.13.0",
     "@types/rimraf": "^2.0.2",

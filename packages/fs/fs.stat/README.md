@@ -20,9 +20,7 @@ npm install @nodelib/fs.stat
 ```ts
 import * as fsStat from '@nodelib/fs.stat';
 
-fsStat.stat('path', (error, stats) => {
-	// …
-});
+fsStat.stat('path', (error, stats) => { /* … */ });
 ```
 
 ## API

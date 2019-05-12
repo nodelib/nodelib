@@ -11,10 +11,10 @@ $ npm install @nodelib/fs.macchiato
 ## Usage
 
 ```js
-const macchiato = require('@nodelib/fs.macchiato');
+import { Stats, Dirent } from '@nodelib/fs.macchiato';
 
-const stats = new macchiato.Stats();
-const dirent = new macchiato.Dirent();
+const stats = new Stats();
+const dirent = new Dirent();
 ```
 
 ## API
@@ -24,7 +24,7 @@ const dirent = new macchiato.Dirent();
 Creates a fake instance of `fs.Stats`. Can accept options to control parameter values.
 
 ```js
-const stats = new macchiato.Stats({
+const stats = new Stats({
 	isSymbolicLink: true,
 	ino: 3
 });
@@ -35,7 +35,7 @@ const stats = new macchiato.Stats({
 Creates a fake instance of `fs.Dirent`. Can accept options to control parameter values.
 
 ```js
-const dirent = new macchiato.Dirent({
+const dirent = new Dirent({
 	isSymbolicLink: true
 });
 ```

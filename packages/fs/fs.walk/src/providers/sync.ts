@@ -1,0 +1,13 @@
+import SyncReader from '../readers/sync';
+import Settings from '../settings';
+import { Entry } from '../types/index';
+
+export default class SyncProvider {
+	protected readonly _reader: SyncReader = new SyncReader(this._settings);
+
+	constructor(private readonly _settings: Settings) { }
+
+	public read(dir: string): Entry[] {
+		return this._reader.read(dir);
+	}
+}

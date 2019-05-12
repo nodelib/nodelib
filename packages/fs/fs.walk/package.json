@@ -29,6 +29,6 @@
   },
   "dependencies": {
     "@nodelib/fs.scandir": "1.2.3",
-    "fastq": "1.6.0"
+    "fastq": "^1.6.0"
   }
 }

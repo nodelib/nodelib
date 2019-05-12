@@ -14,3 +14,11 @@ NodeLib (Node.js Library) is another monorepo contains utilities that make easie
 * [`fs.scandir`](./packages/fs/fs.scandir) — List files and directories inside the specified directory.
 * [`fs.stat`](./packages/fs/fs.stat) — Get the status of a file with some features.
 * [`fs.walk`](./packages/fs/fs.walk) — A library for efficiently walking a directory recursively.
+
+## Want to report a bug or request a feature?
+
+Please read through our [CONTRIBUTING.md](.github/CONTRIBUTING.md).
+
+## Want to contribute to NodeLib?
+
+Check out our [CONTRIBUTING.md](.github/CONTRIBUTING.md) to get started with setting up the repo.

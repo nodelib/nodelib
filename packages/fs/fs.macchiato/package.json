@@ -1,6 +1,6 @@
 {
   "name": "@nodelib/fs.macchiato",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "A set of classes for easy testing of built-in structures of FS",
   "license": "MIT",
   "repository": "https://github.com/nodelib/nodelib/tree/master/packages/fs/fs.macchiato",

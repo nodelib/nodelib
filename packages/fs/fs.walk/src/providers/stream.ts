@@ -1,13 +1,12 @@
 import { Readable } from 'stream';
 import AsyncReader from '../readers/async';
 import Settings from '../settings';
-import * as tests from '../tests/index';
 
 export default class StreamProvider {
 	protected readonly _reader: AsyncReader = new AsyncReader(this._settings);
 	protected readonly _stream: Readable = new Readable({
 		objectMode: true,
-		read: tests.noop,
+		read: () => { /* noop */ },
 		destroy: this._reader.destroy.bind(this._reader)
 	});
 

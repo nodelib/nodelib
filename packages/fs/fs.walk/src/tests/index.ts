@@ -3,8 +3,6 @@ import * as sinon from 'sinon';
 import { Dirent } from '../../../fs.macchiato';
 import { Entry, Errno } from '../types/index';
 
-export const noop = () => { /* noop */ };
-
 export function buildFakeFileEntry(entry?: Partial<Entry>): Entry {
 	return {
 		name: 'fake.txt',

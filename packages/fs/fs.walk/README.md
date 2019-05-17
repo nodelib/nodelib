@@ -93,6 +93,20 @@ const entries = fsWalk.walkSync('path', settings);
 
 ## Options
 
+### basePath
+
+* Type: `string`
+* Default: `null`
+
+By default, all paths are built relative to the root path. You can use this option to set custom root path.
+
+In the example below we read the files from the `root` directory, but in the results the root path will be `custom`.
+
+```ts
+fsWalk.walkSync('root'); // → ['root/file.txt']
+fsWalk.walkSync('root', { basePath: 'custom' }); // → ['custom/file.txt']
+```
+
 ### concurrency
 
 * Type: `number`

@@ -1,4 +1,5 @@
 import * as assert from 'assert';
+import * as path from 'path';
 
 import Settings from '../settings';
 import * as tests from '../tests/index';
@@ -65,6 +66,30 @@ describe('Readers → Common', () => {
 			const actual = common.isAppliedFilter(settings.entryFilter, fakeEntry);
 
 			assert.ok(!actual);
+		});
+	});
+
+	describe('.setBasePathForEntryPath', () => {
+		it('should set base path to entry path', () => {
+			const root = process.cwd();
+			const fullpath = path.join(root, 'file.txt');
+
+			const expected = path.join('base', 'file.txt');
+
+			const actual = common.setBasePathForEntryPath(fullpath, root, 'base');
+
+			assert.strictEqual(actual, expected);
+		});
+
+		it('should correctly set empty base path to entry path', () => {
+			const root = process.cwd();
+			const fullpath = path.join(root, 'file.txt');
+
+			const expected = 'file.txt';
+
+			const actual = common.setBasePathForEntryPath(fullpath, root, '');
+
+			assert.strictEqual(actual, expected);
 		});
 	});
 });

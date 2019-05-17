@@ -1,4 +1,5 @@
 import * as assert from 'assert';
+import * as path from 'path';
 
 import * as sinon from 'sinon';
 
@@ -88,6 +89,22 @@ describe('Readers → Sync', () => {
 			const actual = reader.read();
 
 			assert.deepStrictEqual(actual, expected);
+		});
+
+		it('should set base path to entry when the `basePath` option is exist', () => {
+			const settings = new Settings({ basePath: 'base' });
+			const reader = new TestReader('directory', settings);
+
+			const fakeDirectoryEntry = tests.buildFakeDirectoryEntry();
+			const fakeFileEntry = tests.buildFakeFileEntry();
+
+			reader.scandir.onFirstCall().returns([fakeDirectoryEntry]);
+			reader.scandir.onSecondCall().returns([fakeFileEntry]);
+
+			const actual = reader.read();
+
+			assert.strict(actual[0].path, path.join('base', fakeDirectoryEntry.name));
+			assert.strict(actual[1].path, path.join('base', fakeFileEntry.name));
 		});
 	});
 });

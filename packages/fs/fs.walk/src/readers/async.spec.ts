@@ -1,4 +1,5 @@
 import * as assert from 'assert';
+import * as path from 'path';
 
 import * as fsScandir from '@nodelib/fs.scandir';
 import * as sinon from 'sinon';
@@ -132,6 +133,29 @@ describe('Readers → Async', () => {
 
 			reader.onEnd(() => {
 				assert.deepStrictEqual(entries, [fakeDirectoryEntry]);
+				done();
+			});
+
+			reader.read();
+		});
+
+		it('should set base path to entry when the `basePath` option is exist', (done) => {
+			const settings = new Settings({ basePath: 'base' });
+			const reader = new TestReader('directory', settings);
+
+			const fakeDirectoryEntry = tests.buildFakeDirectoryEntry();
+			const fakeFileEntry = tests.buildFakeFileEntry();
+
+			reader.scandir.onFirstCall().yields(null, [fakeDirectoryEntry]);
+			reader.scandir.onSecondCall().yields(null, [fakeFileEntry]);
+
+			const entries: Entry[] = [];
+
+			reader.onEntry((entry) => entries.push(entry));
+
+			reader.onEnd(() => {
+				assert.strictEqual(entries[0].path, path.join('base', fakeDirectoryEntry.name));
+				assert.strictEqual(entries[1].path, path.join('base', fakeFileEntry.name));
 				done();
 			});
 

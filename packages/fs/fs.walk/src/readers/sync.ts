@@ -50,12 +50,18 @@ export default class SyncReader {
 	}
 
 	private _handleEntry(entry: Entry): void {
+		const fullpath = entry.path;
+
+		if (this._settings.basePath !== null) {
+			entry.path = common.setBasePathForEntryPath(fullpath, this._root, this._settings.basePath);
+		}
+
 		if (common.isAppliedFilter(this._settings.entryFilter, entry)) {
 			this._pushToStorage(entry);
 		}
 
 		if (entry.dirent.isDirectory() && common.isAppliedFilter(this._settings.deepFilter, entry)) {
-			this._handleDirectory(entry.path);
+			this._handleDirectory(fullpath);
 		}
 	}
 

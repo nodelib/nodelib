@@ -12,8 +12,8 @@ class TestProvider extends StreamProvider {
 	protected readonly _reader: AsyncReader = new tests.TestAsyncReader() as unknown as AsyncReader;
 	protected readonly _stream: Readable = sinon.createStubInstance(Readable) as unknown as Readable;
 
-	constructor(_settings: Settings = new Settings()) {
-		super(_settings);
+	constructor(_root: string, _settings: Settings = new Settings()) {
+		super(_root, _settings);
 	}
 
 	public get reader(): tests.TestAsyncReader {
@@ -28,48 +28,48 @@ class TestProvider extends StreamProvider {
 describe('Providers → Stream', () => {
 	describe('.read', () => {
 		it('should return stream', () => {
-			const provider = new TestProvider();
+			const provider = new TestProvider('directory');
 
-			const stream = provider.read('directory');
+			const stream = provider.read();
 
 			assert.ok(stream instanceof Readable);
 		});
 
 		it('should call reader function with correct set of arguments', () => {
-			const provider = new TestProvider();
+			const provider = new TestProvider('directory');
 
-			provider.read('directory');
+			provider.read();
 
-			assert.deepStrictEqual(provider.reader.read.args, [['directory']]);
+			assert.ok(provider.reader.read.called);
 		});
 
 		it('should re-emit the "error" event from reader', () => {
-			const provider = new TestProvider();
+			const provider = new TestProvider('directory');
 
 			provider.reader.onError.yields(tests.EPERM_ERRNO);
 
-			provider.read('directory');
+			provider.read();
 
 			assert.deepStrictEqual(provider.stream.emit.args, [['error', tests.EPERM_ERRNO]]);
 		});
 
 		it('should call the "push" method with entry value for the "entry" event from reader', () => {
-			const provider = new TestProvider();
+			const provider = new TestProvider('directory');
 			const fakeEntry = tests.buildFakeFileEntry();
 
 			provider.reader.onEntry.yields(fakeEntry);
 
-			provider.read('directory');
+			provider.read();
 
 			assert.deepStrictEqual(provider.stream.push.args, [[fakeEntry]]);
 		});
 
 		it('should call the "push" method with "null" value for the "end" event from reader', () => {
-			const provider = new TestProvider();
+			const provider = new TestProvider('directory');
 
 			provider.reader.onEnd.yields();
 
-			provider.read('directory');
+			provider.read();
 
 			assert.deepStrictEqual(provider.stream.push.args, [[null]]);
 		});

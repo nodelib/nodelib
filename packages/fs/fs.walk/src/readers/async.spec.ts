@@ -13,8 +13,8 @@ type ScandirSignature = typeof fsScandir.scandir;
 class TestReader extends AsyncReader {
 	protected readonly _scandir: ScandirSignature = sinon.stub() as unknown as ScandirSignature;
 
-	constructor(_settings: Settings = new Settings()) {
-		super(_settings);
+	constructor(_root: string, _settings: Settings = new Settings()) {
+		super(_root, _settings);
 	}
 
 	public get scandir(): sinon.SinonStub {
@@ -25,7 +25,7 @@ class TestReader extends AsyncReader {
 describe('Readers → Async', () => {
 	describe('.read', () => {
 		it('should emit "error" event when the first call of scandir is broken', (done) => {
-			const reader = new TestReader();
+			const reader = new TestReader('non-exist-directory');
 
 			reader.scandir.yields(tests.EPERM_ERRNO);
 
@@ -34,14 +34,14 @@ describe('Readers → Async', () => {
 				done();
 			});
 
-			reader.read('non-exist-directory');
+			reader.read();
 		});
 
 		it('should emit "end" event when the first call of scandir is broken but this error can be suppressed', (done) => {
 			const settings = new Settings({
 				errorFilter: (error) => error.code === 'EPERM'
 			});
-			const reader = new TestReader(settings);
+			const reader = new TestReader('non-exist-directory', settings);
 
 			reader.scandir.yields(tests.EPERM_ERRNO);
 
@@ -49,11 +49,11 @@ describe('Readers → Async', () => {
 				done();
 			});
 
-			reader.read('non-exist-directory');
+			reader.read();
 		});
 
 		it('should do not emit "entry" event after first broken scandir call', (done) => {
-			const reader = new TestReader();
+			const reader = new TestReader('directory');
 
 			const firstFakeDirectoryEntry = tests.buildFakeDirectoryEntry({ name: 'a', path: 'directory/a' });
 			const secondFakeDirectoryEntry = tests.buildFakeDirectoryEntry({ name: 'b', path: 'directory/b' });
@@ -70,11 +70,11 @@ describe('Readers → Async', () => {
 				done();
 			});
 
-			reader.read('directory');
+			reader.read();
 		});
 
 		it('should return entries', (done) => {
-			const reader = new TestReader();
+			const reader = new TestReader('directory');
 
 			const fakeDirectoryEntry = tests.buildFakeDirectoryEntry();
 			const fakeFileEntry = tests.buildFakeFileEntry();
@@ -91,12 +91,12 @@ describe('Readers → Async', () => {
 				done();
 			});
 
-			reader.read('directory');
+			reader.read();
 		});
 
 		it('should push to results only directories', (done) => {
 			const settings = new Settings({ entryFilter: (entry) => !entry.dirent.isFile() });
-			const reader = new TestReader(settings);
+			const reader = new TestReader('directory', settings);
 
 			const fakeDirectoryEntry = tests.buildFakeDirectoryEntry();
 			const fakeFileEntry = tests.buildFakeFileEntry();
@@ -113,12 +113,12 @@ describe('Readers → Async', () => {
 				done();
 			});
 
-			reader.read('directory');
+			reader.read();
 		});
 
 		it('should do not read root directory', (done) => {
 			const settings = new Settings({ deepFilter: () => false });
-			const reader = new TestReader(settings);
+			const reader = new TestReader('directory', settings);
 
 			const fakeDirectoryEntry = tests.buildFakeDirectoryEntry();
 			const fakeFileEntry = tests.buildFakeFileEntry();
@@ -135,13 +135,13 @@ describe('Readers → Async', () => {
 				done();
 			});
 
-			reader.read('directory');
+			reader.read();
 		});
 	});
 
 	describe('.destroy', () => {
 		it('should do not emit entries after destroy', (done) => {
-			const reader = new TestReader();
+			const reader = new TestReader('directory');
 
 			const firstFakeDirectoryEntry = tests.buildFakeDirectoryEntry({ name: 'a', path: 'directory/a' });
 			const fakeFileEntry = tests.buildFakeFileEntry();
@@ -161,11 +161,11 @@ describe('Readers → Async', () => {
 				done();
 			});
 
-			reader.read('directory');
+			reader.read();
 		});
 
 		it('should throw an error when trying to destroy reader twice', () => {
-			const reader = new TestReader();
+			const reader = new TestReader('directory');
 
 			const expectedErrorMessageRe = /The reader is already destroyed/;
 

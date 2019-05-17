@@ -8,8 +8,8 @@ import SyncProvider from './sync';
 class TestProvider extends SyncProvider {
 	protected readonly _reader: SyncReader = new tests.TestSyncReader() as unknown as SyncReader;
 
-	constructor(_settings: Settings = new Settings()) {
-		super(_settings);
+	constructor(_root: string, _settings: Settings = new Settings()) {
+		super(_root, _settings);
 	}
 
 	public get reader(): tests.TestSyncReader {
@@ -20,15 +20,15 @@ class TestProvider extends SyncProvider {
 describe('Providers → Sync', () => {
 	describe('.read', () => {
 		it('should call reader function with correct set of arguments and got result', () => {
-			const provider = new TestProvider();
+			const provider = new TestProvider('directory');
 			const fakeEntry = tests.buildFakeFileEntry();
 
 			provider.reader.read.returns([fakeEntry]);
 
-			const actual = provider.read('directory');
+			const actual = provider.read();
 
 			assert.deepStrictEqual(actual, [fakeEntry]);
-			assert.deepStrictEqual(provider.reader.read.args, [['directory']]);
+			assert.ok(provider.reader.read.called);
 		});
 	});
 });

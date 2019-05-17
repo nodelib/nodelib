@@ -8,32 +8,32 @@ import SyncProvider from './providers/sync';
 import Settings, { DeepFilterFunction, EntryFilterFunction, ErrorFilterFunction, Options } from './settings';
 import { Entry } from './types/index';
 
-function walk(path: string, callback: AsyncCallback): void;
-function walk(path: string, optionsOrSettings: Options | Settings, callback: AsyncCallback): void;
-function walk(path: string, optionsOrSettingsOrCallback: Options | Settings | AsyncCallback, callback?: AsyncCallback): void {
+function walk(dir: string, callback: AsyncCallback): void;
+function walk(dir: string, optionsOrSettings: Options | Settings, callback: AsyncCallback): void;
+function walk(dir: string, optionsOrSettingsOrCallback: Options | Settings | AsyncCallback, callback?: AsyncCallback): void {
 	if (typeof optionsOrSettingsOrCallback === 'function') {
-		return new AsyncProvider(getSettings()).read(path, optionsOrSettingsOrCallback);
+		return new AsyncProvider(dir, getSettings()).read(optionsOrSettingsOrCallback);
 	}
 
-	new AsyncProvider(getSettings(optionsOrSettingsOrCallback)).read(path, callback as AsyncCallback);
+	new AsyncProvider(dir, getSettings(optionsOrSettingsOrCallback)).read(callback as AsyncCallback);
 }
 
 declare namespace walk {
-	function __promisify__(path: string, optionsOrSettings?: Options | Settings): Promise<Entry[]>;
+	function __promisify__(dir: string, optionsOrSettings?: Options | Settings): Promise<Entry[]>;
 }
 
 function walkSync(dir: string, optionsOrSettings?: Options | Settings): Entry[] {
 	const settings = getSettings(optionsOrSettings);
-	const provider = new SyncProvider(settings);
+	const provider = new SyncProvider(dir, settings);
 
-	return provider.read(dir);
+	return provider.read();
 }
 
 function walkStream(dir: string, optionsOrSettings?: Options | Settings): Readable {
 	const settings = getSettings(optionsOrSettings);
-	const provider = new StreamProvider(settings);
+	const provider = new StreamProvider(dir, settings);
 
-	return provider.read(dir);
+	return provider.read();
 }
 
 function getSettings(settingsOrOptions: Settings | Options = {}): Settings {

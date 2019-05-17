@@ -10,10 +10,10 @@ export default class SyncReader {
 	private readonly _storage: Set<Entry> = new Set();
 	private readonly _queue: Set<string> = new Set();
 
-	constructor(private readonly _settings: Settings) { }
+	constructor(private readonly _root: string, private readonly _settings: Settings) { }
 
-	public read(dir: string): Entry[] {
-		this._pushToQueue(dir);
+	public read(): Entry[] {
+		this._pushToQueue(this._root);
 		this._handleQueue();
 
 		return Array.from(this._storage);

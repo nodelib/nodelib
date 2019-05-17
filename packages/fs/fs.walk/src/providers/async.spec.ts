@@ -10,8 +10,8 @@ import AsyncProvider from './async';
 class TestProvider extends AsyncProvider {
 	protected readonly _reader: AsyncReader = new tests.TestAsyncReader() as unknown as AsyncReader;
 
-	constructor(_settings: Settings = new Settings()) {
-		super(_settings);
+	constructor(_root: string, _settings: Settings = new Settings()) {
+		super(_root, _settings);
 	}
 
 	public get reader(): tests.TestAsyncReader {
@@ -22,34 +22,34 @@ class TestProvider extends AsyncProvider {
 describe('Providers → Async', () => {
 	describe('.read', () => {
 		it('should call reader function with correct set of arguments', () => {
-			const provider = new TestProvider();
+			const provider = new TestProvider('directory');
 			const fakeCallback = sinon.stub();
 
-			provider.read('directory', fakeCallback);
+			provider.read(fakeCallback);
 
-			assert.deepStrictEqual(provider.reader.read.args, [['directory']]);
+			assert.ok(provider.reader.read.called);
 		});
 
 		it('should call callback with error for failed launch', () => {
-			const provider = new TestProvider();
+			const provider = new TestProvider('directory');
 			const fakeCallback = sinon.stub();
 
 			provider.reader.onError.yields(tests.EPERM_ERRNO);
 
-			provider.read('directory', fakeCallback);
+			provider.read(fakeCallback);
 
 			assert.deepStrictEqual(fakeCallback.args, [[tests.EPERM_ERRNO]]);
 		});
 
 		it('should push entries to storage and call callback with array of entries', () => {
-			const provider = new TestProvider();
+			const provider = new TestProvider('directory');
 			const fakeEntry = tests.buildFakeFileEntry();
 			const fakeCallback = sinon.stub();
 
 			provider.reader.onEntry.yields(fakeEntry);
 			provider.reader.onEnd.yields();
 
-			provider.read('directory', fakeCallback);
+			provider.read(fakeCallback);
 
 			assert.deepStrictEqual(fakeCallback.args, [[null, [fakeEntry]]]);
 		});

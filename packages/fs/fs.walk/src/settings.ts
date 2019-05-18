@@ -8,6 +8,7 @@ export type EntryFilterFunction = FilterFunction<Entry>;
 export type ErrorFilterFunction = FilterFunction<Errno>;
 
 export interface Options {
+	basePath?: string | null;
 	concurrency?: number;
 	deepFilter?: DeepFilterFunction | null;
 	entryFilter?: EntryFilterFunction;
@@ -19,6 +20,7 @@ export interface Options {
 }
 
 export default class Settings {
+	private readonly _basePath: string | null;
 	private readonly _concurrency: number;
 	private readonly _deepFilter: DeepFilterFunction | null;
 	private readonly _entryFilter: EntryFilterFunction | null;
@@ -26,6 +28,7 @@ export default class Settings {
 	private readonly _fsScandirSettings: fsScandir.Settings;
 
 	constructor(private readonly _options: Options = {}) {
+		this._basePath = this._setDefaultValue(this._options.basePath, null);
 		this._concurrency = this._setDefaultValue(this._options.concurrency, Infinity);
 		this._deepFilter = this._setDefaultValue(this._options.deepFilter, null);
 		this._entryFilter = this._setDefaultValue(this._options.entryFilter, null);
@@ -37,6 +40,10 @@ export default class Settings {
 			followSymbolicLinks: this._options.followSymbolicLinks,
 			throwErrorOnBrokenSymbolicLink: this._options.throwErrorOnBrokenSymbolicLink
 		});
+	}
+
+	public get basePath(): string | null {
+		return this._basePath;
 	}
 
 	public get concurrency(): number {

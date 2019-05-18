@@ -19,7 +19,7 @@ export default class AsyncReader {
 	private _isFatalError: boolean = false;
 	private _isDestroyed: boolean = false;
 
-	constructor(private readonly _settings: Settings) {
+	constructor(private readonly _root: string, private readonly _settings: Settings) {
 		this._queue.drain = () => {
 			if (!this._isFatalError) {
 				this._emitter.emit('end');
@@ -27,12 +27,12 @@ export default class AsyncReader {
 		};
 	}
 
-	public read(dir: string): EventEmitter {
+	public read(): EventEmitter {
 		this._isFatalError = false;
 		this._isDestroyed = false;
 
 		setImmediate(() => {
-			this._handleDirectory(dir);
+			this._handleDirectory(this._root);
 		});
 
 		return this._emitter;
@@ -96,12 +96,18 @@ export default class AsyncReader {
 			return;
 		}
 
+		const fullpath = entry.path;
+
+		if (this._settings.basePath !== null) {
+			entry.path = common.setBasePathForEntryPath(fullpath, this._root, this._settings.basePath);
+		}
+
 		if (common.isAppliedFilter(this._settings.entryFilter, entry)) {
 			this._emitEntry(entry);
 		}
 
 		if (entry.dirent.isDirectory() && common.isAppliedFilter(this._settings.deepFilter, entry)) {
-			this._handleDirectory(entry.path);
+			this._handleDirectory(fullpath);
 		}
 	}
 

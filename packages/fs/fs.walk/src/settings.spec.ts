@@ -14,10 +14,12 @@ describe('Settings', () => {
 			throwErrorOnBrokenSymbolicLink: undefined
 		});
 
-		assert.deepStrictEqual(fsWalkSettings.fsScandirSettings, fsScandirSettings);
+		assert.strictEqual(fsWalkSettings.basePath, null);
+		assert.strictEqual(fsWalkSettings.concurrency, Infinity);
 		assert.strictEqual(fsWalkSettings.deepFilter, null);
 		assert.strictEqual(fsWalkSettings.entryFilter, null);
 		assert.strictEqual(fsWalkSettings.errorFilter, null);
+		assert.deepStrictEqual(fsWalkSettings.fsScandirSettings, fsScandirSettings);
 	});
 
 	it('should return instance with custom values', () => {

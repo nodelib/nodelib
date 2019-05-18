@@ -10,10 +10,10 @@ export default class SyncReader {
 	private readonly _storage: Set<Entry> = new Set();
 	private readonly _queue: Set<string> = new Set();
 
-	constructor(private readonly _settings: Settings) { }
+	constructor(private readonly _root: string, private readonly _settings: Settings) { }
 
-	public read(dir: string): Entry[] {
-		this._pushToQueue(dir);
+	public read(): Entry[] {
+		this._pushToQueue(this._root);
 		this._handleQueue();
 
 		return Array.from(this._storage);
@@ -50,12 +50,18 @@ export default class SyncReader {
 	}
 
 	private _handleEntry(entry: Entry): void {
+		const fullpath = entry.path;
+
+		if (this._settings.basePath !== null) {
+			entry.path = common.setBasePathForEntryPath(fullpath, this._root, this._settings.basePath);
+		}
+
 		if (common.isAppliedFilter(this._settings.entryFilter, entry)) {
 			this._pushToStorage(entry);
 		}
 
 		if (entry.dirent.isDirectory() && common.isAppliedFilter(this._settings.deepFilter, entry)) {
-			this._handleDirectory(entry.path);
+			this._handleDirectory(fullpath);
 		}
 	}
 

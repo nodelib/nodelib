@@ -10,7 +10,7 @@ export type ErrorFilterFunction = FilterFunction<Errno>;
 export interface Options {
 	basePath?: string | null;
 	concurrency?: number;
-	deepFilter?: DeepFilterFunction | null;
+	deepFilter?: DeepFilterFunction;
 	entryFilter?: EntryFilterFunction;
 	errorFilter?: ErrorFilterFunction;
 	followSymbolicLinks?: boolean;
@@ -20,53 +20,22 @@ export interface Options {
 }
 
 export default class Settings {
-	private readonly _basePath: string | null;
-	private readonly _concurrency: number;
-	private readonly _deepFilter: DeepFilterFunction | null;
-	private readonly _entryFilter: EntryFilterFunction | null;
-	private readonly _errorFilter: ErrorFilterFunction | null;
-	private readonly _fsScandirSettings: fsScandir.Settings;
+	public readonly basePath: string | null = this._getValue(this._options.basePath, null);
+	public readonly concurrency: number = this._getValue(this._options.concurrency, Infinity);
+	public readonly deepFilter: DeepFilterFunction | null = this._getValue(this._options.deepFilter, null);
+	public readonly entryFilter: EntryFilterFunction | null = this._getValue(this._options.entryFilter, null);
+	public readonly errorFilter: ErrorFilterFunction | null = this._getValue(this._options.errorFilter, null);
 
-	constructor(private readonly _options: Options = {}) {
-		this._basePath = this._setDefaultValue(this._options.basePath, null);
-		this._concurrency = this._setDefaultValue(this._options.concurrency, Infinity);
-		this._deepFilter = this._setDefaultValue(this._options.deepFilter, null);
-		this._entryFilter = this._setDefaultValue(this._options.entryFilter, null);
-		this._errorFilter = this._setDefaultValue(this._options.errorFilter, null);
+	public readonly fsScandirSettings: fsScandir.Settings = new fsScandir.Settings({
+		fs: this._options.fs,
+		stats: this._options.stats,
+		followSymbolicLinks: this._options.followSymbolicLinks,
+		throwErrorOnBrokenSymbolicLink: this._options.throwErrorOnBrokenSymbolicLink
+	});
 
-		this._fsScandirSettings = new fsScandir.Settings({
-			fs: this._options.fs,
-			stats: this._options.stats,
-			followSymbolicLinks: this._options.followSymbolicLinks,
-			throwErrorOnBrokenSymbolicLink: this._options.throwErrorOnBrokenSymbolicLink
-		});
-	}
+	constructor(private readonly _options: Options = {}) { }
 
-	public get basePath(): string | null {
-		return this._basePath;
-	}
-
-	public get concurrency(): number {
-		return this._concurrency;
-	}
-
-	public get deepFilter(): DeepFilterFunction | null {
-		return this._deepFilter;
-	}
-
-	public get entryFilter(): EntryFilterFunction | null {
-		return this._entryFilter;
-	}
-
-	public get errorFilter(): ErrorFilterFunction | null {
-		return this._errorFilter;
-	}
-
-	public get fsScandirSettings(): fsScandir.Settings {
-		return this._fsScandirSettings;
-	}
-
-	private _setDefaultValue<T>(option: T | undefined, value: T): T {
+	private _getValue<T>(option: T | undefined, value: T): T {
 		return option === undefined ? value : option;
 	}
 }

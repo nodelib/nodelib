@@ -16,7 +16,13 @@ export function isAppliedFilter<T>(filter: FilterFunction<T> | null, value: T): 
 }
 
 export function setBasePathForEntryPath(fullpath: string, root: string, base: string): string {
-	const relative = path.relative(root, fullpath);
+	let relative: string;
+
+	if (fullpath.startsWith(root)) {
+		relative = fullpath.replace(root, '').replace(/^[\\\/]/, '');
+	} else {
+		relative = path.relative(root, fullpath);
+	}
 
 	if (base === '') {
 		return relative;

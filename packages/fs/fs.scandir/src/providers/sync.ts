@@ -22,7 +22,7 @@ export function readdirWithFileTypes(dir: string, settings: Settings): Entry[] {
 		const entry: Entry = {
 			dirent,
 			name: dirent.name,
-			path: path.join(dir, dirent.name)
+			path: `${dir}${path.sep}${dirent.name}`
 		};
 
 		if (entry.dirent.isSymbolicLink() && settings.followSymbolicLinks) {
@@ -45,7 +45,7 @@ export function readdir(dir: string, settings: Settings): Entry[] {
 	const names = settings.fs.readdirSync(dir);
 
 	return names.map((name) => {
-		const entryPath = path.join(dir, name);
+		const entryPath = `${dir}${path.sep}${name}`;
 		const stats = fsStat.statSync(entryPath, settings.fsStatSettings);
 
 		const entry: Entry = {

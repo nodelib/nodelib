@@ -10,47 +10,20 @@ export interface Options {
 }
 
 export default class Settings {
-	private readonly _followSymbolicLinks: boolean;
-	private readonly _fs: fs.FileSystemAdapter;
-	private readonly _stats: boolean;
-	private readonly _throwErrorOnBrokenSymbolicLink: boolean;
+	public readonly followSymbolicLinks: boolean = this._getValue(this._options.followSymbolicLinks, false);
+	public readonly fs: fs.FileSystemAdapter = fs.createFileSystemAdapter(this._options.fs);
+	public readonly stats: boolean = this._getValue(this._options.stats, false);
+	public readonly throwErrorOnBrokenSymbolicLink: boolean = this._getValue(this._options.throwErrorOnBrokenSymbolicLink, true);
 
-	private readonly _fsStatSettings: fsStat.Settings;
+	public readonly fsStatSettings: fsStat.Settings = new fsStat.Settings({
+		followSymbolicLink: this.followSymbolicLinks,
+		fs: this.fs,
+		throwErrorOnBrokenSymbolicLink: this.throwErrorOnBrokenSymbolicLink
+	});
 
-	constructor(private readonly _options: Options = {}) {
-		this._followSymbolicLinks = this._setDefaultValue(this._options.followSymbolicLinks, false);
-		this._fs = fs.createFileSystemAdapter(this._options.fs);
-		this._stats = this._setDefaultValue(this._options.stats, false);
-		this._throwErrorOnBrokenSymbolicLink = this._setDefaultValue(this._options.throwErrorOnBrokenSymbolicLink, true);
+	constructor(private readonly _options: Options = {}) { }
 
-		this._fsStatSettings = new fsStat.Settings({
-			followSymbolicLink: this._followSymbolicLinks,
-			fs: this._fs,
-			throwErrorOnBrokenSymbolicLink: this._throwErrorOnBrokenSymbolicLink
-		});
-	}
-
-	public get followSymbolicLinks(): boolean {
-		return this._followSymbolicLinks;
-	}
-
-	public get fs(): fs.FileSystemAdapter {
-		return this._fs;
-	}
-
-	public get stats(): boolean {
-		return this._stats;
-	}
-
-	public get throwErrorOnBrokenSymbolicLink(): boolean {
-		return this._throwErrorOnBrokenSymbolicLink;
-	}
-
-	public get fsStatSettings(): fsStat.Settings {
-		return this._fsStatSettings;
-	}
-
-	private _setDefaultValue<T>(option: T | undefined, value: T): T {
+	private _getValue<T>(option: T | undefined, value: T): T {
 		return option === undefined ? value : option;
 	}
 }

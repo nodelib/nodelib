@@ -32,7 +32,7 @@ export function readdirWithFileTypes(dir: string, settings: Settings, callback: 
 		const entries: Entry[] = dirents.map((dirent) => ({
 			dirent,
 			name: dirent.name,
-			path: path.join(dir, dirent.name)
+			path: `${dir}${path.sep}${dirent.name}`
 		}));
 
 		if (!settings.followSymbolicLinks) {
@@ -79,7 +79,7 @@ export function readdir(dir: string, settings: Settings, callback: AsyncCallback
 			return callFailureCallback(callback, readdirError);
 		}
 
-		const filepaths = names.map((name) => path.join(dir, name));
+		const filepaths = names.map((name) => `${dir}${path.sep}${name}`);
 
 		const tasks: RplTaskStats[] = filepaths.map((filepath): RplTaskStats => {
 			return (done) => fsStat.stat(filepath, settings.fsStatSettings, done);

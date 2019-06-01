@@ -81,6 +81,17 @@ describe('Readers → Common', () => {
 			assert.strictEqual(actual, expected);
 		});
 
+		it('should set base path to entry path when the root directory is not a part of fullpath', () => {
+			const root = path.join(process.cwd(), 'directory');
+			const fullpath = path.join(process.cwd(), 'file.txt');
+
+			const expected = 'base/../file.txt'.replace(/\//g, path.sep);
+
+			const actual = common.setBasePathForEntryPath(fullpath, root, 'base');
+
+			assert.strictEqual(actual, expected);
+		});
+
 		it('should correctly set empty base path to entry path', () => {
 			const root = process.cwd();
 			const fullpath = path.join(root, 'file.txt');

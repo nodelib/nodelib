@@ -8,7 +8,7 @@ export type EntryFilterFunction = FilterFunction<Entry>;
 export type ErrorFilterFunction = FilterFunction<Errno>;
 
 export interface Options {
-	basePath?: string | null;
+	basePath?: string;
 	concurrency?: number;
 	deepFilter?: DeepFilterFunction;
 	entryFilter?: EntryFilterFunction;

@@ -96,7 +96,7 @@ const entries = fsWalk.walkSync('path', settings);
 ### basePath
 
 * Type: `string`
-* Default: `null`
+* Default: `undefined`
 
 By default, all paths are built relative to the root path. You can use this option to set custom root path.
 
@@ -118,8 +118,8 @@ The maximum number of concurrent calls to `fs.readdir`.
 
 ### deepFilter
 
-* Type: [`DeepFilterFunction`](./src/settings.ts) | `null`
-* Default: `null`
+* Type: [`DeepFilterFunction`](./src/settings.ts)
+* Default: `undefined`
 
 A function that indicates whether the directory will be read deep or not.
 
@@ -130,8 +130,8 @@ const filter: DeepFilterFunction = (entry) => !entry.path.startsWith('node_modul
 
 ### entryFilter
 
-* Type: [`EntryFilterFunction`](./src/settings.ts) | `null`
-* Default: `null`
+* Type: [`EntryFilterFunction`](./src/settings.ts)
+* Default: `undefined`
 
 A function that indicates whether the entry will be included to results or not.
 
@@ -142,8 +142,8 @@ const filter: EntryFilterFunction = (entry) => !entry.name.endsWith('.js');
 
 ### errorFilter
 
-* Type: [`ErrorFilterFunction`](./src/settings.ts) | `null`
-* Default: `null`
+* Type: [`ErrorFilterFunction`](./src/settings.ts)
+* Default: `undefined`
 
 A function that allows you to skip errors that occur when reading directories.
 
@@ -157,7 +157,7 @@ const filter: ErrorFilterFunction = (error) => error.code == 'ENOENT';
 ### stats
 
 * Type: `boolean`
-* Default: `true`
+* Default: `false`
 
 Adds an instance of `fs.Stats` class to the [`Entry`](#entry).
 
@@ -166,7 +166,7 @@ Adds an instance of `fs.Stats` class to the [`Entry`](#entry).
 ### followSymbolicLinks
 
 * Type: `boolean`
-* Default: `true`
+* Default: `false`
 
 Follow symbolic links or not. Call `fs.stat` on symbolic link if `true`.
 

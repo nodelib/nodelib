@@ -8,9 +8,10 @@ describe('Settings', () => {
 	it('should return instance with default values', () => {
 		const fsWalkSettings = new Settings();
 		const fsScandirSettings = new fsScandir.Settings({
-			fs: undefined,
-			stats: undefined,
 			followSymbolicLinks: undefined,
+			fs: undefined,
+			pathSegmentSeparator: undefined,
+			stats: undefined,
 			throwErrorOnBrokenSymbolicLink: undefined
 		});
 

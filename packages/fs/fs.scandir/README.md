@@ -115,6 +115,13 @@ Follow symbolic links or not. Call `fs.stat` on symbolic link if `true`.
 
 Throw an error when symbolic link is broken if `true` or safely use `lstat` call if `false`.
 
+### `pathSegmentSeparator`
+
+* Type: `string`
+* Default: `path.sep`
+
+By default, this package uses the correct path separator for your OS (`\` on Windows, `/` on Unix-like systems). But you can set this option to any separator character(s) that you want to use instead.
+
 ### `fs`
 
 * Type: [`FileSystemAdapter`](./src/adapters/fs.ts)

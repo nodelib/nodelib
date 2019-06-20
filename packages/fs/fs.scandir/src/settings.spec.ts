@@ -1,4 +1,5 @@
 import * as assert from 'assert';
+import * as path from 'path';
 
 import * as fs from './adapters/fs';
 import Settings from './settings';
@@ -12,6 +13,7 @@ describe('Settings', () => {
 		assert.deepStrictEqual(settings.fs, fs.createFileSystemAdapter());
 		assert.ok(!settings.followSymbolicLinks);
 		assert.ok(!settings.stats);
+		assert.strictEqual(settings.pathSegmentSeparator, path.sep);
 		assert.ok(settings.fsStatSettings);
 		assert.ok(settings.throwErrorOnBrokenSymbolicLink);
 	});

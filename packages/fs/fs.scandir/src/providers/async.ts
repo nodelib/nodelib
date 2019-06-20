@@ -1,5 +1,3 @@
-import * as path from 'path';
-
 import * as fsStat from '@nodelib/fs.stat';
 import * as rpl from 'run-parallel';
 
@@ -32,7 +30,7 @@ export function readdirWithFileTypes(dir: string, settings: Settings, callback: 
 		const entries: Entry[] = dirents.map((dirent) => ({
 			dirent,
 			name: dirent.name,
-			path: `${dir}${path.sep}${dirent.name}`
+			path: `${dir}${settings.pathSegmentSeparator}${dirent.name}`
 		}));
 
 		if (!settings.followSymbolicLinks) {
@@ -79,7 +77,7 @@ export function readdir(dir: string, settings: Settings, callback: AsyncCallback
 			return callFailureCallback(callback, readdirError);
 		}
 
-		const filepaths = names.map((name) => `${dir}${path.sep}${name}`);
+		const filepaths = names.map((name) => `${dir}${settings.pathSegmentSeparator}${name}`);
 
 		const tasks: RplTaskStats[] = filepaths.map((filepath): RplTaskStats => {
 			return (done) => fsStat.stat(filepath, settings.fsStatSettings, done);

@@ -1,16 +1,14 @@
 import * as fsScandir from '@nodelib/fs.scandir';
 
-import Settings from '../settings';
 import { Entry, Errno } from '../types/index';
 import * as common from './common';
+import Reader from './reader';
 
-export default class SyncReader {
+export default class SyncReader extends Reader {
 	protected readonly _scandir: typeof fsScandir.scandirSync = fsScandir.scandirSync;
 
 	private readonly _storage: Set<Entry> = new Set();
 	private readonly _queue: Set<string> = new Set();
-
-	constructor(private readonly _root: string, private readonly _settings: Settings) { }
 
 	public read(): Entry[] {
 		this._pushToQueue(this._root);
@@ -53,7 +51,7 @@ export default class SyncReader {
 		const fullpath = entry.path;
 
 		if (this._settings.basePath !== null) {
-			entry.path = common.setBasePathForEntryPath(fullpath, this._root, this._settings.basePath);
+			entry.path = common.setBasePathForEntryPath(fullpath, this._root, this._settings.basePath, this._settings.pathSegmentSeparator);
 		}
 
 		if (common.isAppliedFilter(this._settings.entryFilter, entry)) {

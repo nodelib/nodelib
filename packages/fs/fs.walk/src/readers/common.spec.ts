@@ -69,6 +69,18 @@ describe('Readers → Common', () => {
 		});
 	});
 
+	describe('.replacePathSegmentSeparator', () => {
+		it('should replace path segment separator', () => {
+			const filepath = path.join('directory', 'file.txt');
+
+			const expected = 'directory_file.txt';
+
+			const actual = common.replacePathSegmentSeparator(filepath, '_');
+
+			assert.strictEqual(actual, expected);
+		});
+	});
+
 	describe('.setBasePathForEntryPath', () => {
 		it('should set base path to entry path', () => {
 			const root = process.cwd();
@@ -76,7 +88,7 @@ describe('Readers → Common', () => {
 
 			const expected = path.join('base', 'file.txt');
 
-			const actual = common.setBasePathForEntryPath(fullpath, root, 'base');
+			const actual = common.setBasePathForEntryPath(fullpath, root, 'base', path.sep);
 
 			assert.strictEqual(actual, expected);
 		});
@@ -87,7 +99,7 @@ describe('Readers → Common', () => {
 
 			const expected = 'base/../file.txt'.replace(/\//g, path.sep);
 
-			const actual = common.setBasePathForEntryPath(fullpath, root, 'base');
+			const actual = common.setBasePathForEntryPath(fullpath, root, 'base', path.sep);
 
 			assert.strictEqual(actual, expected);
 		});
@@ -98,7 +110,7 @@ describe('Readers → Common', () => {
 
 			const expected = 'file.txt';
 
-			const actual = common.setBasePathForEntryPath(fullpath, root, '');
+			const actual = common.setBasePathForEntryPath(fullpath, root, '', path.sep);
 
 			assert.strictEqual(actual, expected);
 		});

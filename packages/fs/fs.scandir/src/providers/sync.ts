@@ -1,5 +1,3 @@
-import * as path from 'path';
-
 import * as fsStat from '@nodelib/fs.stat';
 
 import { IS_SUPPORT_READDIR_WITH_FILE_TYPES } from '../constants';
@@ -22,7 +20,7 @@ export function readdirWithFileTypes(dir: string, settings: Settings): Entry[] {
 		const entry: Entry = {
 			dirent,
 			name: dirent.name,
-			path: `${dir}${path.sep}${dirent.name}`
+			path: `${dir}${settings.pathSegmentSeparator}${dirent.name}`
 		};
 
 		if (entry.dirent.isSymbolicLink() && settings.followSymbolicLinks) {
@@ -45,7 +43,7 @@ export function readdir(dir: string, settings: Settings): Entry[] {
 	const names = settings.fs.readdirSync(dir);
 
 	return names.map((name) => {
-		const entryPath = `${dir}${path.sep}${name}`;
+		const entryPath = `${dir}${settings.pathSegmentSeparator}${name}`;
 		const stats = fsStat.statSync(entryPath, settings.fsStatSettings);
 
 		const entry: Entry = {

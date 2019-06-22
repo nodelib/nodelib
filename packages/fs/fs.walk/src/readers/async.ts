@@ -6,12 +6,13 @@ import * as fastq from 'fastq';
 import Settings from '../settings';
 import { Entry, Errno } from '../types/index';
 import * as common from './common';
+import Reader from './reader';
 
 type EntryEventCallback = (entry: Entry) => void;
 type ErrorEventCallback = (error: Errno) => void;
 type EndEventCallback = () => void;
 
-export default class AsyncReader {
+export default class AsyncReader extends Reader {
 	protected readonly _scandir: typeof fsScandir.scandir = fsScandir.scandir;
 	protected readonly _emitter: EventEmitter = new EventEmitter();
 
@@ -19,7 +20,9 @@ export default class AsyncReader {
 	private _isFatalError: boolean = false;
 	private _isDestroyed: boolean = false;
 
-	constructor(private readonly _root: string, private readonly _settings: Settings) {
+	constructor(protected readonly _root: string, protected readonly _settings: Settings) {
+		super(_root, _settings);
+
 		this._queue.drain = () => {
 			if (!this._isFatalError) {
 				this._emitter.emit('end');
@@ -99,7 +102,7 @@ export default class AsyncReader {
 		const fullpath = entry.path;
 
 		if (this._settings.basePath !== null) {
-			entry.path = common.setBasePathForEntryPath(fullpath, this._root, this._settings.basePath);
+			entry.path = common.setBasePathForEntryPath(fullpath, this._root, this._settings.basePath, this._settings.pathSegmentSeparator);
 		}
 
 		if (common.isAppliedFilter(this._settings.entryFilter, entry)) {

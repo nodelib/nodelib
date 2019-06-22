@@ -1,3 +1,5 @@
+import * as path from 'path';
+
 import * as fsScandir from '@nodelib/fs.scandir';
 
 import { Entry, Errno } from './types/index';
@@ -15,6 +17,7 @@ export interface Options {
 	errorFilter?: ErrorFilterFunction;
 	followSymbolicLinks?: boolean;
 	fs?: Partial<fsScandir.FileSystemAdapter>;
+	pathSegmentSeparator?: string;
 	stats?: boolean;
 	throwErrorOnBrokenSymbolicLink?: boolean;
 }
@@ -25,11 +28,13 @@ export default class Settings {
 	public readonly deepFilter: DeepFilterFunction | null = this._getValue(this._options.deepFilter, null);
 	public readonly entryFilter: EntryFilterFunction | null = this._getValue(this._options.entryFilter, null);
 	public readonly errorFilter: ErrorFilterFunction | null = this._getValue(this._options.errorFilter, null);
+	public readonly pathSegmentSeparator: string = this._getValue(this._options.pathSegmentSeparator, path.sep);
 
 	public readonly fsScandirSettings: fsScandir.Settings = new fsScandir.Settings({
-		fs: this._options.fs,
-		stats: this._options.stats,
 		followSymbolicLinks: this._options.followSymbolicLinks,
+		fs: this._options.fs,
+		pathSegmentSeparator: this._options.pathSegmentSeparator,
+		stats: this._options.stats,
 		throwErrorOnBrokenSymbolicLink: this._options.throwErrorOnBrokenSymbolicLink
 	});
 

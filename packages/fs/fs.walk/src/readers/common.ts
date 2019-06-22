@@ -15,7 +15,11 @@ export function isAppliedFilter<T>(filter: FilterFunction<T> | null, value: T): 
 	return filter === null || filter(value);
 }
 
-export function setBasePathForEntryPath(fullpath: string, root: string, base: string): string {
+export function replacePathSegmentSeparator(filepath: string, separator: string): string {
+	return filepath.split(/[\\\/]/).join(separator);
+}
+
+export function setBasePathForEntryPath(fullpath: string, root: string, base: string, separator: string): string {
 	let relative: string;
 
 	if (fullpath.startsWith(root)) {
@@ -28,5 +32,5 @@ export function setBasePathForEntryPath(fullpath: string, root: string, base: st
 		return relative;
 	}
 
-	return `${base}${path.sep}${relative}`;
+	return `${base}${separator}${relative}`;
 }

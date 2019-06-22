@@ -4,7 +4,7 @@ import * as fsScandir from '@nodelib/fs.scandir';
 import * as fastq from 'fastq';
 
 import Settings from '../settings';
-import { Entry, Errno } from '../types/index';
+import { Entry, Errno, QueueItem } from '../types/index';
 import * as common from './common';
 import Reader from './reader';
 
@@ -20,7 +20,7 @@ export default class AsyncReader extends Reader {
 	private _isFatalError: boolean = false;
 	private _isDestroyed: boolean = false;
 
-	constructor(protected readonly _root: string, protected readonly _settings: Settings) {
+	constructor(_root: string, protected readonly _settings: Settings) {
 		super(_root, _settings);
 
 		this._queue.drain = () => {
@@ -35,7 +35,7 @@ export default class AsyncReader extends Reader {
 		this._isDestroyed = false;
 
 		setImmediate(() => {
-			this._handleDirectory(this._root);
+			this._pushToQueue(this._root, this._settings.basePath);
 		});
 
 		return this._emitter;
@@ -62,22 +62,24 @@ export default class AsyncReader extends Reader {
 		this._emitter.once('end', callback);
 	}
 
-	private _handleDirectory(dir: string): void {
-		this._queue.push(dir, (error) => {
+	private _pushToQueue(dir: string, base?: string): void {
+		const queueItem: QueueItem = { dir, base };
+
+		this._queue.push(queueItem, (error) => {
 			if (error) {
 				this._handleError(error);
 			}
 		});
 	}
 
-	private _worker(dir: string, done: fastq.done): void {
-		this._scandir(dir, this._settings.fsScandirSettings, (error, entries) => {
+	private _worker(item: QueueItem, done: fastq.done): void {
+		this._scandir(item.dir, this._settings.fsScandirSettings, (error, entries) => {
 			if (error) {
 				return done(error, undefined);
 			}
 
 			for (const entry of entries) {
-				this._handleEntry(entry);
+				this._handleEntry(entry, item.base);
 			}
 
 			done(null as unknown as Error, undefined);
@@ -94,15 +96,15 @@ export default class AsyncReader extends Reader {
 		this._emitter.emit('error', error);
 	}
 
-	private _handleEntry(entry: Entry): void {
+	private _handleEntry(entry: Entry, base?: string): void {
 		if (this._isDestroyed || this._isFatalError) {
 			return;
 		}
 
 		const fullpath = entry.path;
 
-		if (this._settings.basePath !== null) {
-			entry.path = common.setBasePathForEntryPath(fullpath, this._root, this._settings.basePath, this._settings.pathSegmentSeparator);
+		if (base) {
+			entry.path = common.joinPathSegments(base, entry.name, this._settings.pathSegmentSeparator);
 		}
 
 		if (common.isAppliedFilter(this._settings.entryFilter, entry)) {
@@ -110,7 +112,7 @@ export default class AsyncReader extends Reader {
 		}
 
 		if (entry.dirent.isDirectory() && common.isAppliedFilter(this._settings.deepFilter, entry)) {
-			this._handleDirectory(fullpath);
+			this._pushToQueue(fullpath, entry.path);
 		}
 	}
 

@@ -81,36 +81,11 @@ describe('Readers → Common', () => {
 		});
 	});
 
-	describe('.setBasePathForEntryPath', () => {
-		it('should set base path to entry path', () => {
-			const root = process.cwd();
-			const fullpath = path.join(root, 'file.txt');
+	describe('.joinPathSegments', () => {
+		it('should return concatenated string', () => {
+			const expected = 'a&b';
 
-			const expected = path.join('base', 'file.txt');
-
-			const actual = common.setBasePathForEntryPath(fullpath, root, 'base', path.sep);
-
-			assert.strictEqual(actual, expected);
-		});
-
-		it('should set base path to entry path when the root directory is not a part of fullpath', () => {
-			const root = path.join(process.cwd(), 'directory');
-			const fullpath = path.join(process.cwd(), 'file.txt');
-
-			const expected = 'base/../file.txt'.replace(/\//g, path.sep);
-
-			const actual = common.setBasePathForEntryPath(fullpath, root, 'base', path.sep);
-
-			assert.strictEqual(actual, expected);
-		});
-
-		it('should correctly set empty base path to entry path', () => {
-			const root = process.cwd();
-			const fullpath = path.join(root, 'file.txt');
-
-			const expected = 'file.txt';
-
-			const actual = common.setBasePathForEntryPath(fullpath, root, '', path.sep);
+			const actual = common.joinPathSegments('a', 'b', '&');
 
 			assert.strictEqual(actual, expected);
 		});

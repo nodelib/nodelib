@@ -1,5 +1,3 @@
-import * as path from 'path';
-
 import Settings, { FilterFunction } from '../settings';
 import { Errno } from '../types/index';
 
@@ -19,18 +17,6 @@ export function replacePathSegmentSeparator(filepath: string, separator: string)
 	return filepath.split(/[\\\/]/).join(separator);
 }
 
-export function setBasePathForEntryPath(fullpath: string, root: string, base: string, separator: string): string {
-	let relative: string;
-
-	if (fullpath.startsWith(root)) {
-		relative = fullpath.replace(root, '').replace(/^[\\\/]/, '');
-	} else {
-		relative = path.relative(root, fullpath);
-	}
-
-	if (base === '') {
-		return relative;
-	}
-
-	return `${base}${separator}${relative}`;
+export function joinPathSegments(a: string, b: string, separator: string): string {
+	return a + separator + b;
 }

@@ -103,7 +103,7 @@ export default class AsyncReader extends Reader {
 
 		const fullpath = entry.path;
 
-		if (base) {
+		if (base !== undefined) {
 			entry.path = common.joinPathSegments(base, entry.name, this._settings.pathSegmentSeparator);
 		}
 

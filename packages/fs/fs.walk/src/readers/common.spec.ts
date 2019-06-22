@@ -89,5 +89,13 @@ describe('Readers → Common', () => {
 
 			assert.strictEqual(actual, expected);
 		});
+
+		it('should return second part of path when the first path is an empty string', () => {
+			const expected = 'b';
+
+			const actual = common.joinPathSegments('', 'b', '&');
+
+			assert.strictEqual(actual, expected);
+		});
 	});
 });

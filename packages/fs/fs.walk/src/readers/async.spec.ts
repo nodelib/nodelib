@@ -161,6 +161,29 @@ describe('Readers → Async', () => {
 
 			reader.read();
 		});
+
+		it('should set base path to entry when the `basePath` option is exist and value is an empty string', (done) => {
+			const settings = new Settings({ basePath: '' });
+			const reader = new TestReader('directory', settings);
+
+			const fakeDirectoryEntry = tests.buildFakeDirectoryEntry();
+			const fakeFileEntry = tests.buildFakeFileEntry();
+
+			reader.scandir.onFirstCall().yields(null, [fakeDirectoryEntry]);
+			reader.scandir.onSecondCall().yields(null, [fakeFileEntry]);
+
+			const entries: Entry[] = [];
+
+			reader.onEntry((entry) => entries.push(entry));
+
+			reader.onEnd(() => {
+				assert.strictEqual(entries[0].path, path.join(fakeDirectoryEntry.name));
+				assert.strictEqual(entries[1].path, path.join('fake', fakeFileEntry.name));
+				done();
+			});
+
+			reader.read();
+		});
 	});
 
 	describe('.destroy', () => {

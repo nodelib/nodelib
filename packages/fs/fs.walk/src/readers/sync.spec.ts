@@ -106,5 +106,21 @@ describe('Readers → Sync', () => {
 			assert.strictEqual(actual[0].path, path.join('base', fakeDirectoryEntry.name));
 			assert.strictEqual(actual[1].path, path.join('base', 'fake', fakeFileEntry.name));
 		});
+
+		it('should set base path to entry when the `basePath` option is exist and value is an empty string', () => {
+			const settings = new Settings({ basePath: '' });
+			const reader = new TestReader('directory', settings);
+
+			const fakeDirectoryEntry = tests.buildFakeDirectoryEntry();
+			const fakeFileEntry = tests.buildFakeFileEntry();
+
+			reader.scandir.onFirstCall().returns([fakeDirectoryEntry]);
+			reader.scandir.onSecondCall().returns([fakeFileEntry]);
+
+			const actual = reader.read();
+
+			assert.strictEqual(actual[0].path, fakeDirectoryEntry.name);
+			assert.strictEqual(actual[1].path, path.join('fake', fakeFileEntry.name));
+		});
 	});
 });

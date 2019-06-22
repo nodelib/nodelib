@@ -18,5 +18,9 @@ export function replacePathSegmentSeparator(filepath: string, separator: string)
 }
 
 export function joinPathSegments(a: string, b: string, separator: string): string {
+	if (a === '') {
+		return b;
+	}
+
 	return a + separator + b;
 }

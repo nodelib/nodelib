@@ -50,7 +50,7 @@ export default class SyncReader extends Reader {
 	private _handleEntry(entry: Entry, base?: string): void {
 		const fullpath = entry.path;
 
-		if (base) {
+		if (base !== undefined) {
 			entry.path = common.joinPathSegments(base, entry.name, this._settings.pathSegmentSeparator);
 		}
 

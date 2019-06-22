@@ -23,7 +23,7 @@ export interface Options {
 }
 
 export default class Settings {
-	public readonly basePath: string | null = this._getValue(this._options.basePath, null);
+	public readonly basePath?: string = this._getValue(this._options.basePath, undefined);
 	public readonly concurrency: number = this._getValue(this._options.concurrency, Infinity);
 	public readonly deepFilter: DeepFilterFunction | null = this._getValue(this._options.deepFilter, null);
 	public readonly entryFilter: EntryFilterFunction | null = this._getValue(this._options.entryFilter, null);

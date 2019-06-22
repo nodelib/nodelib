@@ -15,7 +15,7 @@ describe('Settings', () => {
 			throwErrorOnBrokenSymbolicLink: undefined
 		});
 
-		assert.strictEqual(fsWalkSettings.basePath, null);
+		assert.strictEqual(fsWalkSettings.basePath, undefined);
 		assert.strictEqual(fsWalkSettings.concurrency, Infinity);
 		assert.strictEqual(fsWalkSettings.deepFilter, null);
 		assert.strictEqual(fsWalkSettings.entryFilter, null);

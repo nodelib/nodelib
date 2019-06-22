@@ -155,7 +155,7 @@ describe('Readers → Async', () => {
 
 			reader.onEnd(() => {
 				assert.strictEqual(entries[0].path, path.join('base', fakeDirectoryEntry.name));
-				assert.strictEqual(entries[1].path, path.join('base', fakeFileEntry.name));
+				assert.strictEqual(entries[1].path, path.join('base', 'fake', fakeFileEntry.name));
 				done();
 			});
 

@@ -103,8 +103,8 @@ describe('Readers → Sync', () => {
 
 			const actual = reader.read();
 
-			assert.strict(actual[0].path, path.join('base', fakeDirectoryEntry.name));
-			assert.strict(actual[1].path, path.join('base', fakeFileEntry.name));
+			assert.strictEqual(actual[0].path, path.join('base', fakeDirectoryEntry.name));
+			assert.strictEqual(actual[1].path, path.join('base', 'fake', fakeFileEntry.name));
 		});
 	});
 });

@@ -3,8 +3,8 @@ import * as rpl from 'run-parallel';
 
 import { IS_SUPPORT_READDIR_WITH_FILE_TYPES } from '../constants';
 import Settings from '../settings';
-import { Entry, Stats } from '../types/index';
-import * as utils from '../utils/index';
+import { Entry, Stats } from '../types';
+import * as utils from '../utils';
 
 type RplTaskStats = rpl.Task<Stats>;
 type RplTaskEntry = rpl.Task<Entry>;

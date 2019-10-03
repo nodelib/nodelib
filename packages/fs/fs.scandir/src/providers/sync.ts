@@ -2,8 +2,8 @@ import * as fsStat from '@nodelib/fs.stat';
 
 import { IS_SUPPORT_READDIR_WITH_FILE_TYPES } from '../constants';
 import Settings from '../settings';
-import { Entry } from '../types/index';
-import * as utils from '../utils/index';
+import { Entry } from '../types';
+import * as utils from '../utils';
 
 export function read(dir: string, settings: Settings): Entry[] {
 	if (!settings.stats && IS_SUPPORT_READDIR_WITH_FILE_TYPES) {

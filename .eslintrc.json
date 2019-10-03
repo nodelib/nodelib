@@ -1,21 +1,3 @@
 {
-	"extends": "mrmlnc",
-	"overrides": [
-		{
-			"files": [
-				"*.spec.ts"
-			],
-			"rules": {
-				"import/no-extraneous-dependencies": [
-					"error",
-					{
-						"packageDir": [
-							".", // package
-							"../../.." // root
-						]
-					}
-				]
-			}
-		}
-	]
+	"extends": "mrmlnc"
 }

@@ -15,7 +15,7 @@ export const FILE_SYSTEM_ADAPTER: FileSystemAdapter = {
 };
 
 export function createFileSystemAdapter(fsMethods?: Partial<FileSystemAdapter>): FileSystemAdapter {
-	if (!fsMethods) {
+	if (fsMethods === undefined) {
 		return FILE_SYSTEM_ADAPTER;
 	}
 

@@ -8,7 +8,7 @@ export type AsyncCallback = (err: ErrnoException, stats: Stats) => void;
 
 export function read(path: string, settings: Settings, callback: AsyncCallback): void {
 	settings.fs.lstat(path, (lstatError, lstat) => {
-		if (lstatError) {
+		if (lstatError !== null) {
 			return callFailureCallback(callback, lstatError);
 		}
 
@@ -17,7 +17,7 @@ export function read(path: string, settings: Settings, callback: AsyncCallback):
 		}
 
 		settings.fs.stat(path, (statError, stat) => {
-			if (statError) {
+			if (statError !== null) {
 				if (settings.throwErrorOnBrokenSymbolicLink) {
 					return callFailureCallback(callback, statError);
 				}

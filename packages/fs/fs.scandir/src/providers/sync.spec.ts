@@ -100,7 +100,7 @@ describe('Providers → Sync', () => {
 			const dirent = new Dirent({ name: FIRST_FILE_PATH, isSymbolicLink: true });
 
 			const readdirSync = sinon.stub().returns([dirent]);
-			const statSync = () => {
+			const statSync = (): never => {
 				throw new Error('error');
 			};
 
@@ -122,7 +122,7 @@ describe('Providers → Sync', () => {
 			const dirent = new Dirent({ name: FIRST_FILE_PATH, isSymbolicLink: true });
 
 			const readdirSync = sinon.stub().returns([dirent]);
-			const statSync = () => {
+			const statSync = (): never => {
 				throw new Error('error');
 			};
 

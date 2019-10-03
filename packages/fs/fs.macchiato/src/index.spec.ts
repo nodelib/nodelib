@@ -1,6 +1,6 @@
 import * as assert from 'assert';
 
-import * as pkg from './index';
+import * as pkg from '.';
 
 describe('Package', () => {
 	it('should create a fake instance of fs.Stats', () => {

@@ -1,10 +1,10 @@
 import * as assert from 'assert';
 import * as path from 'path';
 
+import { Stats } from '../../fs.macchiato';
+
 import * as fs from './adapters/fs';
 import Settings from './settings';
-
-const noop = (): undefined => undefined;
 
 describe('Settings', () => {
 	it('should return instance with default values', () => {
@@ -19,7 +19,7 @@ describe('Settings', () => {
 	});
 
 	it('should return instance with custom values', () => {
-		const lstatSync = noop as unknown as typeof fs.FILE_SYSTEM_ADAPTER.lstatSync;
+		const lstatSync = (): Stats => new Stats();
 
 		const settings = new Settings({
 			fs: fs.createFileSystemAdapter({ lstatSync }),

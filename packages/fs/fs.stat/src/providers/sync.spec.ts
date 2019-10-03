@@ -61,7 +61,7 @@ describe('Providers → Sync', () => {
 		it('should return lstat for broken symlink entry when the "throwErrorOnBrokenSymbolicLink" option is disabled', () => {
 			const lstatSync = () => new Stats({ isSymbolicLink: true });
 			const statSync = () => {
-				throw new Error();
+				throw new Error('error');
 			};
 
 			const settings = new Settings({

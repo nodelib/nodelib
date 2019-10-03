@@ -73,7 +73,7 @@ describe('Package', () => {
 		it('should throw an error for non-exist directory', async () => {
 			const stream = pkg.walkStream('non-exist-directory');
 
-			return assert.rejects(() => streamToPromise(stream), (error: Errno) => error.code === 'ENOENT');
+			await assert.rejects(() => streamToPromise(stream), (error: Errno) => error.code === 'ENOENT');
 		});
 
 		it('should work without options or settings', async () => {

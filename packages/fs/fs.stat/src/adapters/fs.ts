@@ -1,11 +1,11 @@
 import * as fs from 'fs';
 
-export interface FileSystemAdapter {
+export type FileSystemAdapter = {
 	lstat: typeof fs.lstat;
 	stat: typeof fs.stat;
 	lstatSync: typeof fs.lstatSync;
 	statSync: typeof fs.statSync;
-}
+};
 
 export const FILE_SYSTEM_ADAPTER: FileSystemAdapter = {
 	lstat: fs.lstat,

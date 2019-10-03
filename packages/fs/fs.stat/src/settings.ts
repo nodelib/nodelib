@@ -1,11 +1,11 @@
 import * as fs from './adapters/fs';
 
-export interface Options {
+export type Options = {
 	followSymbolicLink?: boolean;
 	fs?: Partial<fs.FileSystemAdapter>;
 	markSymbolicLink?: boolean;
 	throwErrorOnBrokenSymbolicLink?: boolean;
-}
+};
 
 export default class Settings {
 	public readonly followSymbolicLink: boolean = this._getValue(this._options.followSymbolicLink, true);

@@ -16,6 +16,8 @@ function stat(path: string, optionsOrSettingsOrCallback: Options | Settings | As
 	async.read(path, getSettings(optionsOrSettingsOrCallback), callback as AsyncCallback);
 }
 
+// https://github.com/typescript-eslint/typescript-eslint/issues/60
+// eslint-disable-next-line no-redeclare
 declare namespace stat {
 	function __promisify__(path: string, optionsOrSettings?: Options | Settings): Promise<Stats>;
 }

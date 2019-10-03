@@ -8,6 +8,7 @@ const gid = process.platform === 'win32' ? undefined : process.getgid();
 export default class Stats implements fs.Stats {
 	public readonly _date: Date = new Date();
 
+	// eslint-disable-next-line unicorn/prevent-abbreviations
 	public readonly dev: number = ('dev' in this._options) ? this._options.dev as number : 0;
 	public readonly ino: number = ('ino' in this._options) ? this._options.ino as number : 0;
 	public readonly mode: number = ('mode' in this._options) ? this._options.mode as number : 0;

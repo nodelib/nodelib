@@ -74,7 +74,7 @@ describe('Stats', () => {
 		const date = new Date();
 
 		const stats = new Stats({
-			dev: 1,
+			dev: 1, // eslint-disable-line unicorn/prevent-abbreviations
 			ino: 1,
 			mode: 1,
 			nlink: 1,

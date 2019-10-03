@@ -5,11 +5,9 @@ import { Stats } from '../../../fs.macchiato';
 
 import * as adapter from './fs';
 
-import { FileSystemAdapter } from './fs';
-
 describe('Adapters → FileSystem', () => {
 	it('should return original FS methods', () => {
-		const expected: FileSystemAdapter = adapter.FILE_SYSTEM_ADAPTER;
+		const expected: adapter.FileSystemAdapter = adapter.FILE_SYSTEM_ADAPTER;
 
 		const actual = adapter.createFileSystemAdapter();
 
@@ -19,7 +17,7 @@ describe('Adapters → FileSystem', () => {
 	it('should return custom FS methods', () => {
 		const customLstatSyncMethod: typeof fs.lstatSync = () => new Stats();
 
-		const expected: FileSystemAdapter = {
+		const expected: adapter.FileSystemAdapter = {
 			...adapter.FILE_SYSTEM_ADAPTER,
 			lstatSync: customLstatSyncMethod
 		};

@@ -17,19 +17,19 @@ export default class SyncReader extends Reader {
 		return [...this._storage];
 	}
 
-	private _pushToQueue(dir: string, base?: string): void {
-		this._queue.add({ dir, base });
+	private _pushToQueue(directory: string, base?: string): void {
+		this._queue.add({ directory, base });
 	}
 
 	private _handleQueue(): void {
 		for (const item of this._queue.values()) {
-			this._handleDirectory(item.dir, item.base);
+			this._handleDirectory(item.directory, item.base);
 		}
 	}
 
-	private _handleDirectory(dir: string, base?: string): void {
+	private _handleDirectory(directory: string, base?: string): void {
 		try {
-			const entries = this._scandir(dir, this._settings.fsScandirSettings);
+			const entries = this._scandir(directory, this._settings.fsScandirSettings);
 
 			for (const entry of entries) {
 				this._handleEntry(entry, base);

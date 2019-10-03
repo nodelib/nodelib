@@ -62,8 +62,8 @@ export default class AsyncReader extends Reader {
 		this._emitter.once('end', callback);
 	}
 
-	private _pushToQueue(dir: string, base?: string): void {
-		const queueItem: QueueItem = { dir, base };
+	private _pushToQueue(directory: string, base?: string): void {
+		const queueItem: QueueItem = { directory, base };
 
 		this._queue.push(queueItem, (error: Error | null) => {
 			if (error !== null) {
@@ -73,7 +73,7 @@ export default class AsyncReader extends Reader {
 	}
 
 	private _worker(item: QueueItem, done: fastq.done): void {
-		this._scandir(item.dir, this._settings.fsScandirSettings, (error: NodeJS.ErrnoException | null, entries) => {
+		this._scandir(item.directory, this._settings.fsScandirSettings, (error: NodeJS.ErrnoException | null, entries) => {
 			if (error !== null) {
 				return done(error, undefined);
 			}

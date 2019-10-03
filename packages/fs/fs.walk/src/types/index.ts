@@ -4,6 +4,6 @@ export type Entry = scandir.Entry;
 export type Errno = NodeJS.ErrnoException;
 
 export type QueueItem = {
-	dir: string;
+	directory: string;
 	base?: string;
 };

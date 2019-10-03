@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 import * as fs from 'fs';
 
-import rimraf = require('rimraf');
+import * as rimraf from 'rimraf';
 
 import * as pkg from './index';
 

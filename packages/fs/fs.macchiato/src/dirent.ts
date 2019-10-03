@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import { PrepareOptionsFromClass } from './types';
 
 export default class Dirent implements fs.Dirent {
-	public readonly name: string = this._options.name || 'unknown.txt';
+	public readonly name: string = this._options.name === undefined ? 'unknown.txt' : this._options.name;
 
 	constructor(private readonly _options: PrepareOptionsFromClass<fs.Dirent> = {}) { }
 

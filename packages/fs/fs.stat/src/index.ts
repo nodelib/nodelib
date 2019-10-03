@@ -2,7 +2,7 @@ import { FileSystemAdapter } from './adapters/fs';
 import * as async from './providers/async';
 import * as sync from './providers/sync';
 import Settings, { Options } from './settings';
-import { Stats } from './types/index';
+import { Stats } from './types';
 
 type AsyncCallback = async.AsyncCallback;
 

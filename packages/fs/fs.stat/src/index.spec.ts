@@ -3,7 +3,7 @@ import * as fs from 'fs';
 
 import * as rimraf from 'rimraf';
 
-import * as pkg from './index';
+import * as pkg from '.';
 
 describe('Package', () => {
 	before(() => {

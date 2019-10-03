@@ -1,5 +1,5 @@
 import Settings from '../settings';
-import { ErrnoException, Stats } from '../types/index';
+import { ErrnoException, Stats } from '../types';
 
 type FailureCallback = (err: ErrnoException) => void;
 type SuccessCallback = (err: null, stats: Stats) => void;

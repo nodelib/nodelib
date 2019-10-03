@@ -4,7 +4,7 @@ import * as path from 'path';
 import * as sinon from 'sinon';
 
 import Settings from '../settings';
-import * as tests from '../tests/index';
+import * as tests from '../tests';
 import SyncReader from './sync';
 
 class TestReader extends SyncReader {

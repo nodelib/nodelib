@@ -4,7 +4,7 @@ import * as fsScandir from '@nodelib/fs.scandir';
 import * as fastq from 'fastq';
 
 import Settings from '../settings';
-import { Entry, Errno, QueueItem } from '../types/index';
+import { Entry, Errno, QueueItem } from '../types';
 import * as common from './common';
 import Reader from './reader';
 

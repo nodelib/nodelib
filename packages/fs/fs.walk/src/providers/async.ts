@@ -1,6 +1,6 @@
 import AsyncReader from '../readers/async';
 import Settings from '../settings';
-import { Entry, Errno } from '../types/index';
+import { Entry, Errno } from '../types';
 
 type FailureCallback = (err: Errno) => void;
 type SuccessCallback = (err: null, entries: Entry[]) => void;

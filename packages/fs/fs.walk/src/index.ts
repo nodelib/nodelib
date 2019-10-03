@@ -6,7 +6,7 @@ import AsyncProvider, { AsyncCallback } from './providers/async';
 import StreamProvider from './providers/stream';
 import SyncProvider from './providers/sync';
 import Settings, { DeepFilterFunction, EntryFilterFunction, ErrorFilterFunction, Options } from './settings';
-import { Entry } from './types/index';
+import { Entry } from './types';
 
 function walk(dir: string, callback: AsyncCallback): void;
 function walk(dir: string, optionsOrSettings: Options | Settings, callback: AsyncCallback): void;

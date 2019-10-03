@@ -4,7 +4,7 @@ import { Readable } from 'stream';
 
 import * as rimraf from 'rimraf';
 
-import * as pkg from './index';
+import * as pkg from '.';
 import { Errno } from './types';
 
 const entryFilter = (entry: pkg.Entry): boolean => !entry.dirent.isDirectory();

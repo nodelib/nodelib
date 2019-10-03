@@ -4,7 +4,7 @@ import * as sinon from 'sinon';
 
 import AsyncReader from '../readers/async';
 import Settings from '../settings';
-import * as tests from '../tests/index';
+import * as tests from '../tests';
 import AsyncProvider from './async';
 
 class TestProvider extends AsyncProvider {

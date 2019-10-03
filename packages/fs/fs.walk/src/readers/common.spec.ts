@@ -2,7 +2,7 @@ import * as assert from 'assert';
 import * as path from 'path';
 
 import Settings from '../settings';
-import * as tests from '../tests/index';
+import * as tests from '../tests';
 import * as common from './common';
 
 describe('Readers → Common', () => {

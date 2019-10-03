@@ -1,6 +1,6 @@
 import * as fsScandir from '@nodelib/fs.scandir';
 
-import { Entry, Errno, QueueItem } from '../types/index';
+import { Entry, Errno, QueueItem } from '../types';
 import * as common from './common';
 import Reader from './reader';
 

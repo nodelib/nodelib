@@ -10,8 +10,6 @@ export type Entry = {
 export type Stats = fs.Stats;
 
 export type Dirent = {
-	name: string;
-
 	isBlockDevice(): boolean;
 	isCharacterDevice(): boolean;
 	isDirectory(): boolean;
@@ -19,4 +17,5 @@ export type Dirent = {
 	isFile(): boolean;
 	isSocket(): boolean;
 	isSymbolicLink(): boolean;
+	name: string;
 };

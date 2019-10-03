@@ -24,7 +24,7 @@ describe('Settings', () => {
 	});
 
 	it('should return instance with custom values', () => {
-		const filter = () => true;
+		const filter = (): boolean => true;
 
 		const fsWalkSettings = new Settings({ entryFilter: filter });
 

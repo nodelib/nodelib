@@ -3,7 +3,7 @@ import * as assert from 'assert';
 import * as fs from './adapters/fs';
 import Settings from './settings';
 
-const noop = () => undefined;
+const noop = (): undefined => undefined;
 
 describe('Settings', () => {
 	it('should return instance with default values', () => {

@@ -13,16 +13,16 @@ type SuccessCallback = (err: null, entries: Entry[]) => void;
 
 export type AsyncCallback = (err: NodeJS.ErrnoException, entries: Entry[]) => void;
 
-export function read(dir: string, settings: Settings, callback: AsyncCallback): void {
+export function read(directory: string, settings: Settings, callback: AsyncCallback): void {
 	if (!settings.stats && IS_SUPPORT_READDIR_WITH_FILE_TYPES) {
-		return readdirWithFileTypes(dir, settings, callback);
+		return readdirWithFileTypes(directory, settings, callback);
 	}
 
-	return readdir(dir, settings, callback);
+	return readdir(directory, settings, callback);
 }
 
-export function readdirWithFileTypes(dir: string, settings: Settings, callback: AsyncCallback): void {
-	settings.fs.readdir(dir, { withFileTypes: true }, (readdirError, dirents) => {
+export function readdirWithFileTypes(directory: string, settings: Settings, callback: AsyncCallback): void {
+	settings.fs.readdir(directory, { withFileTypes: true }, (readdirError, dirents) => {
 		if (readdirError) {
 			return callFailureCallback(callback, readdirError);
 		}
@@ -30,7 +30,7 @@ export function readdirWithFileTypes(dir: string, settings: Settings, callback: 
 		const entries: Entry[] = dirents.map((dirent) => ({
 			dirent,
 			name: dirent.name,
-			path: `${dir}${settings.pathSegmentSeparator}${dirent.name}`
+			path: `${directory}${settings.pathSegmentSeparator}${dirent.name}`
 		}));
 
 		if (!settings.followSymbolicLinks) {
@@ -71,13 +71,13 @@ function makeRplTaskEntry(entry: Entry, settings: Settings): RplTaskEntry {
 	};
 }
 
-export function readdir(dir: string, settings: Settings, callback: AsyncCallback): void {
-	settings.fs.readdir(dir, (readdirError, names) => {
+export function readdir(directory: string, settings: Settings, callback: AsyncCallback): void {
+	settings.fs.readdir(directory, (readdirError, names) => {
 		if (readdirError) {
 			return callFailureCallback(callback, readdirError);
 		}
 
-		const filepaths = names.map((name) => `${dir}${settings.pathSegmentSeparator}${name}`);
+		const filepaths = names.map((name) => `${directory}${settings.pathSegmentSeparator}${name}`);
 
 		const tasks: RplTaskStats[] = filepaths.map((filepath): RplTaskStats => {
 			return (done) => fsStat.stat(filepath, settings.fsStatSettings, done);

@@ -41,6 +41,8 @@ export {
 	scandirSync,
 	Settings,
 
+	// https://github.com/typescript-eslint/typescript-eslint/issues/131
+	// eslint-disable-next-line no-undef
 	AsyncCallback,
 	Dirent,
 	Entry,

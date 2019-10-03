@@ -18,6 +18,8 @@ function walk(dir: string, optionsOrSettingsOrCallback: Options | Settings | Asy
 	new AsyncProvider(dir, getSettings(optionsOrSettingsOrCallback)).read(callback as AsyncCallback);
 }
 
+// https://github.com/typescript-eslint/typescript-eslint/issues/60
+// eslint-disable-next-line no-redeclare
 declare namespace walk {
 	function __promisify__(dir: string, optionsOrSettings?: Options | Settings): Promise<Entry[]>;
 }

@@ -9,7 +9,7 @@ export type DeepFilterFunction = FilterFunction<Entry>;
 export type EntryFilterFunction = FilterFunction<Entry>;
 export type ErrorFilterFunction = FilterFunction<Errno>;
 
-export interface Options {
+export type Options = {
 	basePath?: string;
 	concurrency?: number;
 	deepFilter?: DeepFilterFunction;
@@ -20,7 +20,7 @@ export interface Options {
 	pathSegmentSeparator?: string;
 	stats?: boolean;
 	throwErrorOnBrokenSymbolicLink?: boolean;
-}
+};
 
 export default class Settings {
 	public readonly basePath?: string = this._getValue(this._options.basePath, undefined);

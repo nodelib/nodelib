@@ -23,7 +23,7 @@ export function read(directory: string, settings: Settings, callback: AsyncCallb
 
 export function readdirWithFileTypes(directory: string, settings: Settings, callback: AsyncCallback): void {
 	settings.fs.readdir(directory, { withFileTypes: true }, (readdirError, dirents) => {
-		if (readdirError) {
+		if (readdirError !== null) {
 			return callFailureCallback(callback, readdirError);
 		}
 
@@ -40,7 +40,7 @@ export function readdirWithFileTypes(directory: string, settings: Settings, call
 		const tasks: RplTaskEntry[] = entries.map((entry) => makeRplTaskEntry(entry, settings));
 
 		rpl(tasks, (rplError: Error | null, rplEntries) => {
-			if (rplError) {
+			if (rplError !== null) {
 				return callFailureCallback(callback, rplError);
 			}
 
@@ -56,7 +56,7 @@ function makeRplTaskEntry(entry: Entry, settings: Settings): RplTaskEntry {
 		}
 
 		settings.fs.stat(entry.path, (statError, stats) => {
-			if (statError) {
+			if (statError !== null) {
 				if (settings.throwErrorOnBrokenSymbolicLink) {
 					return done(statError);
 				}
@@ -73,7 +73,7 @@ function makeRplTaskEntry(entry: Entry, settings: Settings): RplTaskEntry {
 
 export function readdir(directory: string, settings: Settings, callback: AsyncCallback): void {
 	settings.fs.readdir(directory, (readdirError, names) => {
-		if (readdirError) {
+		if (readdirError !== null) {
 			return callFailureCallback(callback, readdirError);
 		}
 
@@ -84,7 +84,7 @@ export function readdir(directory: string, settings: Settings, callback: AsyncCa
 		});
 
 		rpl(tasks, (rplError: Error | null, results) => {
-			if (rplError) {
+			if (rplError !== null) {
 				return callFailureCallback(callback, rplError);
 			}
 

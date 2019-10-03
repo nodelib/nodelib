@@ -90,8 +90,7 @@ export function readdir(dir: string, settings: Settings, callback: AsyncCallback
 
 			const entries: Entry[] = [];
 
-			for (let index = 0; index < names.length; index++) {
-				const name = names[index];
+			names.forEach((name, index) => {
 				const stats = results[index];
 
 				const entry: Entry = {
@@ -105,7 +104,7 @@ export function readdir(dir: string, settings: Settings, callback: AsyncCallback
 				}
 
 				entries.push(entry);
-			}
+			});
 
 			callSuccessCallback(callback, entries);
 		});

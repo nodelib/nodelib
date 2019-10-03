@@ -14,7 +14,7 @@ export default class SyncReader extends Reader {
 		this._pushToQueue(this._root, this._settings.basePath);
 		this._handleQueue();
 
-		return Array.from(this._storage);
+		return [...this._storage];
 	}
 
 	private _pushToQueue(dir: string, base?: string): void {

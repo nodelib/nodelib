@@ -39,7 +39,7 @@ export function readdirWithFileTypes(dir: string, settings: Settings, callback: 
 
 		const tasks: RplTaskEntry[] = entries.map((entry) => makeRplTaskEntry(entry, settings));
 
-		rpl(tasks, (rplError, rplEntries) => {
+		rpl(tasks, (rplError: Error | null, rplEntries) => {
 			if (rplError) {
 				return callFailureCallback(callback, rplError);
 			}
@@ -83,7 +83,7 @@ export function readdir(dir: string, settings: Settings, callback: AsyncCallback
 			return (done) => fsStat.stat(filepath, settings.fsStatSettings, done);
 		});
 
-		rpl(tasks, (rplError, results) => {
+		rpl(tasks, (rplError: Error | null, results) => {
 			if (rplError) {
 				return callFailureCallback(callback, rplError);
 			}

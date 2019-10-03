@@ -21,7 +21,11 @@ export function buildFakeDirectoryEntry(entry?: Partial<Entry>): Entry {
 	};
 }
 
-export const EPERM_ERRNO = { code: 'EPERM' } as Errno;
+export const EPERM_ERRNO: Errno = {
+	name: 'EPERM',
+	code: 'EPERM',
+	message: 'EPERM'
+};
 
 export class TestAsyncReader {
 	public read: sinon.SinonStub = sinon.stub();

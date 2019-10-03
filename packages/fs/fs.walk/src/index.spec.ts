@@ -2,7 +2,7 @@ import * as assert from 'assert';
 import * as fs from 'fs';
 import { Readable } from 'stream';
 
-import rimraf = require('rimraf');
+import * as rimraf from 'rimraf';
 
 import * as pkg from './index';
 import { Errno } from './types';

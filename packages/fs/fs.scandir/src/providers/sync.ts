@@ -2,25 +2,25 @@ import * as fsStat from '@nodelib/fs.stat';
 
 import { IS_SUPPORT_READDIR_WITH_FILE_TYPES } from '../constants';
 import Settings from '../settings';
-import { Entry } from '../types/index';
-import * as utils from '../utils/index';
+import { Entry } from '../types';
+import * as utils from '../utils';
 
-export function read(dir: string, settings: Settings): Entry[] {
+export function read(directory: string, settings: Settings): Entry[] {
 	if (!settings.stats && IS_SUPPORT_READDIR_WITH_FILE_TYPES) {
-		return readdirWithFileTypes(dir, settings);
+		return readdirWithFileTypes(directory, settings);
 	}
 
-	return readdir(dir, settings);
+	return readdir(directory, settings);
 }
 
-export function readdirWithFileTypes(dir: string, settings: Settings): Entry[] {
-	const dirents = settings.fs.readdirSync(dir, { withFileTypes: true });
+export function readdirWithFileTypes(directory: string, settings: Settings): Entry[] {
+	const dirents = settings.fs.readdirSync(directory, { withFileTypes: true });
 
 	return dirents.map((dirent) => {
 		const entry: Entry = {
 			dirent,
 			name: dirent.name,
-			path: `${dir}${settings.pathSegmentSeparator}${dirent.name}`
+			path: `${directory}${settings.pathSegmentSeparator}${dirent.name}`
 		};
 
 		if (entry.dirent.isSymbolicLink() && settings.followSymbolicLinks) {
@@ -39,11 +39,11 @@ export function readdirWithFileTypes(dir: string, settings: Settings): Entry[] {
 	});
 }
 
-export function readdir(dir: string, settings: Settings): Entry[] {
-	const names = settings.fs.readdirSync(dir);
+export function readdir(directory: string, settings: Settings): Entry[] {
+	const names = settings.fs.readdirSync(directory);
 
 	return names.map((name) => {
-		const entryPath = `${dir}${settings.pathSegmentSeparator}${name}`;
+		const entryPath = `${directory}${settings.pathSegmentSeparator}${name}`;
 		const stats = fsStat.statSync(entryPath, settings.fsStatSettings);
 
 		const entry: Entry = {

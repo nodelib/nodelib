@@ -2,12 +2,12 @@ import * as assert from 'assert';
 import * as fs from 'fs';
 import { Readable } from 'stream';
 
-import rimraf = require('rimraf');
+import * as rimraf from 'rimraf';
 
-import * as pkg from './index';
 import { Errno } from './types';
+import * as pkg from '.';
 
-const entryFilter = (entry: pkg.Entry) => !entry.dirent.isDirectory();
+const entryFilter = (entry: pkg.Entry): boolean => !entry.dirent.isDirectory();
 
 function streamToPromise(stream: Readable): Promise<pkg.Entry[]> {
 	const entries: pkg.Entry[] = [];
@@ -73,7 +73,7 @@ describe('Package', () => {
 		it('should throw an error for non-exist directory', async () => {
 			const stream = pkg.walkStream('non-exist-directory');
 
-			return assert.rejects(() => streamToPromise(stream), (error: Errno) => error.code === 'ENOENT');
+			await assert.rejects(() => streamToPromise(stream), (error: Errno) => error.code === 'ENOENT');
 		});
 
 		it('should work without options or settings', async () => {
@@ -101,7 +101,7 @@ describe('Package', () => {
 
 	describe('.walkSync', () => {
 		it('should throw an error for non-exist directory', () => {
-			const matcher = (error: Errno) => error.code === 'ENOENT';
+			const matcher = (error: Errno): boolean => error.code === 'ENOENT';
 
 			assert.throws(() => pkg.walkSync('non-exist-directory'), matcher);
 		});

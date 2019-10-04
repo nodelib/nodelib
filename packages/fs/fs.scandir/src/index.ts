@@ -16,6 +16,8 @@ function scandir(path: string, optionsOrSettingsOrCallback: Options | Settings |
 	async.read(path, getSettings(optionsOrSettingsOrCallback), callback as AsyncCallback);
 }
 
+// https://github.com/typescript-eslint/typescript-eslint/issues/60
+// eslint-disable-next-line no-redeclare
 declare namespace scandir {
 	function __promisify__(path: string, optionsOrSettings?: Options | Settings): Promise<Entry[]>;
 }
@@ -39,6 +41,8 @@ export {
 	scandirSync,
 	Settings,
 
+	// https://github.com/typescript-eslint/typescript-eslint/issues/131
+	// eslint-disable-next-line no-undef
 	AsyncCallback,
 	Dirent,
 	Entry,

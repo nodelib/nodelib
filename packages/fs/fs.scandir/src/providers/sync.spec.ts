@@ -7,7 +7,7 @@ import * as sinon from 'sinon';
 import { Dirent, Stats } from '../../../fs.macchiato';
 import { IS_SUPPORT_READDIR_WITH_FILE_TYPES } from '../constants';
 import Settings from '../settings';
-import { Entry } from '../types/index';
+import { Entry } from '../types';
 import * as provider from './sync';
 
 const ROOT_PATH = 'root';
@@ -100,7 +100,7 @@ describe('Providers → Sync', () => {
 			const dirent = new Dirent({ name: FIRST_FILE_PATH, isSymbolicLink: true });
 
 			const readdirSync = sinon.stub().returns([dirent]);
-			const statSync = () => {
+			const statSync = (): never => {
 				throw new Error('error');
 			};
 
@@ -122,7 +122,7 @@ describe('Providers → Sync', () => {
 			const dirent = new Dirent({ name: FIRST_FILE_PATH, isSymbolicLink: true });
 
 			const readdirSync = sinon.stub().returns([dirent]);
-			const statSync = () => {
+			const statSync = (): never => {
 				throw new Error('error');
 			};
 

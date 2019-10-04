@@ -1,6 +1,6 @@
 import AsyncReader from '../readers/async';
 import Settings from '../settings';
-import { Entry, Errno } from '../types/index';
+import { Entry, Errno } from '../types';
 
 type FailureCallback = (err: Errno) => void;
 type SuccessCallback = (err: null, entries: Entry[]) => void;
@@ -24,7 +24,7 @@ export default class AsyncProvider {
 		});
 
 		this._reader.onEnd(() => {
-			callSuccessCallback(callback, Array.from(this._storage));
+			callSuccessCallback(callback, [...this._storage]);
 		});
 
 		this._reader.read();

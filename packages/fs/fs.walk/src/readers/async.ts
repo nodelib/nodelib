@@ -4,7 +4,7 @@ import * as fsScandir from '@nodelib/fs.scandir';
 import * as fastq from 'fastq';
 
 import Settings from '../settings';
-import { Entry, Errno, QueueItem } from '../types/index';
+import { Entry, Errno, QueueItem } from '../types';
 import * as common from './common';
 import Reader from './reader';
 
@@ -62,19 +62,19 @@ export default class AsyncReader extends Reader {
 		this._emitter.once('end', callback);
 	}
 
-	private _pushToQueue(dir: string, base?: string): void {
-		const queueItem: QueueItem = { dir, base };
+	private _pushToQueue(directory: string, base?: string): void {
+		const queueItem: QueueItem = { directory, base };
 
-		this._queue.push(queueItem, (error) => {
-			if (error) {
+		this._queue.push(queueItem, (error: Error | null) => {
+			if (error !== null) {
 				this._handleError(error);
 			}
 		});
 	}
 
 	private _worker(item: QueueItem, done: fastq.done): void {
-		this._scandir(item.dir, this._settings.fsScandirSettings, (error, entries) => {
-			if (error) {
+		this._scandir(item.directory, this._settings.fsScandirSettings, (error: NodeJS.ErrnoException | null, entries) => {
+			if (error !== null) {
 				return done(error, undefined);
 			}
 

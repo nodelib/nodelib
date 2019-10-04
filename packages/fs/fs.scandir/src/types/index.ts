@@ -1,17 +1,15 @@
 import * as fs from 'fs';
 
-export interface Entry {
+export type Entry = {
 	dirent: Dirent;
 	name: string;
 	path: string;
 	stats?: Stats;
-}
+};
 
 export type Stats = fs.Stats;
 
-export interface Dirent {
-	name: string;
-
+export type Dirent = {
 	isBlockDevice(): boolean;
 	isCharacterDevice(): boolean;
 	isDirectory(): boolean;
@@ -19,4 +17,5 @@ export interface Dirent {
 	isFile(): boolean;
 	isSocket(): boolean;
 	isSymbolicLink(): boolean;
-}
+	name: string;
+};

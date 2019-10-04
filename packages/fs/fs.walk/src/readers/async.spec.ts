@@ -5,8 +5,8 @@ import * as fsScandir from '@nodelib/fs.scandir';
 import * as sinon from 'sinon';
 
 import Settings from '../settings';
-import * as tests from '../tests/index';
-import { Entry } from '../types/index';
+import * as tests from '../tests';
+import { Entry } from '../types';
 import AsyncReader from './async';
 
 type ScandirSignature = typeof fsScandir.scandir;

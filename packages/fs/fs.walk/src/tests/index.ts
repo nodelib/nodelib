@@ -1,7 +1,7 @@
 import * as sinon from 'sinon';
 
 import { Dirent } from '../../../fs.macchiato';
-import { Entry, Errno } from '../types/index';
+import { Entry, Errno } from '../types';
 
 export function buildFakeFileEntry(entry?: Partial<Entry>): Entry {
 	return {
@@ -21,7 +21,11 @@ export function buildFakeDirectoryEntry(entry?: Partial<Entry>): Entry {
 	};
 }
 
-export const EPERM_ERRNO = { code: 'EPERM' } as Errno;
+export const EPERM_ERRNO: Errno = {
+	name: 'EPERM',
+	code: 'EPERM',
+	message: 'EPERM'
+};
 
 export class TestAsyncReader {
 	public read: sinon.SinonStub = sinon.stub();

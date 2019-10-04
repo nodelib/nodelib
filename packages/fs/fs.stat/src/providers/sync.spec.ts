@@ -7,7 +7,7 @@ import * as provider from './sync';
 describe('Providers → Sync', () => {
 	describe('.read', () => {
 		it('should return lstat for non-symlink entry', () => {
-			const lstatSync = () => new Stats();
+			const lstatSync = (): Stats => new Stats();
 
 			const settings = new Settings({
 				fs: { lstatSync }
@@ -19,7 +19,7 @@ describe('Providers → Sync', () => {
 		});
 
 		it('should return lstat for symlink entry when the "followSymbolicLink" option is disabled', () => {
-			const lstatSync = () => new Stats({ isSymbolicLink: true });
+			const lstatSync = (): Stats => new Stats({ isSymbolicLink: true });
 
 			const settings = new Settings({
 				followSymbolicLink: false,
@@ -32,8 +32,8 @@ describe('Providers → Sync', () => {
 		});
 
 		it('should return stat for symlink entry', () => {
-			const lstatSync = () => new Stats({ isSymbolicLink: true });
-			const statSync = () => new Stats({ ino: 1 });
+			const lstatSync = (): Stats => new Stats({ isSymbolicLink: true });
+			const statSync = (): Stats => new Stats({ ino: 1 });
 
 			const settings = new Settings({
 				fs: { lstatSync, statSync }
@@ -45,8 +45,8 @@ describe('Providers → Sync', () => {
 		});
 
 		it('should return marked stat for symlink entry when the "markSymbolicLink" option is enabled', () => {
-			const lstatSync = () => new Stats({ isSymbolicLink: true });
-			const statSync = () => new Stats({ ino: 1 });
+			const lstatSync = (): Stats => new Stats({ isSymbolicLink: true });
+			const statSync = (): Stats => new Stats({ ino: 1 });
 
 			const settings = new Settings({
 				markSymbolicLink: true,
@@ -59,9 +59,9 @@ describe('Providers → Sync', () => {
 		});
 
 		it('should return lstat for broken symlink entry when the "throwErrorOnBrokenSymbolicLink" option is disabled', () => {
-			const lstatSync = () => new Stats({ isSymbolicLink: true });
-			const statSync = () => {
-				throw new Error();
+			const lstatSync = (): Stats => new Stats({ isSymbolicLink: true });
+			const statSync = (): never => {
+				throw new Error('error');
 			};
 
 			const settings = new Settings({
@@ -75,8 +75,8 @@ describe('Providers → Sync', () => {
 		});
 
 		it('should throw an error when symlink entry is broken', () => {
-			const lstatSync = () => new Stats({ isSymbolicLink: true });
-			const statSync = () => {
+			const lstatSync = (): Stats => new Stats({ isSymbolicLink: true });
+			const statSync = (): never => {
 				throw new Error('broken');
 			};
 

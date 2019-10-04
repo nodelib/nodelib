@@ -20,7 +20,7 @@
   "typings": "out/index.d.ts",
   "scripts": {
     "clean": "rimraf {tsconfig.tsbuildinfo,out}",
-    "lint": "tslint \"src/**/*.ts\" -p . -t stylish",
+    "lint": "eslint \"src/**/*.ts\" --cache",
     "compile": "tsc -b .",
     "compile:watch": "tsc -p . --watch --sourceMap",
     "test": "mocha \"out/**/*.spec.js\" -s 0",

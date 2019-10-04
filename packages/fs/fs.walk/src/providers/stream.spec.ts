@@ -5,7 +5,7 @@ import * as sinon from 'sinon';
 
 import AsyncReader from '../readers/async';
 import Settings from '../settings';
-import * as tests from '../tests/index';
+import * as tests from '../tests';
 import StreamProvider from './stream';
 
 class TestProvider extends StreamProvider {

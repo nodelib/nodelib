@@ -1,6 +1,6 @@
 import SyncReader from '../readers/sync';
 import Settings from '../settings';
-import { Entry } from '../types/index';
+import { Entry } from '../types';
 
 export default class SyncProvider {
 	protected readonly _reader: SyncReader = new SyncReader(this._root, this._settings);

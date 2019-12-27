@@ -28,6 +28,6 @@ export default class Settings {
 	constructor(private readonly _options: Options = {}) { }
 
 	private _getValue<T>(option: T | undefined, value: T): T {
-		return option === undefined ? value : option;
+		return option ?? value;
 	}
 }

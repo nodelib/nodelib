@@ -5,15 +5,15 @@ import { Readable } from 'stream';
 import * as rimraf from 'rimraf';
 
 import { Errno } from './types';
-import * as pkg from '.';
+import { walk, walkSync, walkStream, Settings, Entry } from '.';
 
-const entryFilter = (entry: pkg.Entry): boolean => !entry.dirent.isDirectory();
+const entryFilter = (entry: Entry): boolean => !entry.dirent.isDirectory();
 
-function streamToPromise(stream: Readable): Promise<pkg.Entry[]> {
-	const entries: pkg.Entry[] = [];
+function streamToPromise(stream: Readable): Promise<Entry[]> {
+	const entries: Entry[] = [];
 
 	return new Promise((resolve, reject) => {
-		stream.on('data', (entry: pkg.Entry) => entries.push(entry));
+		stream.on('data', (entry: Entry) => entries.push(entry));
 		stream.once('error', reject);
 		stream.once('end', () => resolve(entries));
 	});
@@ -35,7 +35,7 @@ describe('Package', () => {
 
 	describe('.walk', () => {
 		it('should throw an error for non-exist directory', (done) => {
-			pkg.walk('non-exist-directory', (error, entries) => {
+			walk('non-exist-directory', (error, entries) => {
 				assert.strictEqual(error.code, 'ENOENT');
 				assert.strictEqual(entries, undefined);
 				done();
@@ -43,7 +43,7 @@ describe('Package', () => {
 		});
 
 		it('should work without options or settings', (done) => {
-			pkg.walk('fixtures', (error, entries) => {
+			walk('fixtures', (error, entries) => {
 				assert.strictEqual(error, null);
 				assert.strictEqual(entries.length, 3);
 				done();
@@ -51,7 +51,7 @@ describe('Package', () => {
 		});
 
 		it('should work with options', (done) => {
-			pkg.walk('fixtures', { entryFilter }, (error, entries) => {
+			walk('fixtures', { entryFilter }, (error, entries) => {
 				assert.strictEqual(error, null);
 				assert.strictEqual(entries.length, 2);
 				done();
@@ -59,9 +59,9 @@ describe('Package', () => {
 		});
 
 		it('should work with settings', (done) => {
-			const settings = new pkg.Settings({ entryFilter });
+			const settings = new Settings({ entryFilter });
 
-			pkg.walk('fixtures', settings, (error, entries) => {
+			walk('fixtures', settings, (error, entries) => {
 				assert.strictEqual(error, null);
 				assert.strictEqual(entries.length, 2);
 				done();
@@ -71,28 +71,28 @@ describe('Package', () => {
 
 	describe('.walkStream', () => {
 		it('should throw an error for non-exist directory', async () => {
-			const stream = pkg.walkStream('non-exist-directory');
+			const stream = walkStream('non-exist-directory');
 
 			await assert.rejects(() => streamToPromise(stream), (error: Errno) => error.code === 'ENOENT');
 		});
 
 		it('should work without options or settings', async () => {
-			const stream = pkg.walkStream('fixtures');
+			const stream = walkStream('fixtures');
 			const actual = await streamToPromise(stream);
 
 			assert.strictEqual(actual.length, 3);
 		});
 
 		it('should work with options', async () => {
-			const stream = pkg.walkStream('fixtures', { entryFilter });
+			const stream = walkStream('fixtures', { entryFilter });
 			const actual = await streamToPromise(stream);
 
 			assert.strictEqual(actual.length, 2);
 		});
 
 		it('should work with settings', async () => {
-			const settings = new pkg.Settings({ entryFilter });
-			const stream = pkg.walkStream('fixtures', settings);
+			const settings = new Settings({ entryFilter });
+			const stream = walkStream('fixtures', settings);
 			const actual = await streamToPromise(stream);
 
 			assert.strictEqual(actual.length, 2);
@@ -103,25 +103,25 @@ describe('Package', () => {
 		it('should throw an error for non-exist directory', () => {
 			const matcher = (error: Errno): boolean => error.code === 'ENOENT';
 
-			assert.throws(() => pkg.walkSync('non-exist-directory'), matcher);
+			assert.throws(() => walkSync('non-exist-directory'), matcher);
 		});
 
 		it('should work without options or settings', () => {
-			const actual = pkg.walkSync('fixtures');
+			const actual = walkSync('fixtures');
 
 			assert.strictEqual(actual.length, 3);
 		});
 
 		it('should work with options', () => {
-			const actual = pkg.walkSync('fixtures', { entryFilter });
+			const actual = walkSync('fixtures', { entryFilter });
 
 			assert.strictEqual(actual.length, 2);
 		});
 
 		it('should work with settings', () => {
-			const settings = new pkg.Settings({ entryFilter });
+			const settings = new Settings({ entryFilter });
 
-			const actual = pkg.walkSync('fixtures', settings);
+			const actual = walkSync('fixtures', settings);
 
 			assert.strictEqual(actual.length, 2);
 		});

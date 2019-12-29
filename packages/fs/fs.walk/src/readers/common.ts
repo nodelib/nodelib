@@ -14,7 +14,7 @@ export function isAppliedFilter<T>(filter: FilterFunction<T> | null, value: T): 
 }
 
 export function replacePathSegmentSeparator(filepath: string, separator: string): string {
-	return filepath.split(/[\\/]/).join(separator);
+	return filepath.split(/[/\\]/).join(separator);
 }
 
 export function joinPathSegments(a: string, b: string, separator: string): string {

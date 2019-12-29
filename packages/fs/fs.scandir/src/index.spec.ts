@@ -3,7 +3,7 @@ import * as fs from 'fs';
 
 import * as rimraf from 'rimraf';
 
-import * as pkg from '.';
+import { scandir, scandirSync, Settings } from '.';
 
 describe('Package', () => {
 	before(() => {
@@ -19,7 +19,7 @@ describe('Package', () => {
 
 	describe('.scandir', () => {
 		it('should work without options or settings', (done) => {
-			pkg.scandir('fixtures', (error, entries) => {
+			scandir('fixtures', (error, entries) => {
 				assert.strictEqual(error, null);
 				assert.ok(entries[0].name);
 				assert.ok(entries[0].path);
@@ -29,7 +29,7 @@ describe('Package', () => {
 		});
 
 		it('should work with options', (done) => {
-			pkg.scandir('fixtures', { stats: true }, (error, entries) => {
+			scandir('fixtures', { stats: true }, (error, entries) => {
 				assert.strictEqual(error, null);
 				assert.ok(entries[0].name);
 				assert.ok(entries[0].path);
@@ -40,9 +40,9 @@ describe('Package', () => {
 		});
 
 		it('should work with settings', (done) => {
-			const settings = new pkg.Settings({ stats: true });
+			const settings = new Settings({ stats: true });
 
-			pkg.scandir('fixtures', settings, (error, entries) => {
+			scandir('fixtures', settings, (error, entries) => {
 				assert.strictEqual(error, null);
 				assert.ok(entries[0].name);
 				assert.ok(entries[0].path);
@@ -55,7 +55,7 @@ describe('Package', () => {
 
 	describe('.scandirSync', () => {
 		it('should work without options or settings', () => {
-			const actual = pkg.scandirSync('fixtures');
+			const actual = scandirSync('fixtures');
 
 			assert.ok(actual[0].name);
 			assert.ok(actual[0].path);
@@ -63,7 +63,7 @@ describe('Package', () => {
 		});
 
 		it('should work with options', () => {
-			const actual = pkg.scandirSync('fixtures', { stats: true });
+			const actual = scandirSync('fixtures', { stats: true });
 
 			assert.ok(actual[0].name);
 			assert.ok(actual[0].path);
@@ -72,9 +72,9 @@ describe('Package', () => {
 		});
 
 		it('should work with settings', () => {
-			const settings = new pkg.Settings({ stats: true });
+			const settings = new Settings({ stats: true });
 
-			const actual = pkg.scandirSync('fixtures', settings);
+			const actual = scandirSync('fixtures', settings);
 
 			assert.ok(actual[0].name);
 			assert.ok(actual[0].path);

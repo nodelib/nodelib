@@ -5,6 +5,7 @@ import { IS_SUPPORT_READDIR_WITH_FILE_TYPES } from '../constants';
 import Settings from '../settings';
 import { Entry, Stats } from '../types';
 import * as utils from '../utils';
+import * as common from './common';
 
 type RplTaskStats = rpl.Task<Stats>;
 type RplTaskEntry = rpl.Task<Entry>;
@@ -30,7 +31,7 @@ export function readdirWithFileTypes(directory: string, settings: Settings, call
 		const entries: Entry[] = dirents.map((dirent) => ({
 			dirent,
 			name: dirent.name,
-			path: `${directory}${settings.pathSegmentSeparator}${dirent.name}`
+			path: common.joinPathSegments(directory, dirent.name, settings.pathSegmentSeparator)
 		}));
 
 		if (!settings.followSymbolicLinks) {
@@ -77,7 +78,7 @@ export function readdir(directory: string, settings: Settings, callback: AsyncCa
 			return callFailureCallback(callback, readdirError);
 		}
 
-		const filepaths = names.map((name) => `${directory}${settings.pathSegmentSeparator}${name}`);
+		const filepaths = names.map((name) => common.joinPathSegments(directory, name, settings.pathSegmentSeparator));
 
 		const tasks: RplTaskStats[] = filepaths.map((filepath): RplTaskStats => {
 			return (done) => fsStat.stat(filepath, settings.fsStatSettings, done);

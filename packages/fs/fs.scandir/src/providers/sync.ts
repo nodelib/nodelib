@@ -4,6 +4,7 @@ import { IS_SUPPORT_READDIR_WITH_FILE_TYPES } from '../constants';
 import Settings from '../settings';
 import { Entry } from '../types';
 import * as utils from '../utils';
+import * as common from './common';
 
 export function read(directory: string, settings: Settings): Entry[] {
 	if (!settings.stats && IS_SUPPORT_READDIR_WITH_FILE_TYPES) {
@@ -20,7 +21,7 @@ export function readdirWithFileTypes(directory: string, settings: Settings): Ent
 		const entry: Entry = {
 			dirent,
 			name: dirent.name,
-			path: `${directory}${settings.pathSegmentSeparator}${dirent.name}`
+			path: common.joinPathSegments(directory, dirent.name, settings.pathSegmentSeparator)
 		};
 
 		if (entry.dirent.isSymbolicLink() && settings.followSymbolicLinks) {
@@ -43,7 +44,7 @@ export function readdir(directory: string, settings: Settings): Entry[] {
 	const names = settings.fs.readdirSync(directory);
 
 	return names.map((name) => {
-		const entryPath = `${directory}${settings.pathSegmentSeparator}${name}`;
+		const entryPath = common.joinPathSegments(directory, name, settings.pathSegmentSeparator);
 		const stats = fsStat.statSync(entryPath, settings.fsStatSettings);
 
 		const entry: Entry = {

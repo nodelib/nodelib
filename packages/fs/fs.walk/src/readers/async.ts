@@ -87,7 +87,7 @@ export default class AsyncReader extends Reader {
 	}
 
 	private _handleError(error: Error): void {
-		if (!common.isFatalError(this._settings, error)) {
+		if (this._isDestroyed || !common.isFatalError(this._settings, error)) {
 			return;
 		}
 

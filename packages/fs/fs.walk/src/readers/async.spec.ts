@@ -53,15 +53,15 @@ describe('Readers → Async', () => {
 			reader.read();
 		});
 
-		it('should do not emit "entry" event after first broken scandir call', (done) => {
+		it('should do not emit events after first broken scandir call', (done) => {
 			const reader = new TestReader('directory');
 
 			const firstFakeDirectoryEntry = tests.buildFakeDirectoryEntry({ name: 'a', path: 'directory/a' });
 			const secondFakeDirectoryEntry = tests.buildFakeDirectoryEntry({ name: 'b', path: 'directory/b' });
 
 			reader.scandir.onFirstCall().yields(null, [firstFakeDirectoryEntry, secondFakeDirectoryEntry]);
-			reader.scandir.onSecondCall().yields(tests.EPERM_ERRNO);
-			reader.scandir.onThirdCall().yields(tests.EPERM_ERRNO);
+			reader.scandir.onSecondCall().yieldsAsync(tests.EPERM_ERRNO);
+			reader.scandir.onThirdCall().yieldsAsync(tests.EPERM_ERRNO);
 
 			/**
 			 * If the behavior is broken, then a third scandir call will trigger an unhandled error.

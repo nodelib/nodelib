@@ -1,7 +1,7 @@
 {
 	"version": "independent",
 	"packages": [
-		"packages/fs/*"
+		"packages/{fs,http}/*"
 	],
 	"hoist": true,
 	"independent": true,

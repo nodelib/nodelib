@@ -3,6 +3,9 @@
 	"references": [
 		{
 			"path": "./fs"
+		},
+		{
+			"path": "./http"
 		}
 	]
 }

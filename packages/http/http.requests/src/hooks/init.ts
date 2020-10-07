@@ -43,6 +43,8 @@ export function buildOptionsContext(context?: Partial<OptionsContext>): OptionsC
 		truncateResponseBodyAfter: TRUNCATE_RESPONSE_BODY_AFTER,
 		showQueryFields: false,
 		hideQueryFields: [],
+		showPayloadFields: false,
+		hidePayloadFields: [],
 		...context
 	};
 }

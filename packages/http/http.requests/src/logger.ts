@@ -13,6 +13,7 @@ export type Message<T> = {
 
 export type RequestMessage = Message<{
 	readonly query: Record<string, string>;
+	readonly payload: Record<string, unknown>;
 }>;
 export type RedirectMessage = Message<{
 	readonly redirect: url.URL;
@@ -45,10 +46,12 @@ export default class Logger {
 
 	public logRequest(message: RequestMessage): void {
 		const query = message.info.query;
+		const payload = message.info.payload;
 
 		this._log(JSON.stringify({
 			...this._getBaseMessage(message),
-			query: Object.keys(query).length === 0 ? undefined : query
+			query: Object.keys(query).length === 0 ? undefined : query,
+			payload: Object.keys(payload).length === 0 ? undefined : payload
 		}));
 	}
 

@@ -14,4 +14,6 @@ export type OptionsContext = {
 	readonly truncateResponseBodyAfter: number;
 	readonly showQueryFields: boolean | string[];
 	readonly hideQueryFields: string[];
+	readonly showPayloadFields: boolean | string[];
+	readonly hidePayloadFields: string[];
 };

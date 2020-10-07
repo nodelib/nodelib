@@ -27,6 +27,12 @@ const instance = got.extend({
 		 */
 		afterResponse: [
 			hooks.afterResponse.create()
+		],
+		/**
+		 * We use this hook to log the `response` event for the network problems.
+		 */
+		beforeError: [
+			hooks.beforeError.create()
 		]
 	}
 });

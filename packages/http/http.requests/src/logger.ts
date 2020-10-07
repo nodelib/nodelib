@@ -20,6 +20,10 @@ export type ResponseMessage = Message<{
 	readonly message?: string;
 	readonly body?: string;
 }>;
+export type ErrorMessage = Message<{
+	readonly code?: string;
+	readonly message: string;
+}>;
 
 export type MessageBase = {
 	readonly type: string;
@@ -51,6 +55,14 @@ export default class Logger {
 			status: message.info.status,
 			message: message.info.message,
 			body: message.info.body
+		}));
+	}
+
+	public logError(message: ErrorMessage): void {
+		this._log(JSON.stringify({
+			...this._getBaseMessage(message),
+			code: message.info.code,
+			message: message.info.message
 		}));
 	}
 

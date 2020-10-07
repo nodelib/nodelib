@@ -15,6 +15,11 @@ export type RequestMessage = Message<{}>;
 export type RedirectMessage = Message<{
 	readonly redirect: url.URL;
 }>;
+export type ResponseMessage = Message<{
+	readonly status: number;
+	readonly message?: string;
+	readonly body?: string;
+}>;
 
 export type MessageBase = {
 	readonly type: string;
@@ -37,6 +42,15 @@ export default class Logger {
 		this._log(JSON.stringify({
 			...this._getBaseMessage(message),
 			redirect: url.format(message.info.redirect, { search: false })
+		}));
+	}
+
+	public logResponse(message: ResponseMessage): void {
+		this._log(JSON.stringify({
+			...this._getBaseMessage(message),
+			status: message.info.status,
+			message: message.info.message,
+			body: message.info.body
 		}));
 	}
 

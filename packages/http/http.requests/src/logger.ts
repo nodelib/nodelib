@@ -3,13 +3,18 @@ import * as util from 'util';
 
 export type MessageType = 'request' | 'redirect' | 'response' | 'retry';
 
-export type Message = {
+export type Message<T> = {
 	readonly type: MessageType;
 	readonly id: string;
 	readonly method: string;
 	readonly url: url.URL;
-	readonly info: Record<string, unknown>;
+	readonly info: T;
 };
+
+export type RequestMessage = Message<{}>;
+export type RedirectMessage = Message<{
+	readonly redirect: url.URL;
+}>;
 
 export type MessageBase = {
 	readonly type: string;
@@ -21,16 +26,21 @@ export type MessageBase = {
 export default class Logger {
 	private readonly _log: ReturnType<typeof util.debuglog> = util.debuglog('nodelib.http.requests');
 
-	public logRequest(message: Message): void {
-		const base = this._getBaseMessage(message);
-
+	public logRequest(message: RequestMessage): void {
 		this._log(JSON.stringify({
-			...base,
+			...this._getBaseMessage(message),
 			info: message.info
 		}));
 	}
 
-	private _getBaseMessage(message: Message): MessageBase {
+	public logRedirect(message: RedirectMessage): void {
+		this._log(JSON.stringify({
+			...this._getBaseMessage(message),
+			redirect: url.format(message.info.redirect, { search: false })
+		}));
+	}
+
+	private _getBaseMessage(message: Message<unknown>): MessageBase {
 		return {
 			type: message.type,
 			id: message.id,

@@ -15,6 +15,12 @@ const instance = got.extend({
 		 */
 		beforeRequest: [
 			hooks.beforeRequest.create()
+		],
+		/**
+		 * We use this hook to log the `redirect` event.
+		 */
+		beforeRedirect: [
+			hooks.beforeRedirect.create()
 		]
 	}
 });

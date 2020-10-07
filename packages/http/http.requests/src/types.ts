@@ -12,4 +12,6 @@ export type RequestContext = {
 
 export type OptionsContext = {
 	readonly truncateResponseBodyAfter: number;
+	readonly showQueryFields: boolean | string[];
+	readonly hideQueryFields: string[];
 };

@@ -41,6 +41,8 @@ export function buildRequestContext(context?: Partial<RequestContext>): RequestC
 export function buildOptionsContext(context?: Partial<OptionsContext>): OptionsContext {
 	return {
 		truncateResponseBodyAfter: TRUNCATE_RESPONSE_BODY_AFTER,
+		showQueryFields: false,
+		hideQueryFields: [],
 		...context
 	};
 }

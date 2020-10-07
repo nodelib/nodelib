@@ -11,7 +11,9 @@ export type Message<T> = {
 	readonly info: T;
 };
 
-export type RequestMessage = Message<{}>;
+export type RequestMessage = Message<{
+	readonly query: Record<string, string>;
+}>;
 export type RedirectMessage = Message<{
 	readonly redirect: url.URL;
 }>;
@@ -42,9 +44,11 @@ export default class Logger {
 	private readonly _log: ReturnType<typeof util.debuglog> = util.debuglog('nodelib.http.requests');
 
 	public logRequest(message: RequestMessage): void {
+		const query = message.info.query;
+
 		this._log(JSON.stringify({
 			...this._getBaseMessage(message),
-			info: message.info
+			query: Object.keys(query).length === 0 ? undefined : query
 		}));
 	}
 

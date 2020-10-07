@@ -9,6 +9,12 @@ const instance = got.extend({
 		 */
 		init: [
 			hooks.init.create()
+		],
+		/**
+		 * We use this hook to log the `request` event.
+		 */
+		beforeRequest: [
+			hooks.beforeRequest.create()
 		]
 	}
 });

@@ -4,6 +4,9 @@ import { InitHook, Headers } from 'got';
 
 import { X_REQUEST_ID_HEADER_NAME } from '../constants';
 import { Context, RequestContext } from '../types';
+import Logger from '../logger';
+
+const logger = new Logger();
 
 export function create(): InitHook {
 	return (options) => {
@@ -20,6 +23,7 @@ export function create(): InitHook {
 
 export function buildContext(context?: Partial<Context>): Context {
 	return {
+		logger,
 		request: buildRequestContext(context?.request)
 	};
 }

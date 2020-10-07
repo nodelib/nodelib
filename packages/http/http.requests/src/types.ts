@@ -1,7 +1,10 @@
+import Logger from './logger';
+
 export type Context = {
-	request: RequestContext;
+	readonly logger: Logger;
+	readonly request: RequestContext;
 };
 
 export type RequestContext = {
-	id: string;
+	readonly id: string;
 };

@@ -1,7 +1,7 @@
 import * as url from 'url';
 import * as util from 'util';
 
-export type MessageType = 'request' | 'redirect' | 'response' | 'retry';
+export type MessageType = 'request' | 'redirect' | 'response' | 'retry-planned' | 'retry-skipped';
 
 export type Message<T> = {
 	readonly type: MessageType;
@@ -23,6 +23,12 @@ export type ResponseMessage = Message<{
 export type ErrorMessage = Message<{
 	readonly code?: string;
 	readonly message: string;
+}>;
+export type RetryPlannedMessage = Message<{
+	readonly attempt: number;
+	readonly limit: number;
+	readonly delay: number;
+	readonly next: Date;
 }>;
 
 export type MessageBase = {
@@ -63,6 +69,16 @@ export default class Logger {
 			...this._getBaseMessage(message),
 			code: message.info.code,
 			message: message.info.message
+		}));
+	}
+
+	public logRetry(message: RetryPlannedMessage): void {
+		this._log(JSON.stringify({
+			...this._getBaseMessage(message),
+			attempt: message.info.attempt,
+			limit: message.info.limit,
+			delay: message.info.delay,
+			next: message.info.next.toISOString()
 		}));
 	}
 

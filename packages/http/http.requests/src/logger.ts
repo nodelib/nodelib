@@ -1,6 +1,16 @@
 import * as url from 'url';
 import * as util from 'util';
 
+export type ILogger = {
+	readonly logRequest: LoggerFunction<RequestMessage>;
+	readonly logRedirect: LoggerFunction<RedirectMessage>;
+	readonly logResponse: LoggerFunction<ResponseMessage>;
+	readonly logError: LoggerFunction<ErrorMessage>;
+	readonly logPlannedRetry: LoggerFunction<PlannedRetryMessage>;
+};
+
+export type LoggerFunction<T extends Message<unknown>> = (message: T) => void;
+
 export type MessageType = 'request' | 'redirect' | 'response' | 'retry-planned' | 'retry-skipped';
 
 export type Message<T> = {
@@ -27,7 +37,7 @@ export type ErrorMessage = Message<{
 	readonly code?: string;
 	readonly message: string;
 }>;
-export type RetryPlannedMessage = Message<{
+export type PlannedRetryMessage = Message<{
 	readonly attempt: number;
 	readonly limit: number;
 	readonly delay: number;
@@ -41,7 +51,7 @@ export type MessageBase = {
 	readonly url: string;
 };
 
-export default class Logger {
+export default class Logger implements ILogger {
 	private readonly _log: ReturnType<typeof util.debuglog> = util.debuglog('nodelib.http.requests');
 
 	public logRequest(message: RequestMessage): void {
@@ -79,7 +89,7 @@ export default class Logger {
 		}));
 	}
 
-	public logRetry(message: RetryPlannedMessage): void {
+	public logPlannedRetry(message: PlannedRetryMessage): void {
 		this._log(JSON.stringify({
 			...this._getBaseMessage(message),
 			attempt: message.info.attempt,

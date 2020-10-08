@@ -1,7 +1,7 @@
-import Logger from './logger';
+import { ILogger } from './logger';
 
 export type Context = {
-	readonly logger: Logger;
+	readonly logger: ILogger;
 	readonly request: RequestContext;
 	readonly options: OptionsContext;
 };

@@ -86,7 +86,7 @@ export function buildCalculateDelayFunction(): RetryFunction {
 		const time = Date.now() + delay;
 
 		if (delay !== 0) {
-			context.logger.logRetry({
+			context.logger.logPlannedRetry({
 				type: 'retry-planned',
 				id: context.request.id,
 				method: options.method,

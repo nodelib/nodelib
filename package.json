@@ -22,6 +22,7 @@
     "@nodelib-internal/tools.typedoc": "file:tools/typedoc",
     "@times-components/depend": "2.1.15",
     "@types/mocha": "^5.2.6",
+    "@types/nock": "^11.1.0",
     "@types/node": "^11.13.0",
     "@types/rimraf": "^2.0.2",
     "@types/run-parallel": "^1.1.0",
@@ -31,6 +32,7 @@
     "gh-pages": "^2.0.1",
     "lerna": "^3.13.1",
     "mocha": "^6.1.0",
+    "nock": "^13.0.4",
     "rimraf": "^2.6.3",
     "sinon": "^7.3.1",
     "typescript": "^3.7.4"

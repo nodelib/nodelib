@@ -5,46 +5,14 @@ import * as tests from '../tests';
 import * as hook from './before-request';
 
 describe('hooks → before-request', () => {
-	describe('.create', () => {
-		it('should call logger', async () => {
-			const logger = tests.makeLogger();
-			const options = tests.makeNormalizedOptions({
-				searchParams: new url.URLSearchParams({ token: '<value>' }),
-				json: { message: '<value>' },
-				context: tests.makeContext({
-					logger,
-					options: tests.makeOptionsContext({
-						showQueryFields: true,
-						showPayloadFields: true
-					})
-				})
-			});
-
-			await hook.create()(options);
-
-			assert.deepStrictEqual(logger.logRequest.firstCall.args, [{
-				type: 'request',
-				id: '<request>',
-				method: 'GET',
-				url: options.url,
-				info: {
-					query: { token: '<value>' },
-					payload: { message: '<value>' }
-				}
-			}]);
-		});
-	});
-
 	describe('.getQueryFields', () => {
-		it('should return an empty object when the `showQueryFields` is disabled', () => {
+		it('should return an undefined when the `showQueryFields` is disabled', () => {
 			const parameters = new url.URLSearchParams();
 			const options = tests.makeOptionsContext({ showQueryFields: false });
 
-			const expected = {};
-
 			const actual = hook.getQueryFields(parameters, options);
 
-			assert.deepStrictEqual(actual, expected);
+			assert.strictEqual(actual, undefined);
 		});
 
 		it('should return an object with all parameters when the `showQueryFields` is enabled', () => {
@@ -82,25 +50,21 @@ describe('hooks → before-request', () => {
 	});
 
 	describe('.getPayloadFields', () => {
-		it('should return an empty object when the payload is an undefined', () => {
+		it('should return an undefined when the payload is an undefined', () => {
 			const options = tests.makeOptionsContext({ showPayloadFields: true });
-
-			const expected = {};
 
 			const actual = hook.getPayloadFields(undefined, options);
 
-			assert.deepStrictEqual(actual, expected);
+			assert.strictEqual(actual, undefined);
 		});
 
-		it('should return an empty object when the `showPayloadFields` is disabled', () => {
+		it('should return an undefined when the `showPayloadFields` is disabled', () => {
 			const payload = { token: '<value>' };
 			const options = tests.makeOptionsContext({ showPayloadFields: false });
 
-			const expected = {};
-
 			const actual = hook.getPayloadFields(payload, options);
 
-			assert.deepStrictEqual(actual, expected);
+			assert.strictEqual(actual, undefined);
 		});
 
 		it('should return an object with all fields when the `showPayloadFields` is enabled', () => {

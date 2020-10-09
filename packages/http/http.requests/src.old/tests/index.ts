@@ -1,7 +1,7 @@
 import * as url from 'url';
 
 import * as sinon from 'sinon';
-import got, { Options, NormalizedOptions } from 'got';
+import got, { Options, NormalizedOptions, Response } from 'got';
 
 import { OptionsContext, Context, RequestContext } from '../types';
 import Logger from '../logger';
@@ -21,7 +21,7 @@ export function makeContext(context: Partial<Context> = {}): Context {
 
 export function makeOptionsContext(context: Partial<OptionsContext> = {}): OptionsContext {
 	return {
-		truncateResponseBodyAfter: 10,
+		truncateResponseBodyAfter: 200,
 		showQueryFields: false,
 		hideQueryFields: [],
 		showPayloadFields: false,
@@ -42,4 +42,11 @@ export function makeNormalizedOptions(options: Options = {}): NormalizedOptions 
 		url: new url.URL('https://site.com'),
 		...options
 	});
+}
+
+export function makeResponse(response: Partial<Response> = {}): Response {
+	return {
+		body: '<value>',
+		...response
+	} as unknown as Response;
 }

@@ -5,6 +5,12 @@ import { Context } from '../types';
 export function create(): BeforeErrorHook {
 	return (error) => {
 		const options = error.options;
+
+		// Currently, we does not support logging a stream requests.
+		if (options.isStream) {
+			return error;
+		}
+
 		const context = options.context as Context;
 
 		if (!isHttpError(error)) {

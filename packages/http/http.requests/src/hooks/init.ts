@@ -1,9 +1,9 @@
 import * as crypto from 'crypto';
 
-import { InitHook, Headers, RequiredRetryOptions, RetryFunction } from 'got';
+import { InitHook, Headers } from 'got';
 
-import { X_REQUEST_ID_HEADER_NAME, TRUNCATE_RESPONSE_BODY_AFTER } from '../constants';
-import { Context, RequestContext, OptionsContext } from '../types';
+import { Context, RequestContext } from '../types';
+import { X_REQUEST_ID_HEADER_NAME } from '../constants';
 import Logger from '../logger';
 
 const logger = new Logger();
@@ -18,8 +18,6 @@ export function create(): InitHook {
 			...options.headers,
 			[X_REQUEST_ID_HEADER_NAME]: context.request.id
 		};
-
-		options.retry = buildRetryConfiguration(options.retry);
 	};
 }
 
@@ -27,24 +25,13 @@ export function buildContext(context?: Partial<Context>): Context {
 	return {
 		logger,
 		request: buildRequestContext(context?.request),
-		options: buildOptionsContext(context?.options)
-	};
-}
-
-export function buildRequestContext(context?: Partial<RequestContext>): RequestContext {
-	return {
-		id: getRequestId(context),
 		...context
 	};
 }
 
-export function buildOptionsContext(context?: Partial<OptionsContext>): OptionsContext {
+function buildRequestContext(context?: Partial<RequestContext>): RequestContext {
 	return {
-		truncateResponseBodyAfter: TRUNCATE_RESPONSE_BODY_AFTER,
-		showQueryFields: false,
-		hideQueryFields: [],
-		showPayloadFields: false,
-		hidePayloadFields: [],
+		id: getRequestId(context),
 		...context
 	};
 }
@@ -61,45 +48,3 @@ export function getRequestId(headers: Headers = {}): string {
 	return value;
 }
 
-export function buildRetryConfiguration(retry: Partial<RequiredRetryOptions> | number | undefined): Partial<RequiredRetryOptions> | number | undefined {
-	const calculateDelay = buildCalculateDelayFunction();
-
-	if (typeof retry === 'number') {
-		return {
-			limit: retry,
-			calculateDelay
-		};
-	}
-
-	return {
-		...retry,
-		calculateDelay
-	};
-}
-
-export function buildCalculateDelayFunction(): RetryFunction {
-	return (retry) => {
-		const options = retry.error.options;
-		const context = options.context as Context;
-
-		const delay = Math.trunc(retry.computedValue);
-		const time = Date.now() + delay;
-
-		if (delay !== 0) {
-			context.logger.logPlannedRetry({
-				type: 'retry-planned',
-				id: context.request.id,
-				method: options.method,
-				url: options.url,
-				info: {
-					attempt: retry.attemptCount,
-					limit: retry.retryOptions.limit,
-					delay,
-					next: new Date(time)
-				}
-			});
-		}
-
-		return delay;
-	};
-}

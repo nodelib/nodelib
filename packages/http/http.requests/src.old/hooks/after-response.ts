@@ -5,6 +5,12 @@ import { Context } from '../types';
 export function create(): AfterResponseHook {
 	return (response) => {
 		const options = response.request.options;
+
+		// Currently, we does not support logging a stream requests.
+		if (options.isStream) {
+			return response;
+		}
+
 		const context = options.context as Context;
 
 		context.logger.logResponse({
@@ -24,13 +30,13 @@ export function create(): AfterResponseHook {
 }
 
 export function extractBody(response: Response, limit: number): string | undefined {
-	if (typeof response.body === 'string') {
-		if (response.body.length <= limit) {
-			return response.body;
-		}
-
-		return response.body.slice(0, limit) + '<truncated>';
+	if (typeof response.body !== 'string') {
+		return undefined;
 	}
 
-	return undefined;
+	if (response.body.length <= limit) {
+		return response.body;
+	}
+
+	return response.body.slice(0, limit) + '<truncated>';
 }

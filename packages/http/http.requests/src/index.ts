@@ -1,40 +1,50 @@
 import got from 'got';
-
-import * as hooks from './hooks';
+import { Context } from './types';
 
 const instance = got.extend({
+	mutableDefaults: true,
+	context: {
+		original: true
+	},
+	handlers: [
+		(options, next) => {
+			console.dir('handler', { colors: true });
+
+			console.dir(instance.defaults.options.context, { colors: true });
+			console.dir(options.context, { colors: true });
+
+			return next(options);
+		}
+	],
 	hooks: {
-		/**
-		 * We use this hook to fill the request context and assign a unique id for request.
-		 */
 		init: [
-			hooks.init.create()
+			() => {
+				console.dir('init', { colors: true });
+			}
 		],
-		/**
-		 * We use this hook to log the `request` event.
-		 */
 		beforeRequest: [
-			hooks.beforeRequest.create()
-		],
-		/**
-		 * We use this hook to log the `redirect` event.
-		 */
-		beforeRedirect: [
-			hooks.beforeRedirect.create()
-		],
-		/**
-		 * We use this hook to log the `response` event.
-		 */
-		afterResponse: [
-			hooks.afterResponse.create()
-		],
-		/**
-		 * We use this hook to log the `response` event for the network problems.
-		 */
-		beforeError: [
-			hooks.beforeError.create()
+			() => {
+				console.dir('request', { colors: true });
+			}
 		]
 	}
 });
+
+instance.extend = (...items) => {
+	items.unshift(instance);
+
+	const context = items.reduce<Partial<Context>>((result, item) => {
+		const value = typeof item === 'function' ? item.defaults.options.context : item.context;
+
+		return { ...result, ...value };
+	}, {});
+
+	instance.defaults.options.context = {
+		...instance.defaults.options.context,
+		...context
+	};
+
+	return got.extend(...items, { context });
+};
 
 export default instance;

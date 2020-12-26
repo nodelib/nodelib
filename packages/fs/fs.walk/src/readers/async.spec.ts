@@ -211,6 +211,14 @@ describe('Readers → Async', () => {
 			reader.read();
 		});
 
+		it('should mark stream as "destroyed" after first destroy', () => {
+			const reader = new TestReader('directory');
+
+			reader.destroy();
+
+			assert.ok(reader.isDestroyed);
+		});
+
 		it('should throw an error when trying to destroy reader twice', () => {
 			const reader = new TestReader('directory');
 

@@ -41,6 +41,10 @@ export default class AsyncReader extends Reader {
 		return this._emitter;
 	}
 
+	public get isDestroyed(): boolean {
+		return this._isDestroyed;
+	}
+
 	public destroy(): void {
 		if (this._isDestroyed) {
 			throw new Error('The reader is already destroyed');

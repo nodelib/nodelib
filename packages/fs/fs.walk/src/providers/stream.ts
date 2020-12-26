@@ -7,7 +7,11 @@ export default class StreamProvider {
 	protected readonly _stream: Readable = new Readable({
 		objectMode: true,
 		read: () => { /* noop */ },
-		destroy: this._reader.destroy.bind(this._reader)
+		destroy: () => {
+			if (!this._reader.isDestroyed) {
+				this._reader.destroy();
+			}
+		}
 	});
 
 	constructor(private readonly _root: string, private readonly _settings: Settings) { }

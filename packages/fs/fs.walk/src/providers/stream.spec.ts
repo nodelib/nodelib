@@ -10,10 +10,12 @@ import StreamProvider from './stream';
 
 class TestProvider extends StreamProvider {
 	protected readonly _reader: AsyncReader = new tests.TestAsyncReader() as unknown as AsyncReader;
-	protected readonly _stream: Readable = sinon.createStubInstance(Readable) as unknown as Readable;
 
 	constructor(_root: string, _settings: Settings = new Settings()) {
 		super(_root, _settings);
+
+		this._stream.emit = sinon.stub();
+		this._stream.push = sinon.stub();
 	}
 
 	public get reader(): tests.TestAsyncReader {
@@ -72,6 +74,17 @@ describe('Providers → Stream', () => {
 			provider.read();
 
 			assert.deepStrictEqual(provider.stream.push.args, [[null]]);
+		});
+
+		it('should do not destroy reader when it is already destroyed', () => {
+			const provider = new TestProvider('directory');
+
+			const stream = provider.read();
+
+			stream.destroy();
+
+			assert.ok(stream.destroyed);
+			assert.doesNotThrow(() => stream.destroy());
 		});
 	});
 });

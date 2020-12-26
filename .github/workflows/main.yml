@@ -19,6 +19,7 @@ jobs:
 
   test:
     name: Node.js ${{ matrix.node_version }} on ${{ matrix.os }}
+    if: always()
     needs:
       - cancel
     runs-on: ${{ matrix.os }}

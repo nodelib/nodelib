@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  cancel:
+    name: Cancel previous jobs
+    if: github.ref != 'refs/heads/master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Cancel previous jobs
+        uses: styfle/cancel-workflow-action@0.6.0
+        with:
+          workflow_id: 4524681
+          access_token: ${{ github.token }}
+
+  test:
+    name: Node.js ${{ matrix.node_version }} on ${{ matrix.os }}
+    needs:
+      - cancel
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        node_version: [8, 10, 12, 14, 15]
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+    steps:
+      - name: Setup repository
+        uses: actions/checkout@v2
+      - name: Setup environment
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node_version }}
+      - name: Install root dependencies
+        run: npm install
+      - name: Link package dependencies
+        run: npx lerna bootstrap
+      - name: Compile sources
+        run: npm run compile
+      - name: Run hygiene checks
+        run: npm run lint
+      - name: Run dependencies checks
+        run: npm run lint:dependencies
+      - name: Run unit tests
+        run: npm run test

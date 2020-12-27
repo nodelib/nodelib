@@ -1,6 +1,6 @@
 {
   "name": "@nodelib/fs.stat",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "Get the status of a file with some features",
   "license": "MIT",
   "repository": "https://github.com/nodelib/nodelib/tree/master/packages/fs/fs.stat",

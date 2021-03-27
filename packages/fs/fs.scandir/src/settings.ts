@@ -4,13 +4,13 @@ import * as fsStat from '@nodelib/fs.stat';
 
 import * as fs from './adapters/fs';
 
-export type Options = {
+export interface Options {
 	followSymbolicLinks?: boolean;
 	fs?: Partial<fs.FileSystemAdapter>;
 	pathSegmentSeparator?: string;
 	stats?: boolean;
 	throwErrorOnBrokenSymbolicLink?: boolean;
-};
+}
 
 export default class Settings {
 	public readonly followSymbolicLinks: boolean = this._getValue(this._options.followSymbolicLinks, false);
@@ -25,7 +25,7 @@ export default class Settings {
 		throwErrorOnBrokenSymbolicLink: this.throwErrorOnBrokenSymbolicLink
 	});
 
-	constructor(private readonly _options: Options = {}) { }
+	constructor(private readonly _options: Options = {}) {}
 
 	private _getValue<T>(option: T | undefined, value: T): T {
 		return option ?? value;

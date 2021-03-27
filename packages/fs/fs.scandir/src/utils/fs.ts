@@ -1,6 +1,6 @@
-import * as fs from 'fs';
+import type * as fs from 'fs';
 
-import { Dirent, Stats } from '../types';
+import type { Dirent, Stats } from '../types';
 
 class DirentFromStats implements fs.Dirent {
 	public isBlockDevice: Stats['isBlockDevice'];

@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import * as fs from 'fs';
+import type * as fs from 'fs';
 
 import * as sinon from 'sinon';
 
@@ -71,7 +71,7 @@ describe('Providers → Async', () => {
 
 		it('should return lstat for broken symlink entry when the "throwErrorOnBrokenSymbolicLink" option is disabled', (done) => {
 			const lstat = sinon.stub().yields(null, new Stats({ isSymbolicLink: true })) as unknown as typeof fs.lstat;
-			const stat = sinon.stub().yields(new Error()) as unknown as typeof fs.stat;
+			const stat = sinon.stub().yields(new Error('message')) as unknown as typeof fs.stat;
 
 			const settings = new Settings({
 				fs: { lstat, stat },

@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import * as fs from 'fs';
+import type * as fs from 'fs';
 
 import { Stats } from '@nodelib/fs.macchiato';
 

@@ -1,5 +1,5 @@
-import Settings from '../settings';
-import { Stats } from '../types';
+import type Settings from '../settings';
+import type { Stats } from '../types';
 
 export function read(path: string, settings: Settings): Stats {
 	const lstat = settings.fs.lstatSync(path);
@@ -16,7 +16,7 @@ export function read(path: string, settings: Settings): Stats {
 		}
 
 		return stat;
-	} catch (error) {
+	} catch (error: unknown) {
 		if (!settings.throwErrorOnBrokenSymbolicLink) {
 			return lstat;
 		}

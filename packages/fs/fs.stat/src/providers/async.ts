@@ -1,28 +1,32 @@
-import Settings from '../settings';
-import { ErrnoException, Stats } from '../types';
+import type Settings from '../settings';
+import type { ErrnoException, Stats } from '../types';
 
-type FailureCallback = (err: ErrnoException) => void;
-type SuccessCallback = (err: null, stats: Stats) => void;
+type FailureCallback = (error: ErrnoException) => void;
+type SuccessCallback = (error: null, stats: Stats) => void;
 
-export type AsyncCallback = (err: ErrnoException, stats: Stats) => void;
+export type AsyncCallback = (error: ErrnoException, stats: Stats) => void;
 
 export function read(path: string, settings: Settings, callback: AsyncCallback): void {
 	settings.fs.lstat(path, (lstatError, lstat) => {
 		if (lstatError !== null) {
-			return callFailureCallback(callback, lstatError);
+			callFailureCallback(callback, lstatError);
+			return;
 		}
 
 		if (!lstat.isSymbolicLink() || !settings.followSymbolicLink) {
-			return callSuccessCallback(callback, lstat);
+			callSuccessCallback(callback, lstat);
+			return;
 		}
 
 		settings.fs.stat(path, (statError, stat) => {
 			if (statError !== null) {
 				if (settings.throwErrorOnBrokenSymbolicLink) {
-					return callFailureCallback(callback, statError);
+					callFailureCallback(callback, statError);
+					return;
 				}
 
-				return callSuccessCallback(callback, lstat);
+				callSuccessCallback(callback, lstat);
+				return;
 			}
 
 			if (settings.markSymbolicLink) {

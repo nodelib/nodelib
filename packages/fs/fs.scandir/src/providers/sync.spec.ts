@@ -4,7 +4,7 @@ import * as path from 'path';
 
 import * as sinon from 'sinon';
 
-import { Dirent, Stats } from '../../../fs.macchiato';
+import { Dirent, Stats } from '@nodelib/fs.macchiato';
 import { IS_SUPPORT_READDIR_WITH_FILE_TYPES } from '../constants';
 import Settings from '../settings';
 import { Entry } from '../types';

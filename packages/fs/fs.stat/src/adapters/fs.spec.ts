@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 import * as fs from 'fs';
 
-import { Stats } from '../../../fs.macchiato';
+import { Stats } from '@nodelib/fs.macchiato';
 
 import * as adapter from './fs';
 

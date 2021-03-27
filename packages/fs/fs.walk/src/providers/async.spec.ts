@@ -2,7 +2,7 @@ import * as assert from 'assert';
 
 import * as sinon from 'sinon';
 
-import AsyncReader from '../readers/async';
+import type AsyncReader from '../readers/async';
 import Settings from '../settings';
 import * as tests from '../tests';
 import AsyncProvider from './async';

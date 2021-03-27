@@ -16,7 +16,7 @@ describe('Settings', () => {
 		});
 
 		assert.strictEqual(fsWalkSettings.basePath, undefined);
-		assert.strictEqual(fsWalkSettings.concurrency, Infinity);
+		assert.strictEqual(fsWalkSettings.concurrency, Number.POSITIVE_INFINITY);
 		assert.strictEqual(fsWalkSettings.deepFilter, null);
 		assert.strictEqual(fsWalkSettings.entryFilter, null);
 		assert.strictEqual(fsWalkSettings.errorFilter, null);

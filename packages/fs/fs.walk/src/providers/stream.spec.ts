@@ -3,7 +3,7 @@ import { Readable } from 'stream';
 
 import * as sinon from 'sinon';
 
-import AsyncReader from '../readers/async';
+import type AsyncReader from '../readers/async';
 import Settings from '../settings';
 import * as tests from '../tests';
 import StreamProvider from './stream';
@@ -83,8 +83,9 @@ describe('Providers → Stream', () => {
 
 			stream.destroy();
 
-			assert.ok(stream.destroyed);
-			assert.doesNotThrow(() => stream.destroy());
+			assert.doesNotThrow(() => {
+				stream.destroy();
+			});
 		});
 	});
 });

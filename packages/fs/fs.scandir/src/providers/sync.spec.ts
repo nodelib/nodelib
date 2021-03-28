@@ -5,7 +5,6 @@ import * as path from 'path';
 import * as sinon from 'sinon';
 
 import { Dirent, Stats } from '@nodelib/fs.macchiato';
-import { IS_SUPPORT_READDIR_WITH_FILE_TYPES } from '../constants';
 import Settings from '../settings';
 import type { Entry } from '../types';
 import * as provider from './sync';
@@ -18,39 +17,6 @@ const SECOND_ENTRY_PATH = path.join(ROOT_PATH, SECOND_FILE_PATH);
 
 describe('Providers → Sync', () => {
 	describe('.read', () => {
-		it('should call correct method based on Node.js version', () => {
-			const readdirSync = sinon.stub().returns([]);
-
-			const settings = new Settings({
-				fs: { readdirSync: readdirSync as unknown as typeof fs.readdirSync }
-			});
-
-			const actual = provider.read(ROOT_PATH, settings);
-
-			assert.deepStrictEqual(actual, []);
-
-			if (IS_SUPPORT_READDIR_WITH_FILE_TYPES) {
-				assert.deepStrictEqual(readdirSync.args, [[ROOT_PATH, { withFileTypes: true }]]);
-			} else {
-				assert.deepStrictEqual(readdirSync.args, [[ROOT_PATH]]);
-			}
-		});
-
-		it('should always use `readdir` method when the `stats` option is enabled', () => {
-			const readdirSync = sinon.stub().returns([]);
-
-			const settings = new Settings({
-				fs: { readdirSync: readdirSync as unknown as typeof fs.readdirSync },
-				stats: true
-			});
-
-			provider.read(ROOT_PATH, settings);
-
-			assert.deepStrictEqual(readdirSync.args, [[ROOT_PATH]]);
-		});
-	});
-
-	describe('.readdirWithFileTypes', () => {
 		it('should return entries', () => {
 			const dirent = new Dirent({ name: FIRST_FILE_PATH });
 			const readdirSync = sinon.stub().returns([dirent]);
@@ -67,7 +33,7 @@ describe('Providers → Sync', () => {
 				}
 			];
 
-			const actual = provider.readdirWithFileTypes(ROOT_PATH, settings);
+			const actual = provider.read(ROOT_PATH, settings);
 
 			assert.deepStrictEqual(readdirSync.args, [[ROOT_PATH, { withFileTypes: true }]]);
 			assert.deepStrictEqual(actual, expected);
@@ -89,7 +55,7 @@ describe('Providers → Sync', () => {
 				}
 			});
 
-			const actual = provider.readdirWithFileTypes(ROOT_PATH, settings);
+			const actual = provider.read(ROOT_PATH, settings);
 
 			assert.strictEqual(actual.length, 2);
 			assert.deepStrictEqual(statSync.args, [[SECOND_ENTRY_PATH]]);
@@ -113,7 +79,7 @@ describe('Providers → Sync', () => {
 				}
 			});
 
-			const actual = provider.readdirWithFileTypes(ROOT_PATH, settings);
+			const actual = provider.read(ROOT_PATH, settings);
 
 			assert.strictEqual(actual.length, 1);
 		});
@@ -137,37 +103,14 @@ describe('Providers → Sync', () => {
 
 			const expectedErrorMessageRe = /Error: error/;
 
-			assert.throws(() => provider.readdirWithFileTypes(ROOT_PATH, settings), expectedErrorMessageRe);
-		});
-	});
-
-	describe('.readdir', () => {
-		it('should return entries', () => {
-			const stats = new Stats();
-
-			const readdirSync = sinon.stub().returns([FIRST_FILE_PATH]);
-			const lstatSync = sinon.stub().returns(stats);
-
-			const settings = new Settings({
-				fs: {
-					readdirSync: readdirSync as unknown as typeof fs.readdirSync,
-					lstatSync: lstatSync as unknown as typeof fs.lstatSync
-				}
-			});
-
-			const actual = provider.readdir(ROOT_PATH, settings);
-
-			assert.deepStrictEqual(readdirSync.args, [[ROOT_PATH]]);
-
-			assert.strictEqual(actual[0].name, FIRST_FILE_PATH);
-			assert.strictEqual(actual[0].path, FIRST_ENTRY_PATH);
-			assert.strictEqual(actual[0].dirent.name, FIRST_FILE_PATH);
+			assert.throws(() => provider.read(ROOT_PATH, settings), expectedErrorMessageRe);
 		});
 
 		it('should return entries with `stats` property', () => {
+			const dirent = new Dirent({ name: FIRST_FILE_PATH });
 			const stats = new Stats();
 
-			const readdirSync = sinon.stub().returns([FIRST_FILE_PATH]);
+			const readdirSync = sinon.stub().returns([dirent]);
 			const lstatSync = sinon.stub().returns(stats);
 
 			const settings = new Settings({
@@ -178,7 +121,7 @@ describe('Providers → Sync', () => {
 				stats: true
 			});
 
-			const actual = provider.readdir(ROOT_PATH, settings);
+			const actual = provider.read(ROOT_PATH, settings);
 
 			assert.deepStrictEqual(actual[0].stats, stats);
 		});

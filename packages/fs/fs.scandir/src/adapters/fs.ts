@@ -1,10 +1,8 @@
 import * as fs from 'fs';
 
-export interface FileSystemAdapter {
-	lstat: typeof fs.lstat;
-	stat: typeof fs.stat;
-	lstatSync: typeof fs.lstatSync;
-	statSync: typeof fs.statSync;
+import type * as fsStat from '@nodelib/fs.stat';
+
+export interface FileSystemAdapter extends fsStat.FileSystemAdapter {
 	readdir: typeof fs.readdir;
 	readdirSync: typeof fs.readdirSync;
 }

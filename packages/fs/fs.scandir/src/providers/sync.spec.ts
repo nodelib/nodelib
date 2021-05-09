@@ -89,7 +89,7 @@ describe('Providers → Sync', () => {
 
 			assert.strictEqual(actual.length, 2);
 			assert.deepStrictEqual(statSync.args, [[SECOND_ENTRY_PATH]]);
-			assert.ok(!actual[1].dirent.isSymbolicLink());
+			assert.strictEqual(actual[1]?.dirent.isSymbolicLink(), false);
 		});
 
 		it('should return lstat for broken symbolic link when the "throwErrorOnBrokenSymbolicLink" option is disabled', () => {
@@ -146,9 +146,9 @@ describe('Providers → Sync', () => {
 
 			assert.deepStrictEqual(readdirSync.args, [[ROOT_PATH]]);
 
-			assert.strictEqual(actual[0].name, FIRST_FILE_PATH);
-			assert.strictEqual(actual[0].path, FIRST_ENTRY_PATH);
-			assert.strictEqual(actual[0].dirent.name, FIRST_FILE_PATH);
+			assert.strictEqual(actual[0]?.name, FIRST_FILE_PATH);
+			assert.strictEqual(actual[0]?.path, FIRST_ENTRY_PATH);
+			assert.strictEqual(actual[0]?.dirent.name, FIRST_FILE_PATH);
 		});
 
 		it('should return entries with `stats` property', () => {
@@ -164,7 +164,7 @@ describe('Providers → Sync', () => {
 
 			const actual = provider.readdir(ROOT_PATH, settings);
 
-			assert.deepStrictEqual(actual[0].stats, stats);
+			assert.deepStrictEqual(actual[0]?.stats, stats);
 		});
 	});
 });

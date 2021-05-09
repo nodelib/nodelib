@@ -154,8 +154,8 @@ describe('Readers → Async', () => {
 			reader.onEntry((entry) => entries.push(entry));
 
 			reader.onEnd(() => {
-				assert.strictEqual(entries[0].path, path.join('base', fakeDirectoryEntry.name));
-				assert.strictEqual(entries[1].path, path.join('base', 'fake', fakeFileEntry.name));
+				assert.strictEqual(entries[0]?.path, path.join('base', fakeDirectoryEntry.name));
+				assert.strictEqual(entries[1]?.path, path.join('base', 'fake', fakeFileEntry.name));
 				done();
 			});
 
@@ -177,8 +177,8 @@ describe('Readers → Async', () => {
 			reader.onEntry((entry) => entries.push(entry));
 
 			reader.onEnd(() => {
-				assert.strictEqual(entries[0].path, path.join(fakeDirectoryEntry.name));
-				assert.strictEqual(entries[1].path, path.join('fake', fakeFileEntry.name));
+				assert.strictEqual(entries[0]?.path, path.join(fakeDirectoryEntry.name));
+				assert.strictEqual(entries[1]?.path, path.join('fake', fakeFileEntry.name));
 				done();
 			});
 

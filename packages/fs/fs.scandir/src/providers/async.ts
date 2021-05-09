@@ -3,11 +3,10 @@ import * as rpl from 'run-parallel';
 
 import { IS_SUPPORT_READDIR_WITH_FILE_TYPES } from '../constants';
 import Settings from '../settings';
-import { Entry, Stats } from '../types';
+import { Entry, ErrnoException } from '../types';
 import * as utils from '../utils';
 import * as common from './common';
 
-type RplTaskStats = rpl.Task<Stats>;
 type RplTaskEntry = rpl.Task<Entry>;
 type FailureCallback = (err: NodeJS.ErrnoException) => void;
 type SuccessCallback = (err: null, entries: Entry[]) => void;
@@ -78,34 +77,34 @@ export function readdir(directory: string, settings: Settings, callback: AsyncCa
 			return callFailureCallback(callback, readdirError);
 		}
 
-		const filepaths = names.map((name) => common.joinPathSegments(directory, name, settings.pathSegmentSeparator));
+		const tasks: RplTaskEntry[] = names.map((name) => {
+			const path = common.joinPathSegments(directory, name, settings.pathSegmentSeparator);
 
-		const tasks: RplTaskStats[] = filepaths.map((filepath): RplTaskStats => {
-			return (done) => fsStat.stat(filepath, settings.fsStatSettings, done);
+			return (done) => {
+				fsStat.stat(path, settings.fsStatSettings, (error: ErrnoException | null, stats) => {
+					if (error !== null) {
+						return done(error);
+					}
+
+					const entry: Entry = {
+						name,
+						path,
+						dirent: utils.fs.createDirentFromStats(name, stats)
+					};
+
+					if (settings.stats) {
+						entry.stats = stats;
+					}
+
+					return done(null, entry);
+				});
+			};
 		});
 
-		rpl(tasks, (rplError: Error | null, results) => {
+		rpl(tasks, (rplError: Error | null, entries) => {
 			if (rplError !== null) {
 				return callFailureCallback(callback, rplError);
 			}
-
-			const entries: Entry[] = [];
-
-			names.forEach((name, index) => {
-				const stats = results[index];
-
-				const entry: Entry = {
-					name,
-					path: filepaths[index],
-					dirent: utils.fs.createDirentFromStats(name, stats)
-				};
-
-				if (settings.stats) {
-					entry.stats = stats;
-				}
-
-				entries.push(entry);
-			});
 
 			callSuccessCallback(callback, entries);
 		});

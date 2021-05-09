@@ -1,5 +1,9 @@
 const NODE_PROCESS_VERSION_PARTS = process.versions.node.split('.');
 
+if (NODE_PROCESS_VERSION_PARTS[0] === undefined || NODE_PROCESS_VERSION_PARTS[1] === undefined) {
+	throw new Error(`Unexpected behavior. The 'process.versions.node' variable has invalid value: ${process.versions.node}`);
+}
+
 const MAJOR_VERSION = parseInt(NODE_PROCESS_VERSION_PARTS[0], 10);
 const MINOR_VERSION = parseInt(NODE_PROCESS_VERSION_PARTS[1], 10);
 

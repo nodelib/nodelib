@@ -21,9 +21,9 @@ describe('Package', () => {
 		it('should work without options or settings', (done) => {
 			scandir('fixtures', (error, entries) => {
 				assert.strictEqual(error, null);
-				assert.ok(entries[0].name);
-				assert.ok(entries[0].path);
-				assert.ok(entries[0].dirent);
+				assert.ok(entries[0]?.name);
+				assert.ok(entries[0]?.path);
+				assert.ok(entries[0]?.dirent);
 				done();
 			});
 		});
@@ -31,10 +31,10 @@ describe('Package', () => {
 		it('should work with options', (done) => {
 			scandir('fixtures', { stats: true }, (error, entries) => {
 				assert.strictEqual(error, null);
-				assert.ok(entries[0].name);
-				assert.ok(entries[0].path);
-				assert.ok(entries[0].dirent);
-				assert.ok(entries[0].stats);
+				assert.ok(entries[0]?.name);
+				assert.ok(entries[0]?.path);
+				assert.ok(entries[0]?.dirent);
+				assert.ok(entries[0]?.stats);
 				done();
 			});
 		});
@@ -44,10 +44,10 @@ describe('Package', () => {
 
 			scandir('fixtures', settings, (error, entries) => {
 				assert.strictEqual(error, null);
-				assert.ok(entries[0].name);
-				assert.ok(entries[0].path);
-				assert.ok(entries[0].dirent);
-				assert.ok(entries[0].stats);
+				assert.ok(entries[0]?.name);
+				assert.ok(entries[0]?.path);
+				assert.ok(entries[0]?.dirent);
+				assert.ok(entries[0]?.stats);
 				done();
 			});
 		});
@@ -57,18 +57,18 @@ describe('Package', () => {
 		it('should work without options or settings', () => {
 			const actual = scandirSync('fixtures');
 
-			assert.ok(actual[0].name);
-			assert.ok(actual[0].path);
-			assert.ok(actual[0].dirent);
+			assert.ok(actual[0]?.name);
+			assert.ok(actual[0]?.path);
+			assert.ok(actual[0]?.dirent);
 		});
 
 		it('should work with options', () => {
 			const actual = scandirSync('fixtures', { stats: true });
 
-			assert.ok(actual[0].name);
-			assert.ok(actual[0].path);
-			assert.ok(actual[0].dirent);
-			assert.ok(actual[0].stats);
+			assert.ok(actual[0]?.name);
+			assert.ok(actual[0]?.path);
+			assert.ok(actual[0]?.dirent);
+			assert.ok(actual[0]?.stats);
 		});
 
 		it('should work with settings', () => {
@@ -76,10 +76,10 @@ describe('Package', () => {
 
 			const actual = scandirSync('fixtures', settings);
 
-			assert.ok(actual[0].name);
-			assert.ok(actual[0].path);
-			assert.ok(actual[0].dirent);
-			assert.ok(actual[0].stats);
+			assert.ok(actual[0]?.name);
+			assert.ok(actual[0]?.path);
+			assert.ok(actual[0]?.dirent);
+			assert.ok(actual[0]?.stats);
 		});
 	});
 });

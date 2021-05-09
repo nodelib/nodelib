@@ -114,7 +114,7 @@ describe('Providers → Async', () => {
 				assert.strictEqual(error, null);
 
 				assert.strictEqual(entries.length, 2);
-				assert.ok(!entries[1].dirent.isSymbolicLink());
+				assert.strictEqual(entries[1]?.dirent.isSymbolicLink(), false);
 				sinon.assert.match(stat.args, [[SECOND_ENTRY_PATH, sinon.match.func]]);
 
 				done();
@@ -143,7 +143,7 @@ describe('Providers → Async', () => {
 				assert.strictEqual(error, null);
 
 				assert.strictEqual(entries.length, 1);
-				assert.ok(entries[0].dirent.isSymbolicLink());
+				assert.ok(entries[0]?.dirent.isSymbolicLink());
 
 				done();
 			});
@@ -199,9 +199,9 @@ describe('Providers → Async', () => {
 				sinon.assert.match(readdir.args, [[ROOT_PATH, sinon.match.func]]);
 				sinon.assert.match(lstat.args, [[FIRST_ENTRY_PATH, sinon.match.func]]);
 
-				assert.strictEqual(entries[0].name, FIRST_FILE_PATH);
-				assert.strictEqual(entries[0].path, FIRST_ENTRY_PATH);
-				assert.strictEqual(entries[0].dirent.name, FIRST_FILE_PATH);
+				assert.strictEqual(entries[0]?.name, FIRST_FILE_PATH);
+				assert.strictEqual(entries[0]?.path, FIRST_ENTRY_PATH);
+				assert.strictEqual(entries[0]?.dirent.name, FIRST_FILE_PATH);
 
 				done();
 			});
@@ -226,7 +226,7 @@ describe('Providers → Async', () => {
 
 			provider.readdir(ROOT_PATH, settings, (error, entries) => {
 				assert.strictEqual(error, null);
-				assert.deepStrictEqual(entries[0].stats, stats);
+				assert.deepStrictEqual(entries[0]?.stats, stats);
 
 				done();
 			});

@@ -3,28 +3,31 @@
 		"target": "es2017",
 		"module": "commonjs",
 		"moduleResolution": "node",
+		"resolveJsonModule": true,
 
 		"strict": true,
 		"alwaysStrict": true,
+		"strictBindCallApply": true,
 		"strictFunctionTypes": true,
 		"strictNullChecks": true,
 		"strictPropertyInitialization": true,
-
-		"forceConsistentCasingInFileNames": true,
 		"noImplicitAny": true,
 		"noImplicitReturns": true,
 		"noImplicitThis": true,
-		"noFallthroughCasesInSwitch": true,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
+		"noPropertyAccessFromIndexSignature": true,
+		"noUncheckedIndexedAccess": true,
+
+		"noFallthroughCasesInSwitch": true,
+		"forceConsistentCasingInFileNames": true,
+		"importsNotUsedAsValues": "remove",
 
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
 		"downlevelIteration": true,
-
-		"composite": true,
 		"declaration": true,
-		"declarationMap": true,
+		"stripInternal": true,
 
 		"pretty": true
 	}

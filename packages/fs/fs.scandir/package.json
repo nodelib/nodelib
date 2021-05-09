@@ -16,6 +16,11 @@
   "engines": {
     "node": ">= 8"
   },
+  "files": [
+    "out/**",
+    "!out/**/*.map",
+    "!out/**/*.spec.*"
+  ],
   "main": "out/index.js",
   "typings": "out/index.d.ts",
   "scripts": {

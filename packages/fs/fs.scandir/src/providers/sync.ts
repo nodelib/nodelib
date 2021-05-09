@@ -1,8 +1,8 @@
 import * as fsStat from '@nodelib/fs.stat';
 
 import { IS_SUPPORT_READDIR_WITH_FILE_TYPES } from '../constants';
-import Settings from '../settings';
-import { Entry } from '../types';
+import type Settings from '../settings';
+import type { Entry, ErrnoException } from '../types';
 import * as utils from '../utils';
 import * as common from './common';
 
@@ -29,9 +29,9 @@ export function readdirWithFileTypes(directory: string, settings: Settings): Ent
 				const stats = settings.fs.statSync(entry.path);
 
 				entry.dirent = utils.fs.createDirentFromStats(entry.name, stats);
-			} catch (error) {
+			} catch (error: unknown) {
 				if (settings.throwErrorOnBrokenSymbolicLink) {
-					throw error;
+					throw (error as ErrnoException);
 				}
 			}
 		}

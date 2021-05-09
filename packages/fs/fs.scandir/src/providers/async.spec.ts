@@ -1,13 +1,12 @@
 import * as assert from 'assert';
-import * as fs from 'fs';
 import * as path from 'path';
 
 import * as sinon from 'sinon';
 
-import { Dirent, Stats } from '../../../fs.macchiato';
+import { Dirent, Stats } from '@nodelib/fs.macchiato';
 import { IS_SUPPORT_READDIR_WITH_FILE_TYPES } from '../constants';
 import Settings from '../settings';
-import { Entry } from '../types';
+import type { Entry } from '../types';
 import * as provider from './async';
 
 const ROOT_PATH = 'root';
@@ -24,7 +23,7 @@ describe('Providers → Async', () => {
 			readdir.yields(null, []);
 
 			const settings = new Settings({
-				fs: { readdir: readdir as unknown as typeof fs.readdir }
+				fs: { readdir }
 			});
 
 			provider.read(ROOT_PATH, settings, (error, entries) => {
@@ -48,7 +47,7 @@ describe('Providers → Async', () => {
 			readdir.yields(null, []);
 
 			const settings = new Settings({
-				fs: { readdir: readdir as unknown as typeof fs.readdir },
+				fs: { readdir },
 				stats: true
 			});
 
@@ -71,7 +70,7 @@ describe('Providers → Async', () => {
 			readdir.yields(null, [dirent]);
 
 			const settings = new Settings({
-				fs: { readdir: readdir as unknown as typeof fs.readdir }
+				fs: { readdir }
 			});
 
 			const expected: Entry[] = [
@@ -106,8 +105,8 @@ describe('Providers → Async', () => {
 			const settings = new Settings({
 				followSymbolicLinks: true,
 				fs: {
-					readdir: readdir as unknown as typeof fs.readdir,
-					stat: stat as unknown as typeof fs.stat
+					readdir,
+					stat
 				}
 			});
 
@@ -115,7 +114,7 @@ describe('Providers → Async', () => {
 				assert.strictEqual(error, null);
 
 				assert.strictEqual(entries.length, 2);
-				assert.ok(!entries[1].dirent.isSymbolicLink());
+				assert.strictEqual(entries[1]?.dirent.isSymbolicLink(), false);
 				sinon.assert.match(stat.args, [[SECOND_ENTRY_PATH, sinon.match.func]]);
 
 				done();
@@ -135,8 +134,8 @@ describe('Providers → Async', () => {
 				followSymbolicLinks: true,
 				throwErrorOnBrokenSymbolicLink: false,
 				fs: {
-					readdir: readdir as unknown as typeof fs.readdir,
-					stat: stat as unknown as typeof fs.stat
+					readdir,
+					stat
 				}
 			});
 
@@ -144,7 +143,7 @@ describe('Providers → Async', () => {
 				assert.strictEqual(error, null);
 
 				assert.strictEqual(entries.length, 1);
-				assert.ok(entries[0].dirent.isSymbolicLink());
+				assert.ok(entries[0]?.dirent.isSymbolicLink());
 
 				done();
 			});
@@ -163,8 +162,8 @@ describe('Providers → Async', () => {
 				followSymbolicLinks: true,
 				throwErrorOnBrokenSymbolicLink: true,
 				fs: {
-					readdir: readdir as unknown as typeof fs.readdir,
-					stat: stat as unknown as typeof fs.stat
+					readdir,
+					stat
 				}
 			});
 
@@ -189,8 +188,8 @@ describe('Providers → Async', () => {
 
 			const settings = new Settings({
 				fs: {
-					readdir: readdir as unknown as typeof fs.readdir,
-					lstat: lstat as unknown as typeof fs.lstat
+					readdir,
+					lstat
 				}
 			});
 
@@ -200,9 +199,9 @@ describe('Providers → Async', () => {
 				sinon.assert.match(readdir.args, [[ROOT_PATH, sinon.match.func]]);
 				sinon.assert.match(lstat.args, [[FIRST_ENTRY_PATH, sinon.match.func]]);
 
-				assert.strictEqual(entries[0].name, FIRST_FILE_PATH);
-				assert.strictEqual(entries[0].path, FIRST_ENTRY_PATH);
-				assert.strictEqual(entries[0].dirent.name, FIRST_FILE_PATH);
+				assert.strictEqual(entries[0]?.name, FIRST_FILE_PATH);
+				assert.strictEqual(entries[0]?.path, FIRST_ENTRY_PATH);
+				assert.strictEqual(entries[0]?.dirent.name, FIRST_FILE_PATH);
 
 				done();
 			});
@@ -219,15 +218,15 @@ describe('Providers → Async', () => {
 
 			const settings = new Settings({
 				fs: {
-					readdir: readdir as unknown as typeof fs.readdir,
-					lstat: lstat as unknown as typeof fs.lstat
+					readdir,
+					lstat
 				},
 				stats: true
 			});
 
 			provider.readdir(ROOT_PATH, settings, (error, entries) => {
 				assert.strictEqual(error, null);
-				assert.deepStrictEqual(entries[0].stats, stats);
+				assert.deepStrictEqual(entries[0]?.stats, stats);
 
 				done();
 			});

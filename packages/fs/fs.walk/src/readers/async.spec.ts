@@ -1,12 +1,12 @@
 import * as assert from 'assert';
 import * as path from 'path';
 
-import * as fsScandir from '@nodelib/fs.scandir';
+import type * as fsScandir from '@nodelib/fs.scandir';
 import * as sinon from 'sinon';
 
 import Settings from '../settings';
 import * as tests from '../tests';
-import { Entry } from '../types';
+import type { Entry } from '../types';
 import AsyncReader from './async';
 
 type ScandirSignature = typeof fsScandir.scandir;
@@ -154,8 +154,8 @@ describe('Readers → Async', () => {
 			reader.onEntry((entry) => entries.push(entry));
 
 			reader.onEnd(() => {
-				assert.strictEqual(entries[0].path, path.join('base', fakeDirectoryEntry.name));
-				assert.strictEqual(entries[1].path, path.join('base', 'fake', fakeFileEntry.name));
+				assert.strictEqual(entries[0]?.path, path.join('base', fakeDirectoryEntry.name));
+				assert.strictEqual(entries[1]?.path, path.join('base', 'fake', fakeFileEntry.name));
 				done();
 			});
 
@@ -177,8 +177,8 @@ describe('Readers → Async', () => {
 			reader.onEntry((entry) => entries.push(entry));
 
 			reader.onEnd(() => {
-				assert.strictEqual(entries[0].path, path.join(fakeDirectoryEntry.name));
-				assert.strictEqual(entries[1].path, path.join('fake', fakeFileEntry.name));
+				assert.strictEqual(entries[0]?.path, path.join(fakeDirectoryEntry.name));
+				assert.strictEqual(entries[1]?.path, path.join('fake', fakeFileEntry.name));
 				done();
 			});
 
@@ -226,7 +226,9 @@ describe('Readers → Async', () => {
 
 			reader.destroy();
 
-			assert.throws(() => reader.destroy(), expectedErrorMessageRe);
+			assert.throws(() => {
+				reader.destroy();
+			}, expectedErrorMessageRe);
 		});
 	});
 });

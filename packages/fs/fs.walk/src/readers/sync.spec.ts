@@ -103,8 +103,8 @@ describe('Readers → Sync', () => {
 
 			const actual = reader.read();
 
-			assert.strictEqual(actual[0].path, path.join('base', fakeDirectoryEntry.name));
-			assert.strictEqual(actual[1].path, path.join('base', 'fake', fakeFileEntry.name));
+			assert.strictEqual(actual[0]?.path, path.join('base', fakeDirectoryEntry.name));
+			assert.strictEqual(actual[1]?.path, path.join('base', 'fake', fakeFileEntry.name));
 		});
 
 		it('should set base path to entry when the `basePath` option is exist and value is an empty string', () => {
@@ -119,8 +119,8 @@ describe('Readers → Sync', () => {
 
 			const actual = reader.read();
 
-			assert.strictEqual(actual[0].path, fakeDirectoryEntry.name);
-			assert.strictEqual(actual[1].path, path.join('fake', fakeFileEntry.name));
+			assert.strictEqual(actual[0]?.path, fakeDirectoryEntry.name);
+			assert.strictEqual(actual[1]?.path, path.join('fake', fakeFileEntry.name));
 		});
 	});
 });

@@ -2,30 +2,31 @@ import * as fsStat from '@nodelib/fs.stat';
 import * as rpl from 'run-parallel';
 
 import { IS_SUPPORT_READDIR_WITH_FILE_TYPES } from '../constants';
-import Settings from '../settings';
-import { Entry, Stats } from '../types';
+import type Settings from '../settings';
+import type { Entry, ErrnoException } from '../types';
 import * as utils from '../utils';
 import * as common from './common';
 
-type RplTaskStats = rpl.Task<Stats>;
 type RplTaskEntry = rpl.Task<Entry>;
-type FailureCallback = (err: NodeJS.ErrnoException) => void;
-type SuccessCallback = (err: null, entries: Entry[]) => void;
+type FailureCallback = (error: NodeJS.ErrnoException) => void;
+type SuccessCallback = (error: null, entries: Entry[]) => void;
 
-export type AsyncCallback = (err: NodeJS.ErrnoException, entries: Entry[]) => void;
+export type AsyncCallback = (error: NodeJS.ErrnoException, entries: Entry[]) => void;
 
 export function read(directory: string, settings: Settings, callback: AsyncCallback): void {
 	if (!settings.stats && IS_SUPPORT_READDIR_WITH_FILE_TYPES) {
-		return readdirWithFileTypes(directory, settings, callback);
+		readdirWithFileTypes(directory, settings, callback);
+		return;
 	}
 
-	return readdir(directory, settings, callback);
+	readdir(directory, settings, callback);
 }
 
 export function readdirWithFileTypes(directory: string, settings: Settings, callback: AsyncCallback): void {
 	settings.fs.readdir(directory, { withFileTypes: true }, (readdirError, dirents) => {
 		if (readdirError !== null) {
-			return callFailureCallback(callback, readdirError);
+			callFailureCallback(callback, readdirError);
+			return;
 		}
 
 		const entries: Entry[] = dirents.map((dirent) => ({
@@ -35,14 +36,16 @@ export function readdirWithFileTypes(directory: string, settings: Settings, call
 		}));
 
 		if (!settings.followSymbolicLinks) {
-			return callSuccessCallback(callback, entries);
+			callSuccessCallback(callback, entries);
+			return;
 		}
 
 		const tasks: RplTaskEntry[] = entries.map((entry) => makeRplTaskEntry(entry, settings));
 
 		rpl(tasks, (rplError: Error | null, rplEntries) => {
 			if (rplError !== null) {
-				return callFailureCallback(callback, rplError);
+				callFailureCallback(callback, rplError);
+				return;
 			}
 
 			callSuccessCallback(callback, rplEntries);
@@ -53,21 +56,24 @@ export function readdirWithFileTypes(directory: string, settings: Settings, call
 function makeRplTaskEntry(entry: Entry, settings: Settings): RplTaskEntry {
 	return (done) => {
 		if (!entry.dirent.isSymbolicLink()) {
-			return done(null, entry);
+			done(null, entry);
+			return;
 		}
 
 		settings.fs.stat(entry.path, (statError, stats) => {
 			if (statError !== null) {
 				if (settings.throwErrorOnBrokenSymbolicLink) {
-					return done(statError);
+					done(statError);
+					return;
 				}
 
-				return done(null, entry);
+				done(null, entry);
+				return;
 			}
 
 			entry.dirent = utils.fs.createDirentFromStats(entry.name, stats);
 
-			return done(null, entry);
+			done(null, entry);
 		});
 	};
 }
@@ -75,37 +81,40 @@ function makeRplTaskEntry(entry: Entry, settings: Settings): RplTaskEntry {
 export function readdir(directory: string, settings: Settings, callback: AsyncCallback): void {
 	settings.fs.readdir(directory, (readdirError, names) => {
 		if (readdirError !== null) {
-			return callFailureCallback(callback, readdirError);
+			callFailureCallback(callback, readdirError);
+			return;
 		}
 
-		const filepaths = names.map((name) => common.joinPathSegments(directory, name, settings.pathSegmentSeparator));
+		const tasks: RplTaskEntry[] = names.map((name) => {
+			const path = common.joinPathSegments(directory, name, settings.pathSegmentSeparator);
 
-		const tasks: RplTaskStats[] = filepaths.map((filepath): RplTaskStats => {
-			return (done) => fsStat.stat(filepath, settings.fsStatSettings, done);
+			return (done) => {
+				fsStat.stat(path, settings.fsStatSettings, (error: ErrnoException | null, stats) => {
+					if (error !== null) {
+						done(error);
+						return;
+					}
+
+					const entry: Entry = {
+						name,
+						path,
+						dirent: utils.fs.createDirentFromStats(name, stats)
+					};
+
+					if (settings.stats) {
+						entry.stats = stats;
+					}
+
+					done(null, entry);
+				});
+			};
 		});
 
-		rpl(tasks, (rplError: Error | null, results) => {
+		rpl(tasks, (rplError: Error | null, entries) => {
 			if (rplError !== null) {
-				return callFailureCallback(callback, rplError);
+				callFailureCallback(callback, rplError);
+				return;
 			}
-
-			const entries: Entry[] = [];
-
-			names.forEach((name, index) => {
-				const stats = results[index];
-
-				const entry: Entry = {
-					name,
-					path: filepaths[index],
-					dirent: utils.fs.createDirentFromStats(name, stats)
-				};
-
-				if (settings.stats) {
-					entry.stats = stats;
-				}
-
-				entries.push(entry);
-			});
 
 			callSuccessCallback(callback, entries);
 		});

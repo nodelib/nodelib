@@ -1,12 +1,22 @@
 import * as fs from 'fs';
 
-export type FileSystemAdapter = {
-	lstat: typeof fs.lstat;
-	stat: typeof fs.stat;
-	lstatSync: typeof fs.lstatSync;
-	statSync: typeof fs.statSync;
-	readdir: typeof fs.readdir;
-	readdirSync: typeof fs.readdirSync;
+import type * as fsStat from '@nodelib/fs.stat';
+
+import type { Dirent, ErrnoException } from '../types';
+
+export interface ReaddirAsynchronousMethod {
+	(filepath: string, options: { withFileTypes: true }, callback: (error: ErrnoException | null, files: Dirent[]) => void): void;
+	(filepath: string, callback: (error: ErrnoException | null, files: string[]) => void): void;
+}
+
+export interface ReaddirSynchronousMethod {
+	(filepath: string, options: { withFileTypes: true }): Dirent[];
+	(filepath: string): string[];
+}
+
+export type FileSystemAdapter = fsStat.FileSystemAdapter & {
+	readdir: ReaddirAsynchronousMethod;
+	readdirSync: ReaddirSynchronousMethod;
 };
 
 export const FILE_SYSTEM_ADAPTER: FileSystemAdapter = {

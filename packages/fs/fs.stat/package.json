@@ -24,5 +24,8 @@
     "test": "mocha \"out/**/*.spec.js\" -s 0",
     "build": "npm run clean && npm run compile && npm run lint && npm test",
     "watch": "npm run clean && npm run compile:watch"
+  },
+  "devDependencies": {
+    "@nodelib/fs.macchiato": "1.0.3"
   }
 }

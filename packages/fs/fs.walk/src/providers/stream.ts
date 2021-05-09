@@ -1,6 +1,6 @@
 import { Readable } from 'stream';
 import AsyncReader from '../readers/async';
-import Settings from '../settings';
+import type Settings from '../settings';
 
 export default class StreamProvider {
 	protected readonly _reader: AsyncReader = new AsyncReader(this._root, this._settings);
@@ -14,7 +14,7 @@ export default class StreamProvider {
 		}
 	});
 
-	constructor(private readonly _root: string, private readonly _settings: Settings) { }
+	constructor(private readonly _root: string, private readonly _settings: Settings) {}
 
 	public read(): Readable {
 		this._reader.onError((error) => {

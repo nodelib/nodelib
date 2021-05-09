@@ -1,9 +1,9 @@
-import * as scandir from '@nodelib/fs.scandir';
+import type * as scandir from '@nodelib/fs.scandir';
 
 export type Entry = scandir.Entry;
 export type Errno = NodeJS.ErrnoException;
 
-export type QueueItem = {
+export interface QueueItem {
 	directory: string;
 	base?: string;
-};
+}

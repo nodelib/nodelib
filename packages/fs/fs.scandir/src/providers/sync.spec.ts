@@ -1,13 +1,12 @@
 import * as assert from 'assert';
-import * as fs from 'fs';
 import * as path from 'path';
 
 import * as sinon from 'sinon';
 
-import { Dirent, Stats } from '../../../fs.macchiato';
+import { Dirent, Stats } from '@nodelib/fs.macchiato';
 import { IS_SUPPORT_READDIR_WITH_FILE_TYPES } from '../constants';
 import Settings from '../settings';
-import { Entry } from '../types';
+import type { Entry } from '../types';
 import * as provider from './sync';
 
 const ROOT_PATH = 'root';
@@ -22,7 +21,7 @@ describe('Providers → Sync', () => {
 			const readdirSync = sinon.stub().returns([]);
 
 			const settings = new Settings({
-				fs: { readdirSync: readdirSync as unknown as typeof fs.readdirSync }
+				fs: { readdirSync }
 			});
 
 			const actual = provider.read(ROOT_PATH, settings);
@@ -40,7 +39,7 @@ describe('Providers → Sync', () => {
 			const readdirSync = sinon.stub().returns([]);
 
 			const settings = new Settings({
-				fs: { readdirSync: readdirSync as unknown as typeof fs.readdirSync },
+				fs: { readdirSync },
 				stats: true
 			});
 
@@ -56,7 +55,7 @@ describe('Providers → Sync', () => {
 			const readdirSync = sinon.stub().returns([dirent]);
 
 			const settings = new Settings({
-				fs: { readdirSync: readdirSync as unknown as typeof fs.readdirSync }
+				fs: { readdirSync }
 			});
 
 			const expected: Entry[] = [
@@ -83,17 +82,14 @@ describe('Providers → Sync', () => {
 
 			const settings = new Settings({
 				followSymbolicLinks: true,
-				fs: {
-					readdirSync: readdirSync as unknown as typeof fs.readdirSync,
-					statSync: statSync as unknown as typeof fs.statSync
-				}
+				fs: { readdirSync, statSync }
 			});
 
 			const actual = provider.readdirWithFileTypes(ROOT_PATH, settings);
 
 			assert.strictEqual(actual.length, 2);
 			assert.deepStrictEqual(statSync.args, [[SECOND_ENTRY_PATH]]);
-			assert.ok(!actual[1].dirent.isSymbolicLink());
+			assert.strictEqual(actual[1]?.dirent.isSymbolicLink(), false);
 		});
 
 		it('should return lstat for broken symbolic link when the "throwErrorOnBrokenSymbolicLink" option is disabled', () => {
@@ -107,10 +103,7 @@ describe('Providers → Sync', () => {
 			const settings = new Settings({
 				followSymbolicLinks: true,
 				throwErrorOnBrokenSymbolicLink: false,
-				fs: {
-					readdirSync: readdirSync as unknown as typeof fs.readdirSync,
-					statSync: statSync as unknown as typeof fs.statSync
-				}
+				fs: { readdirSync, statSync }
 			});
 
 			const actual = provider.readdirWithFileTypes(ROOT_PATH, settings);
@@ -129,10 +122,7 @@ describe('Providers → Sync', () => {
 			const settings = new Settings({
 				followSymbolicLinks: true,
 				throwErrorOnBrokenSymbolicLink: true,
-				fs: {
-					readdirSync: readdirSync as unknown as typeof fs.readdirSync,
-					statSync: statSync as unknown as typeof fs.statSync
-				}
+				fs: { readdirSync, statSync }
 			});
 
 			const expectedErrorMessageRe = /Error: error/;
@@ -149,19 +139,16 @@ describe('Providers → Sync', () => {
 			const lstatSync = sinon.stub().returns(stats);
 
 			const settings = new Settings({
-				fs: {
-					readdirSync: readdirSync as unknown as typeof fs.readdirSync,
-					lstatSync: lstatSync as unknown as typeof fs.lstatSync
-				}
+				fs: { readdirSync, lstatSync }
 			});
 
 			const actual = provider.readdir(ROOT_PATH, settings);
 
 			assert.deepStrictEqual(readdirSync.args, [[ROOT_PATH]]);
 
-			assert.strictEqual(actual[0].name, FIRST_FILE_PATH);
-			assert.strictEqual(actual[0].path, FIRST_ENTRY_PATH);
-			assert.strictEqual(actual[0].dirent.name, FIRST_FILE_PATH);
+			assert.strictEqual(actual[0]?.name, FIRST_FILE_PATH);
+			assert.strictEqual(actual[0]?.path, FIRST_ENTRY_PATH);
+			assert.strictEqual(actual[0]?.dirent.name, FIRST_FILE_PATH);
 		});
 
 		it('should return entries with `stats` property', () => {
@@ -171,16 +158,13 @@ describe('Providers → Sync', () => {
 			const lstatSync = sinon.stub().returns(stats);
 
 			const settings = new Settings({
-				fs: {
-					readdirSync: readdirSync as unknown as typeof fs.readdirSync,
-					lstatSync: lstatSync as unknown as typeof fs.lstatSync
-				},
+				fs: { readdirSync, lstatSync },
 				stats: true
 			});
 
 			const actual = provider.readdir(ROOT_PATH, settings);
 
-			assert.deepStrictEqual(actual[0].stats, stats);
+			assert.deepStrictEqual(actual[0]?.stats, stats);
 		});
 	});
 });

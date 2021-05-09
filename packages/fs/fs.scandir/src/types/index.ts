@@ -1,21 +1,22 @@
-import * as fs from 'fs';
+import type * as fs from 'fs';
 
-export type Entry = {
+export interface Entry {
 	dirent: Dirent;
 	name: string;
 	path: string;
 	stats?: Stats;
-};
+}
 
 export type Stats = fs.Stats;
+export type ErrnoException = NodeJS.ErrnoException;
 
-export type Dirent = {
-	isBlockDevice(): boolean;
-	isCharacterDevice(): boolean;
-	isDirectory(): boolean;
-	isFIFO(): boolean;
-	isFile(): boolean;
-	isSocket(): boolean;
-	isSymbolicLink(): boolean;
+export interface Dirent {
+	isBlockDevice: () => boolean;
+	isCharacterDevice: () => boolean;
+	isDirectory: () => boolean;
+	isFIFO: () => boolean;
+	isFile: () => boolean;
+	isSocket: () => boolean;
+	isSymbolicLink: () => boolean;
 	name: string;
-};
+}

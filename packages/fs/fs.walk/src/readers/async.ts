@@ -3,8 +3,8 @@ import { EventEmitter } from 'events';
 import * as fsScandir from '@nodelib/fs.scandir';
 import * as fastq from 'fastq';
 
-import Settings from '../settings';
-import { Entry, Errno, QueueItem } from '../types';
+import type Settings from '../settings';
+import type { Entry, Errno, QueueItem } from '../types';
 import * as common from './common';
 import Reader from './reader';
 
@@ -79,7 +79,8 @@ export default class AsyncReader extends Reader {
 	private _worker(item: QueueItem, done: fastq.done): void {
 		this._scandir(item.directory, this._settings.fsScandirSettings, (error: NodeJS.ErrnoException | null, entries) => {
 			if (error !== null) {
-				return done(error, undefined);
+				done(error, undefined);
+				return;
 			}
 
 			for (const entry of entries) {

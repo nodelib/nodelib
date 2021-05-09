@@ -32,6 +32,7 @@
     "run-parallel": "^1.1.9"
   },
   "devDependencies": {
-    "@nodelib/fs.macchiato": "1.0.3"
+    "@nodelib/fs.macchiato": "1.0.3",
+    "@types/run-parallel": "^1.1.0"
   }
 }

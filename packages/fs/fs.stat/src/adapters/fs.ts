@@ -1,10 +1,15 @@
 import * as fs from 'fs';
 
+import type { ErrnoException } from '../types';
+
+export type StatAsynchronousMethod = (path: string, callback: (error: ErrnoException | null, stats: fs.Stats) => void) => void;
+export type StatSynchronousMethod = (path: string) => fs.Stats;
+
 export type FileSystemAdapter = {
-	lstat: typeof fs.lstat;
-	stat: typeof fs.stat;
-	lstatSync: typeof fs.lstatSync;
-	statSync: typeof fs.statSync;
+	lstat: StatAsynchronousMethod;
+	stat: StatAsynchronousMethod;
+	lstatSync: StatSynchronousMethod;
+	statSync: StatSynchronousMethod;
 };
 
 export const FILE_SYSTEM_ADAPTER: FileSystemAdapter = {

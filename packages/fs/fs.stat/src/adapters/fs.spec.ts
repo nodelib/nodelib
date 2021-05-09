@@ -1,5 +1,4 @@
 import * as assert from 'assert';
-import * as fs from 'fs';
 
 import { Stats } from '@nodelib/fs.macchiato';
 
@@ -15,7 +14,7 @@ describe('Adapters → FileSystem', () => {
 	});
 
 	it('should return custom FS methods', () => {
-		const customLstatSyncMethod: typeof fs.lstatSync = () => new Stats();
+		const customLstatSyncMethod = (): Stats => new Stats();
 
 		const expected: adapter.FileSystemAdapter = {
 			...adapter.FILE_SYSTEM_ADAPTER,

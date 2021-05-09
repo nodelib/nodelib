@@ -1,4 +1,4 @@
-import { FileSystemAdapter } from './adapters/fs';
+import { FileSystemAdapter, StatAsynchronousMethod, StatSynchronousMethod } from './adapters/fs';
 import * as async from './providers/async';
 import * as sync from './providers/sync';
 import Settings, { Options } from './settings';
@@ -45,6 +45,8 @@ export {
 	// eslint-disable-next-line no-undef
 	AsyncCallback,
 	FileSystemAdapter,
+	StatAsynchronousMethod,
+	StatSynchronousMethod,
 	Options,
 	Stats
 };

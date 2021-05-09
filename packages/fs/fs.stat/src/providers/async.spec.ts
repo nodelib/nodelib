@@ -70,7 +70,7 @@ describe('Providers → Async', () => {
 
 		it('should return lstat for broken symlink entry when the "throwErrorOnBrokenSymbolicLink" option is disabled', (done) => {
 			const lstat = sinon.stub().yields(null, new Stats({ isSymbolicLink: true }));
-			const stat = sinon.stub().yields(new Error());
+			const stat = sinon.stub().yields(new Error('error_message'));
 
 			const settings = new Settings({
 				fs: { lstat, stat },

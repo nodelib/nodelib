@@ -1,23 +1,22 @@
-import { FileSystemAdapter, StatAsynchronousMethod, StatSynchronousMethod } from './adapters/fs';
+import type { FileSystemAdapter, StatAsynchronousMethod, StatSynchronousMethod } from './adapters/fs';
 import * as async from './providers/async';
 import * as sync from './providers/sync';
 import Settings, { Options } from './settings';
-import { Stats } from './types';
+import type { Stats } from './types';
 
 type AsyncCallback = async.AsyncCallback;
 
 function stat(path: string, callback: AsyncCallback): void;
 function stat(path: string, optionsOrSettings: Options | Settings, callback: AsyncCallback): void;
-function stat(path: string, optionsOrSettingsOrCallback: Options | Settings | AsyncCallback, callback?: AsyncCallback): void {
+function stat(path: string, optionsOrSettingsOrCallback: AsyncCallback | Options | Settings, callback?: AsyncCallback): void {
 	if (typeof optionsOrSettingsOrCallback === 'function') {
-		return async.read(path, getSettings(), optionsOrSettingsOrCallback);
+		async.read(path, getSettings(), optionsOrSettingsOrCallback);
+		return;
 	}
 
 	async.read(path, getSettings(optionsOrSettingsOrCallback), callback as AsyncCallback);
 }
 
-// https://github.com/typescript-eslint/typescript-eslint/issues/60
-// eslint-disable-next-line no-redeclare
 declare namespace stat {
 	function __promisify__(path: string, optionsOrSettings?: Options | Settings): Promise<Stats>;
 }
@@ -28,7 +27,7 @@ function statSync(path: string, optionsOrSettings?: Options | Settings): Stats {
 	return sync.read(path, settings);
 }
 
-function getSettings(settingsOrOptions: Settings | Options = {}): Settings {
+function getSettings(settingsOrOptions: Options | Settings = {}): Settings {
 	if (settingsOrOptions instanceof Settings) {
 		return settingsOrOptions;
 	}
@@ -41,8 +40,6 @@ export {
 	stat,
 	statSync,
 
-	// https://github.com/typescript-eslint/typescript-eslint/issues/131
-	// eslint-disable-next-line no-undef
 	AsyncCallback,
 	FileSystemAdapter,
 	StatAsynchronousMethod,

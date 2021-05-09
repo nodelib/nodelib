@@ -1,6 +1,6 @@
-import * as fs from 'fs';
+import type * as fs from 'fs';
 
-import { PrepareOptionsFromClass } from './types';
+import type { PrepareOptionsFromClass } from './types';
 
 const uid = process.platform === 'win32' ? undefined : process.getuid();
 const gid = process.platform === 'win32' ? undefined : process.getgid();
@@ -27,7 +27,7 @@ export default class Stats implements fs.Stats {
 	public readonly ctime: Date = this._options.ctime ?? this._date;
 	public readonly birthtime: Date = this._options.birthtime ?? this._date;
 
-	constructor(private readonly _options: PrepareOptionsFromClass<fs.Stats> = {}) { }
+	constructor(private readonly _options: PrepareOptionsFromClass<fs.Stats> = {}) {}
 
 	public isFile(): boolean {
 		return this._options.isFile ?? true;

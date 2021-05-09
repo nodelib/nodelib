@@ -6,7 +6,7 @@ import * as sinon from 'sinon';
 import { Dirent, Stats } from '@nodelib/fs.macchiato';
 import { IS_SUPPORT_READDIR_WITH_FILE_TYPES } from '../constants';
 import Settings from '../settings';
-import { Entry } from '../types';
+import type { Entry } from '../types';
 import * as provider from './sync';
 
 const ROOT_PATH = 'root';

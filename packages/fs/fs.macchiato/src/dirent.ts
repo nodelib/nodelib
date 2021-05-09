@@ -1,11 +1,11 @@
-import * as fs from 'fs';
+import type * as fs from 'fs';
 
-import { PrepareOptionsFromClass } from './types';
+import type { PrepareOptionsFromClass } from './types';
 
 export default class Dirent implements fs.Dirent {
 	public readonly name: string = this._options.name ?? 'unknown.txt';
 
-	constructor(private readonly _options: PrepareOptionsFromClass<fs.Dirent> = {}) { }
+	constructor(private readonly _options: PrepareOptionsFromClass<fs.Dirent> = {}) {}
 
 	public isFile(): boolean {
 		return this._options.isFile ?? true;

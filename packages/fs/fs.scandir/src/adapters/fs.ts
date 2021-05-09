@@ -1,18 +1,18 @@
 import * as fs from 'fs';
 
-import * as fsStat from '@nodelib/fs.stat';
+import type * as fsStat from '@nodelib/fs.stat';
 
-import { Dirent, ErrnoException } from '../types';
+import type { Dirent, ErrnoException } from '../types';
 
-export type ReaddirAsynchronousMethod = {
+export interface ReaddirAsynchronousMethod {
 	(filepath: string, options: { withFileTypes: true }, callback: (error: ErrnoException | null, files: Dirent[]) => void): void;
 	(filepath: string, callback: (error: ErrnoException | null, files: string[]) => void): void;
-};
+}
 
-export type ReaddirSynchronousMethod = {
+export interface ReaddirSynchronousMethod {
 	(filepath: string, options: { withFileTypes: true }): Dirent[];
 	(filepath: string): string[];
-};
+}
 
 export type FileSystemAdapter = fsStat.FileSystemAdapter & {
 	readdir: ReaddirAsynchronousMethod;

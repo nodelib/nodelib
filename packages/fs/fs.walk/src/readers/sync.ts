@@ -1,6 +1,6 @@
 import * as fsScandir from '@nodelib/fs.scandir';
 
-import { Entry, Errno, QueueItem } from '../types';
+import type { Entry, Errno, QueueItem } from '../types';
 import * as common from './common';
 import Reader from './reader';
 
@@ -34,7 +34,7 @@ export default class SyncReader extends Reader {
 			for (const entry of entries) {
 				this._handleEntry(entry, base);
 			}
-		} catch (error) {
+		} catch (error: unknown) {
 			this._handleError(error as Errno);
 		}
 	}

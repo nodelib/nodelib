@@ -21,7 +21,7 @@
 
 		"noFallthroughCasesInSwitch": true,
 		"forceConsistentCasingInFileNames": true,
-		"importsNotUsedAsValues": "remove",
+		"importsNotUsedAsValues": "error",
 
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,

@@ -1,6 +1,6 @@
 import * as assert from 'assert';
 
-import SyncReader from '../readers/sync';
+import type SyncReader from '../readers/sync';
 import Settings from '../settings';
 import * as tests from '../tests';
 import SyncProvider from './sync';

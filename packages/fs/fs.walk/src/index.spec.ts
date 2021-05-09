@@ -1,11 +1,12 @@
 import * as assert from 'assert';
 import * as fs from 'fs';
-import { Readable } from 'stream';
+import type { Readable } from 'stream';
 
 import * as rimraf from 'rimraf';
 
-import { Errno } from './types';
-import { walk, walkSync, walkStream, Settings, Entry } from '.';
+import type { Errno } from './types';
+import type { Entry } from '.';
+import { walk, walkSync, walkStream, Settings } from '.';
 
 const entryFilter = (entry: Entry): boolean => !entry.dirent.isDirectory();
 
@@ -15,7 +16,9 @@ function streamToPromise(stream: Readable): Promise<Entry[]> {
 	return new Promise((resolve, reject) => {
 		stream.on('data', (entry: Entry) => entries.push(entry));
 		stream.once('error', reject);
-		stream.once('end', () => resolve(entries));
+		stream.once('end', () => {
+			resolve(entries);
+		});
 	});
 }
 

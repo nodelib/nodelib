@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "name": "@nodelib-internal/tools.size-limit",
+  "version": "0.0.0",
+  "bin": {
+    "tools.size-limit": "size-limit.js"
+  },
+  "dependencies": {
+    "chalk": "4.1.1",
+    "pretty-bytes": "5.6.0"
+  }
+}

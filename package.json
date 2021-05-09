@@ -8,9 +8,11 @@
     "node": ">= 8"
   },
   "scripts": {
+    "preversion": "npm run lint:size",
     "clean": "lerna run --parallel clean",
     "lint": "lerna run --parallel lint",
     "lint:dependencies": "depend --lerna . --bail --hint --strategy=conservative",
+    "lint:size": "lerna exec tools.size-limit --no-private --parallel",
     "compile": "tsc -b ./packages --verbose",
     "test": "lerna run --parallel test",
     "build": "npm run clean && npm run compile && npm run lint && npm run test",
@@ -20,6 +22,7 @@
   },
   "devDependencies": {
     "@nodelib-internal/tools.typedoc": "file:tools/typedoc",
+    "@nodelib-internal/tools.size-limit": "file:tools/size-limit",
     "@times-components/depend": "2.1.15",
     "@types/mocha": "^7.0.2",
     "@types/node": "^12.20.12",

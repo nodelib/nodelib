@@ -1,5 +1,4 @@
 import * as assert from 'assert';
-import * as fs from 'fs';
 import * as path from 'path';
 
 import * as sinon from 'sinon';
@@ -24,7 +23,7 @@ describe('Providers → Async', () => {
 			readdir.yields(null, []);
 
 			const settings = new Settings({
-				fs: { readdir: readdir as unknown as typeof fs.readdir }
+				fs: { readdir }
 			});
 
 			provider.read(ROOT_PATH, settings, (error, entries) => {
@@ -48,7 +47,7 @@ describe('Providers → Async', () => {
 			readdir.yields(null, []);
 
 			const settings = new Settings({
-				fs: { readdir: readdir as unknown as typeof fs.readdir },
+				fs: { readdir },
 				stats: true
 			});
 
@@ -71,7 +70,7 @@ describe('Providers → Async', () => {
 			readdir.yields(null, [dirent]);
 
 			const settings = new Settings({
-				fs: { readdir: readdir as unknown as typeof fs.readdir }
+				fs: { readdir }
 			});
 
 			const expected: Entry[] = [
@@ -106,8 +105,8 @@ describe('Providers → Async', () => {
 			const settings = new Settings({
 				followSymbolicLinks: true,
 				fs: {
-					readdir: readdir as unknown as typeof fs.readdir,
-					stat: stat as unknown as typeof fs.stat
+					readdir,
+					stat
 				}
 			});
 
@@ -135,8 +134,8 @@ describe('Providers → Async', () => {
 				followSymbolicLinks: true,
 				throwErrorOnBrokenSymbolicLink: false,
 				fs: {
-					readdir: readdir as unknown as typeof fs.readdir,
-					stat: stat as unknown as typeof fs.stat
+					readdir,
+					stat
 				}
 			});
 
@@ -163,8 +162,8 @@ describe('Providers → Async', () => {
 				followSymbolicLinks: true,
 				throwErrorOnBrokenSymbolicLink: true,
 				fs: {
-					readdir: readdir as unknown as typeof fs.readdir,
-					stat: stat as unknown as typeof fs.stat
+					readdir,
+					stat
 				}
 			});
 
@@ -189,8 +188,8 @@ describe('Providers → Async', () => {
 
 			const settings = new Settings({
 				fs: {
-					readdir: readdir as unknown as typeof fs.readdir,
-					lstat: lstat as unknown as typeof fs.lstat
+					readdir,
+					lstat
 				}
 			});
 
@@ -219,8 +218,8 @@ describe('Providers → Async', () => {
 
 			const settings = new Settings({
 				fs: {
-					readdir: readdir as unknown as typeof fs.readdir,
-					lstat: lstat as unknown as typeof fs.lstat
+					readdir,
+					lstat
 				},
 				stats: true
 			});

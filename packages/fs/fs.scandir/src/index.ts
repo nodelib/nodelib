@@ -1,4 +1,4 @@
-import { FileSystemAdapter } from './adapters/fs';
+import { FileSystemAdapter, ReaddirAsynchronousMethod, ReaddirSynchronousMethod } from './adapters/fs';
 import * as async from './providers/async';
 import * as sync from './providers/sync';
 import Settings, { Options } from './settings';
@@ -47,5 +47,7 @@ export {
 	Dirent,
 	Entry,
 	FileSystemAdapter,
+	ReaddirAsynchronousMethod,
+	ReaddirSynchronousMethod,
 	Options
 };

@@ -1,5 +1,4 @@
 import * as assert from 'assert';
-import * as fs from 'fs';
 import * as path from 'path';
 
 import * as sinon from 'sinon';
@@ -22,7 +21,7 @@ describe('Providers → Sync', () => {
 			const readdirSync = sinon.stub().returns([]);
 
 			const settings = new Settings({
-				fs: { readdirSync: readdirSync as unknown as typeof fs.readdirSync }
+				fs: { readdirSync }
 			});
 
 			const actual = provider.read(ROOT_PATH, settings);
@@ -40,7 +39,7 @@ describe('Providers → Sync', () => {
 			const readdirSync = sinon.stub().returns([]);
 
 			const settings = new Settings({
-				fs: { readdirSync: readdirSync as unknown as typeof fs.readdirSync },
+				fs: { readdirSync },
 				stats: true
 			});
 
@@ -56,7 +55,7 @@ describe('Providers → Sync', () => {
 			const readdirSync = sinon.stub().returns([dirent]);
 
 			const settings = new Settings({
-				fs: { readdirSync: readdirSync as unknown as typeof fs.readdirSync }
+				fs: { readdirSync }
 			});
 
 			const expected: Entry[] = [
@@ -83,10 +82,7 @@ describe('Providers → Sync', () => {
 
 			const settings = new Settings({
 				followSymbolicLinks: true,
-				fs: {
-					readdirSync: readdirSync as unknown as typeof fs.readdirSync,
-					statSync: statSync as unknown as typeof fs.statSync
-				}
+				fs: { readdirSync, statSync }
 			});
 
 			const actual = provider.readdirWithFileTypes(ROOT_PATH, settings);
@@ -107,10 +103,7 @@ describe('Providers → Sync', () => {
 			const settings = new Settings({
 				followSymbolicLinks: true,
 				throwErrorOnBrokenSymbolicLink: false,
-				fs: {
-					readdirSync: readdirSync as unknown as typeof fs.readdirSync,
-					statSync: statSync as unknown as typeof fs.statSync
-				}
+				fs: { readdirSync, statSync }
 			});
 
 			const actual = provider.readdirWithFileTypes(ROOT_PATH, settings);
@@ -129,10 +122,7 @@ describe('Providers → Sync', () => {
 			const settings = new Settings({
 				followSymbolicLinks: true,
 				throwErrorOnBrokenSymbolicLink: true,
-				fs: {
-					readdirSync: readdirSync as unknown as typeof fs.readdirSync,
-					statSync: statSync as unknown as typeof fs.statSync
-				}
+				fs: { readdirSync, statSync }
 			});
 
 			const expectedErrorMessageRe = /Error: error/;
@@ -149,10 +139,7 @@ describe('Providers → Sync', () => {
 			const lstatSync = sinon.stub().returns(stats);
 
 			const settings = new Settings({
-				fs: {
-					readdirSync: readdirSync as unknown as typeof fs.readdirSync,
-					lstatSync: lstatSync as unknown as typeof fs.lstatSync
-				}
+				fs: { readdirSync, lstatSync }
 			});
 
 			const actual = provider.readdir(ROOT_PATH, settings);
@@ -171,10 +158,7 @@ describe('Providers → Sync', () => {
 			const lstatSync = sinon.stub().returns(stats);
 
 			const settings = new Settings({
-				fs: {
-					readdirSync: readdirSync as unknown as typeof fs.readdirSync,
-					lstatSync: lstatSync as unknown as typeof fs.lstatSync
-				},
+				fs: { readdirSync, lstatSync },
 				stats: true
 			});
 

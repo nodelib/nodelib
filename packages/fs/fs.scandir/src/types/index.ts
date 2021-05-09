@@ -8,6 +8,7 @@ export type Entry = {
 };
 
 export type Stats = fs.Stats;
+export type ErrnoException = NodeJS.ErrnoException;
 
 export type Dirent = {
 	isBlockDevice(): boolean;

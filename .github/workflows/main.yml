@@ -51,6 +51,7 @@ jobs:
         run: npm run compile
       - name: Run hygiene checks
         run: npm run lint
+        if: ${{ matrix.node_version != 8 }}
       - name: Run dependencies checks
         run: npm run lint:dependencies
       - name: Run unit tests

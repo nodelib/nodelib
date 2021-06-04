@@ -31,7 +31,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node_version: [8, 10, 12, 14, 15]
+        node_version: [8, 10, 12, 14, 16]
         os:
           - ubuntu-latest
           - macos-latest
@@ -54,5 +54,9 @@ jobs:
         if: ${{ matrix.node_version != 8 }}
       - name: Run dependencies checks
         run: npm run lint:dependencies
+      - name: Run size limit check
+        run: npm run lint:size
+        env:
+          TOOLS_SIZE_LIMIT_SKIP: '1'
       - name: Run unit tests
         run: npm run test

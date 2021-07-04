@@ -66,7 +66,7 @@ export default class AsyncReader extends Reader {
 		this._emitter.once('end', callback);
 	}
 
-	private _pushToQueue(directory: string, base?: string): void {
+	private _pushToQueue(directory: string, base: string | undefined): void {
 		const queueItem: QueueItem = { directory, base };
 
 		this._queue.push(queueItem, (error: Error | null) => {
@@ -101,7 +101,7 @@ export default class AsyncReader extends Reader {
 		this._emitter.emit('error', error);
 	}
 
-	private _handleEntry(entry: Entry, base?: string): void {
+	private _handleEntry(entry: Entry, base: string | undefined): void {
 		if (this._isDestroyed || this._isFatalError) {
 			return;
 		}
@@ -117,7 +117,7 @@ export default class AsyncReader extends Reader {
 		}
 
 		if (entry.dirent.isDirectory() && common.isAppliedFilter(this._settings.deepFilter, entry)) {
-			this._pushToQueue(fullpath, entry.path);
+			this._pushToQueue(fullpath, base === undefined ? undefined : entry.path);
 		}
 	}
 

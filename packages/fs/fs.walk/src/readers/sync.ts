@@ -17,7 +17,7 @@ export default class SyncReader extends Reader {
 		return [...this._storage];
 	}
 
-	private _pushToQueue(directory: string, base?: string): void {
+	private _pushToQueue(directory: string, base: string | undefined): void {
 		this._queue.add({ directory, base });
 	}
 
@@ -27,7 +27,7 @@ export default class SyncReader extends Reader {
 		}
 	}
 
-	private _handleDirectory(directory: string, base?: string): void {
+	private _handleDirectory(directory: string, base: string | undefined): void {
 		try {
 			const entries = this._scandir(directory, this._settings.fsScandirSettings);
 
@@ -47,7 +47,7 @@ export default class SyncReader extends Reader {
 		throw error;
 	}
 
-	private _handleEntry(entry: Entry, base?: string): void {
+	private _handleEntry(entry: Entry, base: string | undefined): void {
 		const fullpath = entry.path;
 
 		if (base !== undefined) {
@@ -59,7 +59,7 @@ export default class SyncReader extends Reader {
 		}
 
 		if (entry.dirent.isDirectory() && common.isAppliedFilter(this._settings.deepFilter, entry)) {
-			this._pushToQueue(fullpath, entry.path);
+			this._pushToQueue(fullpath, base === undefined ? undefined : entry.path);
 		}
 	}
 

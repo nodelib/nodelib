@@ -7,14 +7,14 @@ import Reader from './reader';
 export default class SyncReader extends Reader {
 	protected readonly _scandir: typeof fsScandir.scandirSync = fsScandir.scandirSync;
 
-	private readonly _storage: Set<Entry> = new Set();
+	private readonly _storage: Entry[] = [];
 	private readonly _queue: Set<QueueItem> = new Set();
 
 	public read(): Entry[] {
 		this._pushToQueue(this._root, this._settings.basePath);
 		this._handleQueue();
 
-		return [...this._storage];
+		return this._storage;
 	}
 
 	private _pushToQueue(directory: string, base: string | undefined): void {
@@ -64,6 +64,6 @@ export default class SyncReader extends Reader {
 	}
 
 	private _pushToStorage(entry: Entry): void {
-		this._storage.add(entry);
+		this._storage.push(entry);
 	}
 }

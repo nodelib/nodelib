@@ -10,7 +10,7 @@ export type AsyncCallback = (error: Errno, entries: Entry[]) => void;
 export default class AsyncProvider {
 	protected readonly _reader: AsyncReader = new AsyncReader(this._root, this._settings);
 
-	private readonly _storage: Set<Entry> = new Set();
+	private readonly _storage: Entry[] = [];
 
 	constructor(private readonly _root: string, private readonly _settings: Settings) {}
 
@@ -20,11 +20,11 @@ export default class AsyncProvider {
 		});
 
 		this._reader.onEntry((entry: Entry) => {
-			this._storage.add(entry);
+			this._storage.push(entry);
 		});
 
 		this._reader.onEnd(() => {
-			callSuccessCallback(callback, [...this._storage]);
+			callSuccessCallback(callback, this._storage);
 		});
 
 		this._reader.read();

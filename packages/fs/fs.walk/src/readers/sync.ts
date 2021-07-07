@@ -7,17 +7,17 @@ import Reader from './reader';
 export default class SyncReader extends Reader {
 	protected readonly _scandir: typeof fsScandir.scandirSync = fsScandir.scandirSync;
 
-	private readonly _storage: Set<Entry> = new Set();
+	private readonly _storage: Entry[] = [];
 	private readonly _queue: Set<QueueItem> = new Set();
 
 	public read(): Entry[] {
 		this._pushToQueue(this._root, this._settings.basePath);
 		this._handleQueue();
 
-		return [...this._storage];
+		return this._storage;
 	}
 
-	private _pushToQueue(directory: string, base?: string): void {
+	private _pushToQueue(directory: string, base: string | undefined): void {
 		this._queue.add({ directory, base });
 	}
 
@@ -27,7 +27,7 @@ export default class SyncReader extends Reader {
 		}
 	}
 
-	private _handleDirectory(directory: string, base?: string): void {
+	private _handleDirectory(directory: string, base: string | undefined): void {
 		try {
 			const entries = this._scandir(directory, this._settings.fsScandirSettings);
 
@@ -47,7 +47,7 @@ export default class SyncReader extends Reader {
 		throw error;
 	}
 
-	private _handleEntry(entry: Entry, base?: string): void {
+	private _handleEntry(entry: Entry, base: string | undefined): void {
 		const fullpath = entry.path;
 
 		if (base !== undefined) {
@@ -59,11 +59,11 @@ export default class SyncReader extends Reader {
 		}
 
 		if (entry.dirent.isDirectory() && common.isAppliedFilter(this._settings.deepFilter, entry)) {
-			this._pushToQueue(fullpath, entry.path);
+			this._pushToQueue(fullpath, base === undefined ? undefined : entry.path);
 		}
 	}
 
 	private _pushToStorage(entry: Entry): void {
-		this._storage.add(entry);
+		this._storage.push(entry);
 	}
 }

@@ -9,7 +9,7 @@ import * as tests from '../tests';
 import StreamProvider from './stream';
 
 class TestProvider extends StreamProvider {
-	protected readonly _reader: AsyncReader = new tests.TestAsyncReader() as unknown as AsyncReader;
+	protected override readonly _reader: AsyncReader = new tests.TestAsyncReader() as unknown as AsyncReader;
 
 	constructor(_root: string, _settings: Settings = new Settings()) {
 		super(_root, _settings);

@@ -6,7 +6,7 @@ import * as tests from '../tests';
 import SyncProvider from './sync';
 
 class TestProvider extends SyncProvider {
-	protected readonly _reader: SyncReader = new tests.TestSyncReader() as unknown as SyncReader;
+	protected override readonly _reader: SyncReader = new tests.TestSyncReader() as unknown as SyncReader;
 
 	constructor(_root: string, _settings: Settings = new Settings()) {
 		super(_root, _settings);

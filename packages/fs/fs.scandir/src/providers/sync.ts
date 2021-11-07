@@ -1,13 +1,12 @@
 import * as fsStat from '@nodelib/fs.stat';
 
-import { IS_SUPPORT_READDIR_WITH_FILE_TYPES } from '../constants';
 import type Settings from '../settings';
 import type { Entry, ErrnoException } from '../types';
 import * as utils from '../utils';
 import * as common from './common';
 
 export function read(directory: string, settings: Settings): Entry[] {
-	if (!settings.stats && IS_SUPPORT_READDIR_WITH_FILE_TYPES) {
+	if (!settings.stats) {
 		return readdirWithFileTypes(directory, settings);
 	}
 

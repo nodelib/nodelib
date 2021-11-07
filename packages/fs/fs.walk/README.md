@@ -5,7 +5,6 @@
 ## :bulb: Highlights
 
 * :moneybag: Returns useful information: `name`, `path`, `dirent` and `stats` (optional).
-* :rocket: On Node.js 10.10+ uses the mechanism without additional calls to determine the entry type for performance reasons. See [`old` and `modern` mode](https://github.com/nodelib/nodelib/blob/master/packages/fs/fs.scandir/README.md#old-and-modern-mode).
 * :gear: Built-in directories/files and error filtering system.
 * :link: Can safely work with broken symbolic links.
 

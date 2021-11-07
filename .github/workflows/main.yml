@@ -31,7 +31,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node_version: [8, 10, 12, 14, 16]
+        node_version: [12, 14, 16, 17]
         os:
           - ubuntu-latest
           - macos-latest
@@ -40,7 +40,7 @@ jobs:
       - name: Setup repository
         uses: actions/checkout@v2
       - name: Setup environment
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node_version }}
       - name: Install root dependencies
@@ -51,7 +51,6 @@ jobs:
         run: npm run compile
       - name: Run hygiene checks
         run: npm run lint
-        if: ${{ matrix.node_version != 8 && matrix.node_version != 10 }}
       - name: Run dependencies checks
         run: npm run lint:dependencies
       - name: Run size limit check

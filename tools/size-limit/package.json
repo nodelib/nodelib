@@ -6,7 +6,7 @@
     "tools.size-limit": "size-limit.js"
   },
   "dependencies": {
-    "chalk": "4.1.1",
-    "pretty-bytes": "5.6.0"
+    "chalk": "^4.1.2",
+    "pretty-bytes": "^5.6.0"
   }
 }

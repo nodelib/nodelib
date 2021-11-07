@@ -18,11 +18,11 @@ describe('Adapters → FileSystem', () => {
 
 		const expected: adapter.FileSystemAdapter = {
 			...adapter.FILE_SYSTEM_ADAPTER,
-			lstatSync: customLstatSyncMethod
+			lstatSync: customLstatSyncMethod,
 		};
 
 		const actual = adapter.createFileSystemAdapter({
-			lstatSync: customLstatSyncMethod
+			lstatSync: customLstatSyncMethod,
 		});
 
 		assert.deepStrictEqual(actual, expected);

@@ -12,7 +12,7 @@ describe('Providers → Async', () => {
 			const lstat = sinon.stub().yields(null, new Stats());
 
 			const settings = new Settings({
-				fs: { lstat }
+				fs: { lstat },
 			});
 
 			provider.read('filepath', settings, (error, stats) => {
@@ -27,7 +27,7 @@ describe('Providers → Async', () => {
 
 			const settings = new Settings({
 				followSymbolicLink: false,
-				fs: { lstat }
+				fs: { lstat },
 			});
 
 			provider.read('filepath', settings, (error, stats) => {
@@ -42,7 +42,7 @@ describe('Providers → Async', () => {
 			const stat = sinon.stub().yields(null, new Stats({ ino: 1 }));
 
 			const settings = new Settings({
-				fs: { lstat, stat }
+				fs: { lstat, stat },
 			});
 
 			provider.read('filepath', settings, (error, stats) => {
@@ -58,7 +58,7 @@ describe('Providers → Async', () => {
 
 			const settings = new Settings({
 				fs: { lstat, stat },
-				markSymbolicLink: true
+				markSymbolicLink: true,
 			});
 
 			provider.read('filepath', settings, (error, stats) => {
@@ -74,7 +74,7 @@ describe('Providers → Async', () => {
 
 			const settings = new Settings({
 				fs: { lstat, stat },
-				throwErrorOnBrokenSymbolicLink: false
+				throwErrorOnBrokenSymbolicLink: false,
 			});
 
 			provider.read('filepath', settings, (error, stats) => {
@@ -89,7 +89,7 @@ describe('Providers → Async', () => {
 			const stat = sinon.stub().yields(new Error('broken'));
 
 			const settings = new Settings({
-				fs: { lstat, stat }
+				fs: { lstat, stat },
 			});
 
 			provider.read('filepath', settings, (error) => {

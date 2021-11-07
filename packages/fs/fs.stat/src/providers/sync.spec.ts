@@ -12,7 +12,7 @@ describe('Providers → Sync', () => {
 			const lstatSync = sinon.stub().returns(new Stats());
 
 			const settings = new Settings({
-				fs: { lstatSync }
+				fs: { lstatSync },
 			});
 
 			const actual = provider.read('filepath', settings);
@@ -25,7 +25,7 @@ describe('Providers → Sync', () => {
 
 			const settings = new Settings({
 				followSymbolicLink: false,
-				fs: { lstatSync }
+				fs: { lstatSync },
 			});
 
 			const actual = provider.read('filepath', settings);
@@ -38,7 +38,7 @@ describe('Providers → Sync', () => {
 			const statSync = sinon.stub().returns(new Stats({ ino: 1 }));
 
 			const settings = new Settings({
-				fs: { lstatSync, statSync }
+				fs: { lstatSync, statSync },
 			});
 
 			const actual = provider.read('filepath', settings);
@@ -52,7 +52,7 @@ describe('Providers → Sync', () => {
 
 			const settings = new Settings({
 				markSymbolicLink: true,
-				fs: { lstatSync, statSync }
+				fs: { lstatSync, statSync },
 			});
 
 			const actual = provider.read('filepath', settings);
@@ -66,7 +66,7 @@ describe('Providers → Sync', () => {
 
 			const settings = new Settings({
 				fs: { lstatSync, statSync },
-				throwErrorOnBrokenSymbolicLink: false
+				throwErrorOnBrokenSymbolicLink: false,
 			});
 
 			const actual = provider.read('filepath', settings);
@@ -79,7 +79,7 @@ describe('Providers → Sync', () => {
 			const statSync = sinon.stub().throws(new Error('broken'));
 
 			const settings = new Settings({
-				fs: { lstatSync, statSync }
+				fs: { lstatSync, statSync },
 			});
 
 			const expectedErrorMessageRe = /broken/;

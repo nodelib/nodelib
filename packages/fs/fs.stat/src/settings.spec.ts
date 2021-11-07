@@ -21,7 +21,7 @@ describe('Settings', () => {
 		const settings = new Settings({
 			followSymbolicLink: false,
 			fs: fs.createFileSystemAdapter({ lstatSync }),
-			throwErrorOnBrokenSymbolicLink: false
+			throwErrorOnBrokenSymbolicLink: false,
 		});
 
 		assert.deepStrictEqual(settings.fs, fs.createFileSystemAdapter({ lstatSync }));

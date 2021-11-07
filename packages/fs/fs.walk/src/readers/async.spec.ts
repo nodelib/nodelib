@@ -12,7 +12,7 @@ import AsyncReader from './async';
 type ScandirSignature = typeof fsScandir.scandir;
 
 class TestReader extends AsyncReader {
-	protected readonly _scandir: ScandirSignature = sinon.stub() as unknown as ScandirSignature;
+	protected override readonly _scandir: ScandirSignature = sinon.stub() as unknown as ScandirSignature;
 
 	constructor(_root: string, _settings: Settings = new Settings()) {
 		super(_root, _settings);

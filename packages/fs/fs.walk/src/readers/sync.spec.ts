@@ -8,7 +8,7 @@ import * as tests from '../tests';
 import SyncReader from './sync';
 
 class TestReader extends SyncReader {
-	protected readonly _scandir: sinon.SinonStub = sinon.stub();
+	protected override readonly _scandir: sinon.SinonStub = sinon.stub();
 
 	constructor(_root: string, _settings: Settings = new Settings()) {
 		super(_root, _settings);

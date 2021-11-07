@@ -8,7 +8,7 @@ import * as tests from '../tests';
 import AsyncProvider from './async';
 
 class TestProvider extends AsyncProvider {
-	protected readonly _reader: AsyncReader = new tests.TestAsyncReader() as unknown as AsyncReader;
+	protected override readonly _reader: AsyncReader = new tests.TestAsyncReader() as unknown as AsyncReader;
 
 	constructor(_root: string, _settings: Settings = new Settings()) {
 		super(_root, _settings);

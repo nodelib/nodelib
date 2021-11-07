@@ -20,7 +20,7 @@ export default class AsyncReader extends Reader {
 	private _isFatalError: boolean = false;
 	private _isDestroyed: boolean = false;
 
-	constructor(_root: string, protected readonly _settings: Settings) {
+	constructor(_root: string, protected override readonly _settings: Settings) {
 		super(_root, _settings);
 
 		this._queue.drain = () => {

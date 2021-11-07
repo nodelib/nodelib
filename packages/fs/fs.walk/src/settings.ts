@@ -35,7 +35,7 @@ export default class Settings {
 		fs: this._options.fs,
 		pathSegmentSeparator: this._options.pathSegmentSeparator,
 		stats: this._options.stats,
-		throwErrorOnBrokenSymbolicLink: this._options.throwErrorOnBrokenSymbolicLink
+		throwErrorOnBrokenSymbolicLink: this._options.throwErrorOnBrokenSymbolicLink,
 	});
 
 	constructor(private readonly _options: Options = {}) {}

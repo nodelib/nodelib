@@ -98,7 +98,7 @@ describe('Stats', () => {
 			isBlockDevice: true,
 			isCharacterDevice: true,
 			isFIFO: true,
-			isSocket: true
+			isSocket: true,
 		});
 
 		assert.strictEqual(stats.dev, 1);
@@ -130,7 +130,7 @@ describe('Stats', () => {
 
 	it('should create a fake instance with undefined as values', () => {
 		const stats = new Stats({
-			uid: undefined
+			uid: undefined,
 		});
 
 		assert.strictEqual(stats.uid, undefined);

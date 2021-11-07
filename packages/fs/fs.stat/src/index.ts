@@ -1,7 +1,7 @@
-import type { FileSystemAdapter, StatAsynchronousMethod, StatSynchronousMethod } from './adapters/fs';
 import * as async from './providers/async';
 import * as sync from './providers/sync';
-import Settings, { Options } from './settings';
+import type { Options } from './settings';
+import Settings from './settings';
 import type { Stats } from './types';
 
 type AsyncCallback = async.AsyncCallback;
@@ -35,15 +35,10 @@ function getSettings(settingsOrOptions: Options | Settings = {}): Settings {
 	return new Settings(settingsOrOptions);
 }
 
-export {
-	Settings,
-	stat,
-	statSync,
+export { stat, statSync };
+export { default as Settings } from './settings';
 
-	AsyncCallback,
-	FileSystemAdapter,
-	StatAsynchronousMethod,
-	StatSynchronousMethod,
-	Options,
-	Stats
-};
+export type { AsyncCallback };
+export type { FileSystemAdapter, StatSynchronousMethod, StatAsynchronousMethod } from './adapters/fs';
+export type { Options } from './settings';
+export type { Stats } from './types';

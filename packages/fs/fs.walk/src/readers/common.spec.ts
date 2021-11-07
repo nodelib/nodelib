@@ -17,7 +17,7 @@ describe('Readers → Common', () => {
 
 		it('should return true when the error cannot be suppressed', () => {
 			const settings = new Settings({
-				errorFilter: (error) => error.code === 'ENOENT'
+				errorFilter: (error) => error.code === 'ENOENT',
 			});
 
 			const actual = common.isFatalError(settings, tests.EPERM_ERRNO);
@@ -27,7 +27,7 @@ describe('Readers → Common', () => {
 
 		it('should return false when the error can be suppressed', () => {
 			const settings = new Settings({
-				errorFilter: (error) => error.code === 'EPERM'
+				errorFilter: (error) => error.code === 'EPERM',
 			});
 
 			const actual = common.isFatalError(settings, tests.EPERM_ERRNO);
@@ -48,7 +48,7 @@ describe('Readers → Common', () => {
 
 		it('should return true when the entry will be applied', () => {
 			const settings = new Settings({
-				entryFilter: (entry) => entry.name === 'fake.txt'
+				entryFilter: (entry) => entry.name === 'fake.txt',
 			});
 			const fakeEntry = tests.buildFakeFileEntry();
 
@@ -59,7 +59,7 @@ describe('Readers → Common', () => {
 
 		it('should return false when the entry will be skipped', () => {
 			const settings = new Settings({
-				entryFilter: (entry) => entry.name !== 'fake.txt'
+				entryFilter: (entry) => entry.name !== 'fake.txt',
 			});
 			const fakeEntry = tests.buildFakeFileEntry();
 

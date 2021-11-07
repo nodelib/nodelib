@@ -21,7 +21,7 @@ export function readdirWithFileTypes(directory: string, settings: Settings): Ent
 		const entry: Entry = {
 			dirent,
 			name: dirent.name,
-			path: common.joinPathSegments(directory, dirent.name, settings.pathSegmentSeparator)
+			path: common.joinPathSegments(directory, dirent.name, settings.pathSegmentSeparator),
 		};
 
 		if (entry.dirent.isSymbolicLink() && settings.followSymbolicLinks) {
@@ -50,7 +50,7 @@ export function readdir(directory: string, settings: Settings): Entry[] {
 		const entry: Entry = {
 			name,
 			path: entryPath,
-			dirent: utils.fs.createDirentFromStats(name, stats)
+			dirent: utils.fs.createDirentFromStats(name, stats),
 		};
 
 		if (settings.stats) {

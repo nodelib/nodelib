@@ -1,5 +1,1 @@
-import * as fs from './fs';
-
-export {
-	fs
-};
+export * as fs from './fs';

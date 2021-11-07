@@ -11,7 +11,7 @@ export default class StreamProvider {
 			if (!this._reader.isDestroyed) {
 				this._reader.destroy();
 			}
-		}
+		},
 	});
 
 	constructor(private readonly _root: string, private readonly _settings: Settings) {}

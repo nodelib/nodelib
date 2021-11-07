@@ -3,7 +3,7 @@ import * as fs from 'fs';
 
 import * as rimraf from 'rimraf';
 
-import { stat, statSync, Settings } from '.';
+import { Settings, stat, statSync } from '.';
 
 describe('Package', () => {
 	before(() => {

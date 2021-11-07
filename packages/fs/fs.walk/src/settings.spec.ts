@@ -12,7 +12,7 @@ describe('Settings', () => {
 			fs: undefined,
 			pathSegmentSeparator: undefined,
 			stats: undefined,
-			throwErrorOnBrokenSymbolicLink: undefined
+			throwErrorOnBrokenSymbolicLink: undefined,
 		});
 
 		assert.strictEqual(fsWalkSettings.basePath, undefined);

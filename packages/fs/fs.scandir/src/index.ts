@@ -1,8 +1,8 @@
-import type { FileSystemAdapter, ReaddirAsynchronousMethod, ReaddirSynchronousMethod } from './adapters/fs';
 import * as async from './providers/async';
 import * as sync from './providers/sync';
-import Settings, { Options } from './settings';
-import type { Dirent, Entry } from './types';
+import type { Options } from './settings';
+import Settings from './settings';
+import type { Entry } from './types';
 
 type AsyncCallback = async.AsyncCallback;
 
@@ -35,16 +35,10 @@ function getSettings(settingsOrOptions: Options | Settings = {}): Settings {
 	return new Settings(settingsOrOptions);
 }
 
-export {
-	scandir,
-	scandirSync,
-	Settings,
+export { scandir, scandirSync };
+export { default as Settings } from './settings';
 
-	AsyncCallback,
-	Dirent,
-	Entry,
-	FileSystemAdapter,
-	ReaddirAsynchronousMethod,
-	ReaddirSynchronousMethod,
-	Options
-};
+export type { AsyncCallback };
+export type { FileSystemAdapter, ReaddirSynchronousMethod, ReaddirAsynchronousMethod } from './adapters/fs';
+export type { Dirent, Entry } from './types';
+export type { Options } from './settings';

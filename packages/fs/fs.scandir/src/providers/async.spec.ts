@@ -23,7 +23,7 @@ describe('Providers → Async', () => {
 			readdir.yields(null, []);
 
 			const settings = new Settings({
-				fs: { readdir }
+				fs: { readdir },
 			});
 
 			provider.read(ROOT_PATH, settings, (error, entries) => {
@@ -48,7 +48,7 @@ describe('Providers → Async', () => {
 
 			const settings = new Settings({
 				fs: { readdir },
-				stats: true
+				stats: true,
 			});
 
 			provider.read(ROOT_PATH, settings, (error, entries) => {
@@ -70,15 +70,15 @@ describe('Providers → Async', () => {
 			readdir.yields(null, [dirent]);
 
 			const settings = new Settings({
-				fs: { readdir }
+				fs: { readdir },
 			});
 
 			const expected: Entry[] = [
 				{
 					dirent,
 					name: FIRST_FILE_PATH,
-					path: FIRST_ENTRY_PATH
-				}
+					path: FIRST_ENTRY_PATH,
+				},
 			];
 
 			provider.readdirWithFileTypes(ROOT_PATH, settings, (error, entries) => {
@@ -106,8 +106,8 @@ describe('Providers → Async', () => {
 				followSymbolicLinks: true,
 				fs: {
 					readdir,
-					stat
-				}
+					stat,
+				},
 			});
 
 			provider.readdirWithFileTypes(ROOT_PATH, settings, (error, entries) => {
@@ -135,8 +135,8 @@ describe('Providers → Async', () => {
 				throwErrorOnBrokenSymbolicLink: false,
 				fs: {
 					readdir,
-					stat
-				}
+					stat,
+				},
 			});
 
 			provider.readdirWithFileTypes(ROOT_PATH, settings, (error, entries) => {
@@ -163,8 +163,8 @@ describe('Providers → Async', () => {
 				throwErrorOnBrokenSymbolicLink: true,
 				fs: {
 					readdir,
-					stat
-				}
+					stat,
+				},
 			});
 
 			provider.readdirWithFileTypes(ROOT_PATH, settings, (error, entries) => {
@@ -189,8 +189,8 @@ describe('Providers → Async', () => {
 			const settings = new Settings({
 				fs: {
 					readdir,
-					lstat
-				}
+					lstat,
+				},
 			});
 
 			provider.readdir(ROOT_PATH, settings, (error, entries) => {
@@ -219,9 +219,9 @@ describe('Providers → Async', () => {
 			const settings = new Settings({
 				fs: {
 					readdir,
-					lstat
+					lstat,
 				},
-				stats: true
+				stats: true,
 			});
 
 			provider.readdir(ROOT_PATH, settings, (error, entries) => {

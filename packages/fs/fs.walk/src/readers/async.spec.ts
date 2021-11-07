@@ -40,7 +40,7 @@ describe('Readers → Async', () => {
 
 		it('should emit "end" event when the first call of scandir is broken but this error can be suppressed', (done) => {
 			const settings = new Settings({
-				errorFilter: (error) => error.code === 'EPERM'
+				errorFilter: (error) => error.code === 'EPERM',
 			});
 			const reader = new TestReader('non-exist-directory', settings);
 

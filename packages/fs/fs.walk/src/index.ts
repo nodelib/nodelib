@@ -1,11 +1,11 @@
 import type { Readable } from 'stream';
 
-import type { Dirent, FileSystemAdapter } from '@nodelib/fs.scandir';
-
-import AsyncProvider, { AsyncCallback } from './providers/async';
+import type { AsyncCallback } from './providers/async';
+import AsyncProvider from './providers/async';
 import StreamProvider from './providers/stream';
 import SyncProvider from './providers/sync';
-import Settings, { DeepFilterFunction, EntryFilterFunction, ErrorFilterFunction, Options } from './settings';
+import type { Options } from './settings';
+import Settings from './settings';
 import type { Entry } from './types';
 
 function walk(directory: string, callback: AsyncCallback): void;
@@ -45,18 +45,10 @@ function getSettings(settingsOrOptions: Options | Settings = {}): Settings {
 	return new Settings(settingsOrOptions);
 }
 
-export {
-	walk,
-	walkSync,
-	walkStream,
-	Settings,
+export { walk, walkSync, walkStream };
+export { default as Settings } from './settings';
 
-	AsyncCallback,
-	Dirent,
-	Entry,
-	FileSystemAdapter,
-	Options,
-	DeepFilterFunction,
-	EntryFilterFunction,
-	ErrorFilterFunction
-};
+export type { Dirent, FileSystemAdapter } from '@nodelib/fs.scandir';
+export type { DeepFilterFunction, ErrorFilterFunction, EntryFilterFunction, Options } from './settings';
+export type { AsyncCallback } from './providers/async';
+export type { Entry } from './types';

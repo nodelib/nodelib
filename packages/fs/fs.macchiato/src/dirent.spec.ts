@@ -38,7 +38,7 @@ describe('Dirent', () => {
 			isBlockDevice: true,
 			isCharacterDevice: true,
 			isFIFO: true,
-			isSocket: true
+			isSocket: true,
 		});
 
 		assert.strictEqual(dirent.name, 'known.txt');

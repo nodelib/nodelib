@@ -8,7 +8,7 @@ export function buildFakeFileEntry(entry?: Partial<Entry>): Entry {
 		name: 'fake.txt',
 		path: 'directory/fake.txt',
 		dirent: new Dirent({ name: 'fake.txt' }),
-		...entry
+		...entry,
 	};
 }
 
@@ -17,14 +17,14 @@ export function buildFakeDirectoryEntry(entry?: Partial<Entry>): Entry {
 		name: 'fake',
 		path: 'directory/fake',
 		dirent: new Dirent({ name: 'fake', isFile: false, isDirectory: true }),
-		...entry
+		...entry,
 	};
 }
 
 export const EPERM_ERRNO: Errno = {
 	name: 'EPERM',
 	code: 'EPERM',
-	message: 'EPERM'
+	message: 'EPERM',
 };
 
 export class TestAsyncReader {

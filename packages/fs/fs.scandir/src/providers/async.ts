@@ -1,7 +1,6 @@
 import * as fsStat from '@nodelib/fs.stat';
 import * as rpl from 'run-parallel';
 
-import { IS_SUPPORT_READDIR_WITH_FILE_TYPES } from '../constants';
 import type Settings from '../settings';
 import type { Entry, ErrnoException } from '../types';
 import * as utils from '../utils';
@@ -14,7 +13,7 @@ type SuccessCallback = (error: null, entries: Entry[]) => void;
 export type AsyncCallback = (error: NodeJS.ErrnoException, entries: Entry[]) => void;
 
 export function read(directory: string, settings: Settings, callback: AsyncCallback): void {
-	if (!settings.stats && IS_SUPPORT_READDIR_WITH_FILE_TYPES) {
+	if (!settings.stats) {
 		readdirWithFileTypes(directory, settings, callback);
 		return;
 	}

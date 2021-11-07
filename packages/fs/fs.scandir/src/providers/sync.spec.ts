@@ -4,7 +4,6 @@ import * as path from 'path';
 import * as sinon from 'sinon';
 
 import { Dirent, Stats } from '@nodelib/fs.macchiato';
-import { IS_SUPPORT_READDIR_WITH_FILE_TYPES } from '../constants';
 import Settings from '../settings';
 import type { Entry } from '../types';
 import * as provider from './sync';
@@ -17,24 +16,6 @@ const SECOND_ENTRY_PATH = path.join(ROOT_PATH, SECOND_FILE_PATH);
 
 describe('Providers → Sync', () => {
 	describe('.read', () => {
-		it('should call correct method based on Node.js version', () => {
-			const readdirSync = sinon.stub().returns([]);
-
-			const settings = new Settings({
-				fs: { readdirSync },
-			});
-
-			const actual = provider.read(ROOT_PATH, settings);
-
-			assert.deepStrictEqual(actual, []);
-
-			if (IS_SUPPORT_READDIR_WITH_FILE_TYPES) {
-				assert.deepStrictEqual(readdirSync.args, [[ROOT_PATH, { withFileTypes: true }]]);
-			} else {
-				assert.deepStrictEqual(readdirSync.args, [[ROOT_PATH]]);
-			}
-		});
-
 		it('should always use `readdir` method when the `stats` option is enabled', () => {
 			const readdirSync = sinon.stub().returns([]);
 

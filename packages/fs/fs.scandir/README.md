@@ -7,7 +7,6 @@
 The package is aimed at obtaining information about entries in the directory.
 
 * :moneybag: Returns useful information: `name`, `path`, `dirent` and `stats` (optional).
-* :gear: On Node.js 10.10+ uses the mechanism without additional calls to determine the entry type. See [`old` and `modern` mode](#old-and-modern-mode).
 * :link: Can safely work with broken symbolic links.
 
 ## Install
@@ -77,7 +76,7 @@ const entries = fsScandir.scandirSync('path', settings);
 
 * `name` — The name of the entry (`unknown.txt`).
 * `path` — The path of the entry relative to call directory (`root/unknown.txt`).
-* `dirent` — An instance of [`fs.Dirent`](./src/types/index.ts) class. On Node.js below 10.10 will be emulated by [`DirentFromStats`](./src/utils/fs.ts) class.
+* `dirent` — An instance of [`fs.Dirent`](./src/types/index.ts) class. When the `stats` option is enabled, it will be emulated by [`DirentFromStats`](./src/utils/fs.ts) class.
 * `stats` (optional) — An instance of `fs.Stats` class.
 
 For example, the `scandir` call for `tools` directory with one directory inside:
@@ -150,13 +149,13 @@ This package has two modes that are used depending on the environment and parame
 
 ### old
 
-* Node.js below `10.10` or when the `stats` option is enabled
+* When the `stats` option is enabled.
 
 When working in the old mode, the directory is read first (`fs.readdir`), then the type of entries is determined (`fs.lstat` and/or `fs.stat` for symbolic links).
 
 ### modern
 
-* Node.js 10.10+ and the `stats` option is disabled
+* When the `stats` option is disabled.
 
 In the modern mode, reading the directory (`fs.readdir` with the `withFileTypes` option) is combined with obtaining information about its entries. An additional call for symbolic links (`fs.stat`) is still present.
 

@@ -23,7 +23,7 @@ describe('Settings', () => {
 
 		const settings = new Settings({
 			fs: fs.createFileSystemAdapter({ lstatSync }),
-			stats: true
+			stats: true,
 		});
 
 		assert.deepStrictEqual(settings.fs, fs.createFileSystemAdapter({ lstatSync }));

@@ -22,7 +22,7 @@ export default class Settings {
 	public readonly fsStatSettings: fsStat.Settings = new fsStat.Settings({
 		followSymbolicLink: this.followSymbolicLinks,
 		fs: this.fs,
-		throwErrorOnBrokenSymbolicLink: this.throwErrorOnBrokenSymbolicLink
+		throwErrorOnBrokenSymbolicLink: this.throwErrorOnBrokenSymbolicLink,
 	});
 
 	constructor(private readonly _options: Options = {}) {}

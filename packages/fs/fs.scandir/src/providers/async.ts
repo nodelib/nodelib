@@ -32,7 +32,7 @@ export function readdirWithFileTypes(directory: string, settings: Settings, call
 		const entries: Entry[] = dirents.map((dirent) => ({
 			dirent,
 			name: dirent.name,
-			path: common.joinPathSegments(directory, dirent.name, settings.pathSegmentSeparator)
+			path: common.joinPathSegments(directory, dirent.name, settings.pathSegmentSeparator),
 		}));
 
 		if (!settings.followSymbolicLinks) {
@@ -40,7 +40,7 @@ export function readdirWithFileTypes(directory: string, settings: Settings, call
 			return;
 		}
 
-		const tasks: RplTaskEntry[] = entries.map((entry) => makeRplTaskEntry(entry, settings));
+		const tasks = entries.map((entry) => makeRplTaskEntry(entry, settings));
 
 		rpl(tasks, (rplError: Error | null, rplEntries) => {
 			if (rplError !== null) {
@@ -85,7 +85,7 @@ export function readdir(directory: string, settings: Settings, callback: AsyncCa
 			return;
 		}
 
-		const tasks: RplTaskEntry[] = names.map((name) => {
+		const tasks = names.map<RplTaskEntry>((name) => {
 			const path = common.joinPathSegments(directory, name, settings.pathSegmentSeparator);
 
 			return (done) => {
@@ -98,7 +98,7 @@ export function readdir(directory: string, settings: Settings, callback: AsyncCa
 					const entry: Entry = {
 						name,
 						path,
-						dirent: utils.fs.createDirentFromStats(name, stats)
+						dirent: utils.fs.createDirentFromStats(name, stats),
 					};
 
 					if (settings.stats) {

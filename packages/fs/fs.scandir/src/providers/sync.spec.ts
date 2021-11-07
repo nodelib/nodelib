@@ -21,7 +21,7 @@ describe('Providers → Sync', () => {
 			const readdirSync = sinon.stub().returns([]);
 
 			const settings = new Settings({
-				fs: { readdirSync }
+				fs: { readdirSync },
 			});
 
 			const actual = provider.read(ROOT_PATH, settings);
@@ -40,7 +40,7 @@ describe('Providers → Sync', () => {
 
 			const settings = new Settings({
 				fs: { readdirSync },
-				stats: true
+				stats: true,
 			});
 
 			provider.read(ROOT_PATH, settings);
@@ -55,15 +55,15 @@ describe('Providers → Sync', () => {
 			const readdirSync = sinon.stub().returns([dirent]);
 
 			const settings = new Settings({
-				fs: { readdirSync }
+				fs: { readdirSync },
 			});
 
 			const expected: Entry[] = [
 				{
 					dirent,
 					name: FIRST_FILE_PATH,
-					path: FIRST_ENTRY_PATH
-				}
+					path: FIRST_ENTRY_PATH,
+				},
 			];
 
 			const actual = provider.readdirWithFileTypes(ROOT_PATH, settings);
@@ -82,7 +82,7 @@ describe('Providers → Sync', () => {
 
 			const settings = new Settings({
 				followSymbolicLinks: true,
-				fs: { readdirSync, statSync }
+				fs: { readdirSync, statSync },
 			});
 
 			const actual = provider.readdirWithFileTypes(ROOT_PATH, settings);
@@ -103,7 +103,7 @@ describe('Providers → Sync', () => {
 			const settings = new Settings({
 				followSymbolicLinks: true,
 				throwErrorOnBrokenSymbolicLink: false,
-				fs: { readdirSync, statSync }
+				fs: { readdirSync, statSync },
 			});
 
 			const actual = provider.readdirWithFileTypes(ROOT_PATH, settings);
@@ -122,7 +122,7 @@ describe('Providers → Sync', () => {
 			const settings = new Settings({
 				followSymbolicLinks: true,
 				throwErrorOnBrokenSymbolicLink: true,
-				fs: { readdirSync, statSync }
+				fs: { readdirSync, statSync },
 			});
 
 			const expectedErrorMessageRe = /Error: error/;
@@ -139,7 +139,7 @@ describe('Providers → Sync', () => {
 			const lstatSync = sinon.stub().returns(stats);
 
 			const settings = new Settings({
-				fs: { readdirSync, lstatSync }
+				fs: { readdirSync, lstatSync },
 			});
 
 			const actual = provider.readdir(ROOT_PATH, settings);
@@ -159,7 +159,7 @@ describe('Providers → Sync', () => {
 
 			const settings = new Settings({
 				fs: { readdirSync, lstatSync },
-				stats: true
+				stats: true,
 			});
 
 			const actual = provider.readdir(ROOT_PATH, settings);

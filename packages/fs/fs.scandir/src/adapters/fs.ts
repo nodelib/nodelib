@@ -25,7 +25,7 @@ export const FILE_SYSTEM_ADAPTER: FileSystemAdapter = {
 	lstatSync: fs.lstatSync,
 	statSync: fs.statSync,
 	readdir: fs.readdir,
-	readdirSync: fs.readdirSync
+	readdirSync: fs.readdirSync,
 };
 
 export function createFileSystemAdapter(fsMethods?: Partial<FileSystemAdapter>): FileSystemAdapter {
@@ -35,6 +35,6 @@ export function createFileSystemAdapter(fsMethods?: Partial<FileSystemAdapter>):
 
 	return {
 		...FILE_SYSTEM_ADAPTER,
-		...fsMethods
+		...fsMethods,
 	};
 }

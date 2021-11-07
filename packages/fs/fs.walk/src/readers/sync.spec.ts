@@ -31,7 +31,7 @@ describe('Readers → Sync', () => {
 
 		it('should return empty array when the first call of scandir is broken but this error can be suppressed', () => {
 			const settings = new Settings({
-				errorFilter: (error) => error.code === 'EPERM'
+				errorFilter: (error) => error.code === 'EPERM',
 			});
 			const reader = new TestReader('non-exist-directory', settings);
 

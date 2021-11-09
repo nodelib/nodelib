@@ -1,27 +1,42 @@
-import type * as fs from 'fs';
+import * as fs from 'fs';
 
 import type { Dirent, Stats } from '../types';
 
-class DirentFromStats implements fs.Dirent {
-	public isBlockDevice: Stats['isBlockDevice'];
-	public isCharacterDevice: Stats['isCharacterDevice'];
-	public isDirectory: Stats['isDirectory'];
-	public isFIFO: Stats['isFIFO'];
-	public isFile: Stats['isFile'];
-	public isSocket: Stats['isSocket'];
-	public isSymbolicLink: Stats['isSymbolicLink'];
+const kStats = Symbol('stats');
 
-	constructor(public name: string, stats: Stats) {
-		this.isBlockDevice = stats.isBlockDevice.bind(stats);
-		this.isCharacterDevice = stats.isCharacterDevice.bind(stats);
-		this.isDirectory = stats.isDirectory.bind(stats);
-		this.isFIFO = stats.isFIFO.bind(stats);
-		this.isFile = stats.isFile.bind(stats);
-		this.isSocket = stats.isSocket.bind(stats);
-		this.isSymbolicLink = stats.isSymbolicLink.bind(stats);
-	}
-}
+type DirentStatsKeysIntersection = keyof Dirent & keyof Stats;
 
 export function createDirentFromStats(name: string, stats: Stats): Dirent {
 	return new DirentFromStats(name, stats);
+}
+
+/**
+ * Adapting an internal class from Node.js.
+ * https://github.com/nodejs/node/blob/8e42eaec53e7fc70c90c4aaebaf672e89c598afe/lib/internal/fs/utils.js#L193-L207
+ *
+ * We use it to mimic built-in types and provide continuity with the 'fs.Dirent' class.
+ * https://github.com/nodejs/node/blob/8e42eaec53e7fc70c90c4aaebaf672e89c598afe/lib/internal/fs/utils.js#L265
+ */
+class DirentFromStats extends fs.Dirent {
+	private readonly [kStats]: Stats;
+
+	constructor(name: string, stats: Stats) {
+		// @ts-expect-error Awaiting type correction. The constructor has arguments.
+		// https://github.com/nodejs/node/blob/8e42eaec53e7fc70c90c4aaebaf672e89c598afe/lib/internal/fs/utils.js#L158
+		super(name, null);
+
+		this[kStats] = stats;
+	}
+}
+
+for (const key of Reflect.ownKeys(fs.Dirent.prototype)) {
+	const name = key as DirentStatsKeysIntersection | 'constructor';
+
+	if (name === 'constructor') {
+		continue;
+	}
+
+	DirentFromStats.prototype[name] = function () {
+		return this[kStats][name]();
+	};
 }

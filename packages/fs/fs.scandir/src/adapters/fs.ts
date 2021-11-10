@@ -9,10 +9,7 @@ export interface ReaddirAsynchronousMethod {
 	(filepath: string, callback: (error: ErrnoException | null, files: string[]) => void): void;
 }
 
-export interface ReaddirSynchronousMethod {
-	(filepath: string, options: { withFileTypes: true }): Dirent[];
-	(filepath: string): string[];
-}
+export type ReaddirSynchronousMethod = (filepath: string, options: { withFileTypes: true }) => Dirent[];
 
 export type FileSystemAdapter = fsStat.FileSystemAdapter & {
 	readdir: ReaddirAsynchronousMethod;

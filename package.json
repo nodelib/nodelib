@@ -21,20 +21,20 @@
     "docs:publish": "gh-pages --dist . --src \"{docs/**,README.md}\" --message \"Update documentation\""
   },
   "devDependencies": {
-    "@nodelib-internal/tools.typedoc": "file:tools/typedoc",
     "@nodelib-internal/tools.size-limit": "file:tools/size-limit",
+    "@nodelib-internal/tools.typedoc": "file:tools/typedoc",
     "@times-components/depend": "2.1.15",
-    "@types/mocha": "^7.0.2",
-    "@types/node": "^12.20.36",
-    "@types/rimraf": "^3.0.0",
-    "@types/sinon": "^10.0.0",
-    "eslint": "^8.2.0",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "^12.20.37",
+    "@types/rimraf": "^3.0.2",
+    "@types/sinon": "^10.0.6",
+    "eslint": "^8.3.0",
     "eslint-config-mrmlnc": "^2.0.2",
-    "gh-pages": "^3.1.0",
-    "lerna": "^3.22.1",
-    "mocha": "^7.2.0",
+    "gh-pages": "^3.2.3",
+    "lerna": "^4.0.0",
+    "mocha": "^9.1.3",
     "rimraf": "^3.0.2",
-    "sinon": "^10.0.0",
-    "typescript": "^4.4.4"
+    "sinon": "^12.0.1",
+    "typescript": "^4.5.2"
   }
 }

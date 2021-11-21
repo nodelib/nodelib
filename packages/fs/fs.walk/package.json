@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "@nodelib/fs.scandir": "2.1.5",
-    "fastq": "^1.6.0"
+    "fastq": "^1.13.0"
   },
   "devDependencies": {
     "@nodelib/fs.macchiato": "1.0.4"

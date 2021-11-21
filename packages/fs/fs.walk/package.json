@@ -31,13 +31,18 @@
     "compile:watch": "tsc -p . --watch --sourceMap",
     "test": "mocha \"out/**/*.spec.js\" -s 0",
     "build": "npm run clean && npm run compile && npm run lint && npm test",
-    "watch": "npm run clean && npm run compile:watch"
+    "watch": "npm run clean && npm run compile:watch",
+    "bench:sync": "node ./benchmark/suites/regression/sync.js",
+    "bench:async": "node ./benchmark/suites/regression/async.js",
+    "bench:stream": "node ./benchmark/suites/regression/stream.js",
+    "bench": "npm run bench:async && npm run bench:stream && npm run bench:sync"
   },
   "dependencies": {
     "@nodelib/fs.scandir": "2.1.5",
     "fastq": "^1.13.0"
   },
   "devDependencies": {
-    "@nodelib/fs.macchiato": "1.0.4"
+    "@nodelib/fs.macchiato": "1.0.4",
+    "@nodelib/fs.walk-previous": "npm:@nodelib/fs.walk@1"
   }
 }

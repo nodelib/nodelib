@@ -93,7 +93,7 @@ describe('Providers → Async', () => {
 			});
 
 			provider.read('filepath', settings, (error) => {
-				assert.strictEqual(error.message, 'broken');
+				assert.strictEqual(error?.message, 'broken');
 				done();
 			});
 		});

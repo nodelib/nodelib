@@ -1,10 +1,9 @@
 import type Settings from '../settings';
 import type { ErrnoException, Stats } from '../types';
 
-type FailureCallback = (error: ErrnoException) => void;
-type SuccessCallback = (error: null, stats: Stats) => void;
+type FailureCallback = (error: ErrnoException | null) => void;
 
-export type AsyncCallback = (error: ErrnoException, stats: Stats) => void;
+export type AsyncCallback = (error: ErrnoException | null, stats: Stats) => void;
 
 export function read(path: string, settings: Settings, callback: AsyncCallback): void {
 	settings.fs.lstat(path, (lstatError, lstat) => {
@@ -38,10 +37,10 @@ export function read(path: string, settings: Settings, callback: AsyncCallback):
 	});
 }
 
-function callFailureCallback(callback: AsyncCallback, error: ErrnoException): void {
+function callFailureCallback(callback: AsyncCallback, error: ErrnoException | null): void {
 	(callback as FailureCallback)(error);
 }
 
 function callSuccessCallback(callback: AsyncCallback, result: Stats): void {
-	(callback as unknown as SuccessCallback)(null, result);
+	callback(null, result);
 }

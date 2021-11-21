@@ -1,0 +1,39 @@
+name: Benchmark
+
+on:
+  - push
+
+jobs:
+  cancel:
+    name: Cancel previous jobs
+    if: github.ref != 'refs/heads/master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Cancel previous jobs
+        uses: styfle/cancel-workflow-action@0.6.0
+        with:
+          workflow_id: 4527248
+          access_token: ${{ github.token }}
+
+  benchmark:
+    name: Benchmark
+    if: always()
+    needs:
+      - cancel
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup repository
+        uses: actions/checkout@v2
+      - name: Setup environment
+        uses: actions/setup-node@v2
+        with:
+          node-version: 17
+      - name: Install root dependencies
+        run: npm install
+      - name: Link package dependencies
+        run: npx lerna bootstrap
+      - name: Compile sources
+        run: npm run compile
+      - name: Run benchmarks
+        run: BENCHMARK_CWD=$GITHUB_WORKSPACE npm run bench

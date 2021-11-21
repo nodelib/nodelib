@@ -30,7 +30,10 @@
     "compile:watch": "tsc -p . --watch --sourceMap",
     "test": "mocha \"out/**/*.spec.js\" -s 0",
     "build": "npm run clean && npm run compile && npm run lint && npm test",
-    "watch": "npm run clean && npm run compile:watch"
+    "watch": "npm run clean && npm run compile:watch",
+    "bench:sync": "node ./benchmark/suites/regression/sync.js",
+    "bench:async": "node ./benchmark/suites/regression/async.js",
+    "bench": "npm run bench:async && npm run bench:sync"
   },
   "dependencies": {
     "@nodelib/fs.stat": "2.0.5",
@@ -38,6 +41,7 @@
   },
   "devDependencies": {
     "@nodelib/fs.macchiato": "1.0.4",
+    "@nodelib/fs.scandir-previous": "npm:@nodelib/fs.scandir@2",
     "@types/run-parallel": "^1.1.0"
   }
 }

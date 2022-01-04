@@ -5,6 +5,9 @@
   "bin": {
     "tools.size-limit": "size-limit.js"
   },
+  "scripts": {
+    "lint": "eslint \"**/*.js\" --cache"
+  },
   "dependencies": {
     "chalk": "^4.1.2",
     "pretty-bytes": "^5.6.0"

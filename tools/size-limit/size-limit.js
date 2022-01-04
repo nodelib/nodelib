@@ -67,7 +67,7 @@ async function getPackageSize(name) {
 	return {
 		size: data[0].size,
 		unpackedSize: data[0].unpackedSize,
-		entryCount: data[0].entryCount
+		entryCount: data[0].entryCount,
 	};
 }
 

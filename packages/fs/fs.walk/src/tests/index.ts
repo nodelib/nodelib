@@ -7,7 +7,7 @@ export function buildFakeFileEntry(entry?: Partial<Entry>): Entry {
 	return {
 		name: 'fake.txt',
 		path: 'directory/fake.txt',
-		dirent: new Dirent({ name: 'fake.txt' }),
+		dirent: new Dirent({ name: 'fake.txt', isFile: true }),
 		...entry,
 	};
 }
@@ -16,7 +16,7 @@ export function buildFakeDirectoryEntry(entry?: Partial<Entry>): Entry {
 	return {
 		name: 'fake',
 		path: 'directory/fake',
-		dirent: new Dirent({ name: 'fake', isFile: false, isDirectory: true }),
+		dirent: new Dirent({ name: 'fake', isDirectory: true }),
 		...entry,
 	};
 }

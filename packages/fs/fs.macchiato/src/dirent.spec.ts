@@ -1,13 +1,20 @@
 import * as assert from 'assert';
+import * as fs from 'fs';
 
 import Dirent from './dirent';
 
 describe('Dirent', () => {
+	it('should be instance of fs.Dirent', () => {
+		const dirent = new Dirent();
+
+		assert.ok(dirent instanceof fs.Dirent);
+	});
+
 	it('should create a fake instance without options', () => {
 		const dirent = new Dirent();
 
 		assert.strictEqual(dirent.name, 'unknown.txt');
-		assert.ok(dirent.isFile());
+		assert.ok(!dirent.isFile());
 		assert.ok(!dirent.isDirectory());
 		assert.ok(!dirent.isSymbolicLink());
 		assert.ok(!dirent.isBlockDevice());
@@ -20,7 +27,7 @@ describe('Dirent', () => {
 		const dirent = new Dirent({});
 
 		assert.strictEqual(dirent.name, 'unknown.txt');
-		assert.ok(dirent.isFile());
+		assert.ok(!dirent.isFile());
 		assert.ok(!dirent.isDirectory());
 		assert.ok(!dirent.isSymbolicLink());
 		assert.ok(!dirent.isBlockDevice());
@@ -33,7 +40,7 @@ describe('Dirent', () => {
 		const dirent = new Dirent({
 			name: 'known.txt',
 			isDirectory: true,
-			isFile: false,
+			isFile: true,
 			isSymbolicLink: true,
 			isBlockDevice: true,
 			isCharacterDevice: true,
@@ -42,7 +49,7 @@ describe('Dirent', () => {
 		});
 
 		assert.strictEqual(dirent.name, 'known.txt');
-		assert.ok(!dirent.isFile());
+		assert.ok(dirent.isFile());
 		assert.ok(dirent.isDirectory());
 		assert.ok(dirent.isSymbolicLink());
 		assert.ok(dirent.isBlockDevice());

@@ -1,11 +1,11 @@
-import type { Readable } from 'stream';
-
-import type { AsyncCallback } from './providers/async';
 import AsyncProvider from './providers/async';
 import StreamProvider from './providers/stream';
 import SyncProvider from './providers/sync';
-import type { Options } from './settings';
 import Settings from './settings';
+
+import type { Options } from './settings';
+import type { AsyncCallback } from './providers/async';
+import type { Readable } from 'stream';
 import type { Entry } from './types';
 
 function walk(directory: string, callback: AsyncCallback): void;

@@ -1,10 +1,11 @@
 import * as fsStat from '@nodelib/fs.stat';
 import * as rpl from 'run-parallel';
 
-import type Settings from '../settings';
-import type { Entry, ErrnoException } from '../types';
 import * as utils from '../utils';
 import * as common from './common';
+
+import type Settings from '../settings';
+import type { Entry, ErrnoException } from '../types';
 
 type RplTaskEntry = rpl.Task<Entry>;
 type StatsAction = (callback: fsStat.AsyncCallback) => void;

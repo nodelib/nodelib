@@ -1,9 +1,10 @@
 import * as assert from 'assert';
 import * as path from 'path';
 
-import type { Options } from '../settings';
 import Settings from '../settings';
 import Reader from './reader';
+
+import type { Options } from '../settings';
 
 class TestReader extends Reader {
 	public get root(): string {

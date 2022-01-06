@@ -1,7 +1,6 @@
 import * as fs from 'fs';
 
 import type * as fsStat from '@nodelib/fs.stat';
-
 import type { Dirent, ErrnoException } from '../types';
 
 export type ReaddirAsynchronousMethod = (filepath: string, options: { withFileTypes: true }, callback: (error: ErrnoException | null, files: Dirent[]) => void) => void;

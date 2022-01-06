@@ -3,10 +3,11 @@ import { EventEmitter } from 'events';
 import * as fsScandir from '@nodelib/fs.scandir';
 import * as fastq from 'fastq';
 
-import type Settings from '../settings';
-import type { Entry, Errno, QueueItem } from '../types';
 import * as common from './common';
 import Reader from './reader';
+
+import type Settings from '../settings';
+import type { Entry, Errno, QueueItem } from '../types';
 
 type EntryEventCallback = (entry: Entry) => void;
 type ErrorEventCallback = (error: Errno) => void;

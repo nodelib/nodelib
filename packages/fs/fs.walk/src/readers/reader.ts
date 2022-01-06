@@ -1,5 +1,6 @@
-import type Settings from '../settings';
 import * as common from './common';
+
+import type Settings from '../settings';
 
 export default class Reader {
 	constructor(protected readonly _root: string, protected readonly _settings: Settings) {

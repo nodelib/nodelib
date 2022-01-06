@@ -2,12 +2,13 @@ import * as assert from 'assert';
 import * as path from 'path';
 
 import * as sinon from 'sinon';
-
 import { Dirent, Stats } from '@nodelib/fs.macchiato';
+
 import Settings from '../settings';
-import type { Entry } from '../types';
 import * as utils from '../utils';
 import * as provider from './sync';
+
+import type { Entry } from '../types';
 
 describe('Providers → Sync', () => {
 	describe('.read', () => {

@@ -1,8 +1,9 @@
 import * as fsScandir from '@nodelib/fs.scandir';
 
-import type { Entry, Errno, QueueItem } from '../types';
 import * as common from './common';
 import Reader from './reader';
+
+import type { Entry, Errno, QueueItem } from '../types';
 
 export default class SyncReader extends Reader {
 	protected readonly _scandir: typeof fsScandir.scandirSync = fsScandir.scandirSync;

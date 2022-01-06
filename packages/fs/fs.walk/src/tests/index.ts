@@ -1,6 +1,6 @@
 import * as sinon from 'sinon';
-
 import { Dirent } from '@nodelib/fs.macchiato';
+
 import type { Entry, Errno } from '../types';
 
 export function buildFakeFileEntry(entry?: Partial<Entry>): Entry {

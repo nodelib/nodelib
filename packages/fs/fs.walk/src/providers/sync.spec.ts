@@ -1,9 +1,10 @@
 import * as assert from 'assert';
 
-import type SyncReader from '../readers/sync';
 import Settings from '../settings';
 import * as tests from '../tests';
 import SyncProvider from './sync';
+
+import type SyncReader from '../readers/sync';
 
 class TestProvider extends SyncProvider {
 	protected override readonly _reader: SyncReader = new tests.TestSyncReader() as unknown as SyncReader;

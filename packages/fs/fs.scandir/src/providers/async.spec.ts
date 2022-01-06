@@ -3,12 +3,13 @@ import * as path from 'path';
 import * as util from 'util';
 
 import * as sinon from 'sinon';
-
 import { Dirent, Stats } from '@nodelib/fs.macchiato';
+
 import Settings from '../settings';
-import type { Entry } from '../types';
 import * as utils from '../utils';
 import * as provider from './async';
+
+import type { Entry } from '../types';
 
 const read = util.promisify(provider.read);
 

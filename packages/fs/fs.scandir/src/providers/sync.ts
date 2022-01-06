@@ -1,9 +1,10 @@
 import * as fsStat from '@nodelib/fs.stat';
 
-import type Settings from '../settings';
-import type { Entry, ErrnoException } from '../types';
 import * as utils from '../utils';
 import * as common from './common';
+
+import type Settings from '../settings';
+import type { Entry, ErrnoException } from '../types';
 
 export function read(directory: string, settings: Settings): Entry[] {
 	const dirents = settings.fs.readdirSync(directory, { withFileTypes: true });

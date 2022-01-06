@@ -3,10 +3,11 @@ import { Readable } from 'stream';
 
 import * as sinon from 'sinon';
 
-import type AsyncReader from '../readers/async';
 import Settings from '../settings';
 import * as tests from '../tests';
 import StreamProvider from './stream';
+
+import type AsyncReader from '../readers/async';
 
 class TestProvider extends StreamProvider {
 	protected override readonly _reader: AsyncReader = new tests.TestAsyncReader() as unknown as AsyncReader;

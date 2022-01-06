@@ -1,7 +1,8 @@
 import * as async from './providers/async';
 import * as sync from './providers/sync';
-import type { Options } from './settings';
 import Settings from './settings';
+
+import type { Options } from './settings';
 import type { Entry } from './types';
 
 type AsyncCallback = async.AsyncCallback;

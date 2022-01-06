@@ -1,8 +1,8 @@
 import * as assert from 'assert';
 
 import * as sinon from 'sinon';
-
 import { Stats } from '@nodelib/fs.macchiato';
+
 import Settings from '../settings';
 import * as provider from './async';
 

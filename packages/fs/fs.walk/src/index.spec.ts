@@ -1,12 +1,12 @@
 import * as assert from 'assert';
 import * as fs from 'fs';
-import type { Readable } from 'stream';
 
 import * as rimraf from 'rimraf';
 
-import type { Errno } from './types';
-import type { Entry } from '.';
 import { walk, walkSync, walkStream, Settings } from '.';
+
+import type { Readable } from 'stream';
+import type { Errno, Entry } from './types';
 
 const entryFilter = (entry: Entry): boolean => !entry.dirent.isDirectory();
 

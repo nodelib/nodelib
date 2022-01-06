@@ -2,10 +2,11 @@ import * as assert from 'assert';
 
 import * as sinon from 'sinon';
 
-import type AsyncReader from '../readers/async';
 import Settings from '../settings';
 import * as tests from '../tests';
 import AsyncProvider from './async';
+
+import type AsyncReader from '../readers/async';
 
 class TestProvider extends AsyncProvider {
 	protected override readonly _reader: AsyncReader = new tests.TestAsyncReader() as unknown as AsyncReader;

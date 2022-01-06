@@ -1,4 +1,5 @@
 import SyncReader from '../readers/sync';
+
 import type Settings from '../settings';
 import type { Entry } from '../types';
 

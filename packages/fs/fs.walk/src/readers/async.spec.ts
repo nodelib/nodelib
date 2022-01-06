@@ -1,13 +1,14 @@
 import * as assert from 'assert';
 import * as path from 'path';
 
-import type * as fsScandir from '@nodelib/fs.scandir';
 import * as sinon from 'sinon';
 
 import Settings from '../settings';
 import * as tests from '../tests';
-import type { Entry } from '../types';
 import AsyncReader from './async';
+
+import type { Entry } from '../types';
+import type * as fsScandir from '@nodelib/fs.scandir';
 
 type ScandirSignature = typeof fsScandir.scandir;
 

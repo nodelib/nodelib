@@ -1,5 +1,4 @@
 import type * as fs from 'fs';
-
 import type { PrepareOptionsFromClass } from './types';
 
 export default class Dirent implements fs.Dirent {

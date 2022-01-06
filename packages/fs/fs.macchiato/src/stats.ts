@@ -1,5 +1,4 @@
 import type * as fs from 'fs';
-
 import type { PrepareOptionsFromClass } from './types';
 
 const uid = process.platform === 'win32' ? undefined : process.getuid();

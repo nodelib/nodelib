@@ -1,6 +1,7 @@
 import * as assert from 'assert';
 
 import { Stats } from '@nodelib/fs.macchiato';
+
 import * as util from './fs';
 
 describe('Utils → FS', () => {

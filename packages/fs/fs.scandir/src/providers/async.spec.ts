@@ -16,7 +16,7 @@ const read = util.promisify(provider.read);
 describe('Providers → Async', () => {
 	describe('.read', () => {
 		it('should return entries', async () => {
-			const dirent = new Dirent({ name: 'file.txt' });
+			const dirent = new Dirent({ name: 'file.txt', isFile: true });
 
 			const readdir = sinon.stub().yields(null, [dirent]);
 
@@ -36,7 +36,7 @@ describe('Providers → Async', () => {
 		});
 
 		it('should return entries with the "stats" property', async () => {
-			const dirent = new Dirent({ name: 'file.txt' });
+			const dirent = new Dirent({ name: 'file.txt', isFile: true });
 			const stats = new Stats();
 
 			const readdir = sinon.stub().yields(null, [dirent]);

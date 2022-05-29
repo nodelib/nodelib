@@ -13,7 +13,7 @@ import type { Entry } from '../types';
 describe('Providers → Sync', () => {
 	describe('.read', () => {
 		it('should return entries', () => {
-			const dirent = new Dirent({ name: 'file.txt' });
+			const dirent = new Dirent({ name: 'file.txt', isFile: true });
 
 			const readdirSync = sinon.stub().returns([dirent]);
 
@@ -33,7 +33,7 @@ describe('Providers → Sync', () => {
 		});
 
 		it('should return entries with the "stats" property', () => {
-			const dirent = new Dirent({ name: 'file.txt' });
+			const dirent = new Dirent({ name: 'file.txt', isFile: true });
 			const stats = new Stats();
 
 			const readdirSync = sinon.stub().returns([dirent]);

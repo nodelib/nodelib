@@ -1,4 +1,5 @@
 import * as assert from 'assert';
+import * as fs from 'fs';
 
 import Stats from './stats';
 
@@ -6,6 +7,12 @@ const uid = process.platform === 'win32' ? undefined : process.getuid();
 const gid = process.platform === 'win32' ? undefined : process.getgid();
 
 describe('Stats', () => {
+	it('should be instance of fs.Stats', () => {
+		const stats = new Stats();
+
+		assert.ok(stats instanceof fs.Stats);
+	});
+
 	it('should create a fake instance without options', () => {
 		const stats = new Stats();
 
@@ -29,7 +36,7 @@ describe('Stats', () => {
 		assert.strictEqual(stats.mtime, date);
 		assert.strictEqual(stats.ctime, date);
 		assert.strictEqual(stats.birthtime, date);
-		assert.ok(stats.isFile());
+		assert.ok(!stats.isFile());
 		assert.ok(!stats.isDirectory());
 		assert.ok(!stats.isSymbolicLink());
 		assert.ok(!stats.isBlockDevice());
@@ -61,7 +68,7 @@ describe('Stats', () => {
 		assert.strictEqual(stats.mtime, date);
 		assert.strictEqual(stats.ctime, date);
 		assert.strictEqual(stats.birthtime, date);
-		assert.ok(stats.isFile());
+		assert.ok(!stats.isFile());
 		assert.ok(!stats.isDirectory());
 		assert.ok(!stats.isSymbolicLink());
 		assert.ok(!stats.isBlockDevice());
@@ -93,7 +100,7 @@ describe('Stats', () => {
 			ctime: date,
 			birthtime: date,
 			isDirectory: true,
-			isFile: false,
+			isFile: true,
 			isSymbolicLink: true,
 			isBlockDevice: true,
 			isCharacterDevice: true,
@@ -119,7 +126,7 @@ describe('Stats', () => {
 		assert.strictEqual(stats.mtime, date);
 		assert.strictEqual(stats.ctime, date);
 		assert.strictEqual(stats.birthtime, date);
-		assert.ok(!stats.isFile());
+		assert.ok(stats.isFile());
 		assert.ok(stats.isDirectory());
 		assert.ok(stats.isSymbolicLink());
 		assert.ok(stats.isBlockDevice());

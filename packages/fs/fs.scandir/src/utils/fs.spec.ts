@@ -14,7 +14,7 @@ describe('Utils → FS', () => {
 			assert.ok(!actual.isCharacterDevice());
 			assert.ok(!actual.isDirectory());
 			assert.ok(!actual.isFIFO());
-			assert.ok(actual.isFile());
+			assert.ok(!actual.isFile());
 			assert.ok(!actual.isSocket());
 			assert.ok(!actual.isSymbolicLink());
 		});

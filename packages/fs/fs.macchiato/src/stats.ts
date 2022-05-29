@@ -34,7 +34,7 @@ export default class Stats extends fs.Stats {
 	}
 
 	public override isFile(): boolean {
-		return this._options.isFile ?? true;
+		return this._options.isFile ?? false;
 	}
 
 	public override isDirectory(): boolean {

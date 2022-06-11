@@ -31,9 +31,11 @@ If you find your issue already exists, make relevant comments and add your [reac
 * Install [Node.js](https://nodejs.org/en/).
 * Fork the project and clone the fork repository. ([how to create fork?](https://help.github.com/articles/fork-a-repo/#fork-an-example-repository)).
 * Create a topic branch from the master branch.
-* Run `yarn` or `npm install` to install the application dependencies.
+* Run `npm i && npx lerna bootstrap` to install dependencies for all packages.
 
 #### Setup
+
+> 📖 Only `npm` is supported for working with this repository. Problems with other package managers will be ignored.
 
 ```console
 git clone https://github.com/nodelib/nodelib
@@ -68,4 +70,4 @@ npm run test
 
 #### Commit
 
-Keep git commit messages clear and appropriate. You can use [Angular guide](https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#-git-commit-guidelines).
+Keep git commit messages clear and appropriate. You can use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).

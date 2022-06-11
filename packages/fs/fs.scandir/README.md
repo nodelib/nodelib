@@ -143,24 +143,6 @@ const settings = new fsScandir.Settings({
 });
 ```
 
-## `old` and `modern` mode
-
-This package has two modes that are used depending on the environment and parameters of use.
-
-### old
-
-* When the `stats` option is enabled.
-
-When working in the old mode, the directory is read first (`fs.readdir`), then the type of entries is determined (`fs.lstat` and/or `fs.stat` for symbolic links).
-
-### modern
-
-* When the `stats` option is disabled.
-
-In the modern mode, reading the directory (`fs.readdir` with the `withFileTypes` option) is combined with obtaining information about its entries. An additional call for symbolic links (`fs.stat`) is still present.
-
-This mode makes fewer calls to the file system. It's faster.
-
 ## Changelog
 
 See the [Releases section of our GitHub project](https://github.com/nodelib/nodelib/releases) for changelog for each release version.

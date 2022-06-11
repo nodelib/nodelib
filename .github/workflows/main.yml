@@ -10,37 +10,26 @@ on:
       - '*'
 
 jobs:
-  cancel:
-    name: Cancel previous jobs
-    if: github.ref != 'refs/heads/master'
-    runs-on: ubuntu-latest
-    timeout-minutes: 3
-    steps:
-      - name: Cancel previous jobs
-        uses: styfle/cancel-workflow-action@0.6.0
-        with:
-          workflow_id: 4524681
-          access_token: ${{ github.token }}
-
-  test:
+  build:
     name: Node.js ${{ matrix.node_version }} on ${{ matrix.os }}
     if: always()
-    needs:
-      - cancel
+    concurrency:
+      group: ${{ github.workflow }}-build-${{ matrix.os }}-${{ matrix.node_version }}-${{ github.ref }}
+      cancel-in-progress: true
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        node_version: [12, 14, 16, 17]
+        node_version: [12, 14, 16, 18]
         os:
           - ubuntu-latest
           - macos-latest
           - windows-latest
     steps:
       - name: Setup repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Setup environment
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node_version }}
       - name: Install root dependencies

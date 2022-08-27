@@ -12,7 +12,6 @@ node_modules/
 
 # Compiled and temporary files
 .tmp/
-.benchmark/
 out/
 tsconfig.tsbuildinfo
 .eslintcache

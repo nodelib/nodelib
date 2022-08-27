@@ -16,7 +16,8 @@
     "compile": "tsc -b ./packages --verbose",
     "test": "lerna run --parallel test",
     "build": "npm run clean && npm run compile && npm run lint && npm run test",
-    "watch": "lerna run --parallel watch"
+    "watch": "lerna run --parallel watch",
+    "bench": "lerna run --concurrency 1 --stream bench"
   },
   "devDependencies": {
     "@nodelib-internal/tools.size-limit": "file:tools/size-limit",

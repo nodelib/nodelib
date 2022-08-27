@@ -31,13 +31,23 @@
     "compile:watch": "tsc -p . --watch --sourceMap",
     "test": "mocha \"out/**/*.spec.js\" -s 0",
     "build": "npm run clean && npm run compile && npm run lint && npm test",
-    "watch": "npm run clean && npm run compile:watch"
+    "watch": "npm run clean && npm run compile:watch",
+    "bench": "npm run bench:async && npm run bench:sync",
+    "bench:async": "npm run bench:async:generic && npm run bench:async:fsl && npm run bench:async:stats",
+    "bench:async:generic": "hyperfine -S 'node .benchmark/shell.async.js' --warmup 50 --min-runs 150 'current' 'next'",
+    "bench:async:fsl": "BENCHMARK_FSL=1 npm run bench:async:generic",
+    "bench:async:stats": "BENCHMARK_STATS=1 npm run bench:async:generic",
+    "bench:sync": "npm run bench:sync:generic && npm run bench:sync:fsl && npm run bench:sync:stats",
+    "bench:sync:generic": "hyperfine -S 'node .benchmark/shell.sync.js' --warmup 50 --min-runs 150 'current' 'next'",
+    "bench:sync:stats": "BENCHMARK_STATS=1 npm run bench:sync:generic",
+    "bench:sync:fsl": "BENCHMARK_FSL=1 npm run bench:sync:generic"
   },
   "dependencies": {
     "@nodelib/fs.scandir": "2.1.5",
     "fastq": "^1.13.0"
   },
   "devDependencies": {
-    "@nodelib/fs.macchiato": "1.0.4"
+    "@nodelib/fs.macchiato": "1.0.4",
+    "@nodelib/fs.walk": "npm:@nodelib/fs.walk@1"
   }
 }

@@ -1,0 +1,38 @@
+name: Benchmark
+
+on:
+  push:
+    branches:
+      - master
+      - releases/*
+  pull_request:
+    branches:
+      - '*'
+
+concurrency:
+    group: ${{ github.workflow}}-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+  benchmark:
+    name: Benchmark
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup repository
+        uses: actions/checkout@v2
+      - name: Setup environment
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18
+      - name: Install hyperfine
+        run: |
+          wget https://github.com/sharkdp/hyperfine/releases/download/v1.14.0/hyperfine_1.14.0_amd64.deb
+          sudo dpkg -i hyperfine_1.14.0_amd64.deb
+      - name: Install root dependencies
+        run: npm install
+      - name: Link package dependencies
+        run: npx lerna bootstrap
+      - name: Compile sources
+        run: npm run compile
+      - name: Run benchmarks
+        run: BENCHMARK_CWD=$GITHUB_WORKSPACE npm run bench

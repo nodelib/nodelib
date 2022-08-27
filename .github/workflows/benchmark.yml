@@ -34,5 +34,7 @@ jobs:
         run: npx lerna bootstrap
       - name: Compile sources
         run: npm run compile
-      - name: Run benchmarks
-        run: BENCHMARK_CWD=$GITHUB_WORKSPACE npm run bench
+      - name: '[fs.scandir] run benchmarks'
+        run: BENCHMARK_CWD=$GITHUB_WORKSPACE npm run bench -- --scope @nodelib/fs.scandir
+      - name: '[fs.walk] run benchmarks'
+        run: BENCHMARK_CWD=$GITHUB_WORKSPACE npm run bench -- --scope @nodelib/fs.walk

@@ -42,7 +42,7 @@ Returns an array of plain objects ([`Entry`](#entry)) with information about ent
 ```ts
 const entries = fsScandir.scandirSync('path');
 const entries = fsScandir.scandirSync('path', {});
-const entries = fsScandir.scandirSync(('path', new fsScandir.Settings());
+const entries = fsScandir.scandirSync('path', new fsScandir.Settings());
 ```
 
 #### path

@@ -9,7 +9,7 @@ export default class SyncReader extends Reader {
 	protected readonly _scandir: typeof fsScandir.scandirSync = fsScandir.scandirSync;
 
 	private readonly _storage: Entry[] = [];
-	private readonly _queue: Set<QueueItem> = new Set();
+	private readonly _queue = new Set<QueueItem>();
 
 	public read(): Entry[] {
 		this._pushToQueue(this._root, this._settings.basePath);

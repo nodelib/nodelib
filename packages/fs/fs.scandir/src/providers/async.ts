@@ -92,7 +92,7 @@ function makeRplTask(entry: Entry, settings: Settings): RplTaskEntry | undefined
 function getStatsAction(entry: Entry, settings: Settings): StatsAction | undefined {
 	if (settings.stats) {
 		return (callback) => {
-			fsStat.stat(entry.path, settings, callback);
+			fsStat.stat(entry.path, settings.fsStatSettings, callback);
 		};
 	}
 

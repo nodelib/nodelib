@@ -16,7 +16,7 @@
     "compile": "tsc -b ./packages --verbose",
     "test": "lerna run --parallel test",
     "build": "npm run clean && npm run compile && npm run lint && npm run test",
-    "watch": "lerna run --parallel watch",
+    "watch": "tsc -b ./packages --watch",
     "bench": "lerna run bench --stream"
   },
   "devDependencies": {

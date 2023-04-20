@@ -25,7 +25,7 @@
     "clean": "rimraf {tsconfig.tsbuildinfo,out}",
     "lint": "eslint \"src/**/*.ts\" --cache",
     "compile": "tsc -b .",
-    "compile:watch": "tsc -p . --watch --sourceMap",
+    "compile:watch": "tsc -b . --watch --sourceMap",
     "test": "mocha \"out/**/*.spec.js\" -s 0",
     "build": "npm run clean && npm run compile && npm run lint && npm test",
     "watch": "npm run clean && npm run compile:watch"

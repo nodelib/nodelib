@@ -1,0 +1,33 @@
+name: Benchmark
+
+on:
+  push:
+    branches:
+      - master
+      - releases/*
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  regress:
+    name: Benchmark
+    concurrency:
+      group: ${{ github.workflow }}-benchmark-${{ github.ref }}
+      cancel-in-progress: true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup repository
+        uses: actions/checkout@v3
+      - name: Setup environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - name: Install root dependencies
+        run: npm install
+      - name: Link package dependencies
+        run: npx lerna bootstrap
+      - name: Compile sources
+        run: npm run compile
+      - name: Benchmark
+        run: npm run bench

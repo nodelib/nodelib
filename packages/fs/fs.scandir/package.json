@@ -18,6 +18,7 @@
   },
   "files": [
     "out/**",
+    "!out/benchmark",
     "!out/**/*.map",
     "!out/**/*.spec.*"
   ],
@@ -30,7 +31,10 @@
     "compile:watch": "tsc -p . --watch --sourceMap",
     "test": "mocha \"out/**/*.spec.js\" -s 0",
     "build": "npm run clean && npm run compile && npm run lint && npm test",
-    "watch": "npm run clean && npm run compile:watch"
+    "watch": "npm run clean && npm run compile:watch",
+    "bench": "npm run bench:sync && npm run bench:async",
+    "bench:sync": "hereby bench:sync",
+    "bench:async": "hereby bench:async"
   },
   "dependencies": {
     "@nodelib/fs.stat": "2.0.5",
@@ -38,6 +42,7 @@
   },
   "devDependencies": {
     "@nodelib/fs.macchiato": "1.0.4",
-    "@types/run-parallel": "^1.1.0"
+    "@types/run-parallel": "^1.1.0",
+    "@nodelib/fs.scandir.previous": "npm:@nodelib/fs.scandir@2"
   }
 }

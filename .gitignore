@@ -14,6 +14,7 @@ node_modules/
 .tmp/
 .benchmark/
 out/
+fixtures/
 tsconfig.tsbuildinfo
 .eslintcache
 

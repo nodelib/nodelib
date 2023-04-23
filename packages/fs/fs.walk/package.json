@@ -18,6 +18,7 @@
   },
   "files": [
     "out/**",
+    "!out/benchmark",
     "!out/**/*.map",
     "!out/**/*.spec.*",
     "!out/**/tests/**"
@@ -28,16 +29,21 @@
     "clean": "rimraf {tsconfig.tsbuildinfo,out}",
     "lint": "eslint \"src/**/*.ts\" --cache",
     "compile": "tsc -b .",
-    "compile:watch": "tsc -p . --watch --sourceMap",
+    "compile:watch": "tsc -b . --watch --sourceMap",
     "test": "mocha \"out/**/*.spec.js\" -s 0",
     "build": "npm run clean && npm run compile && npm run lint && npm test",
-    "watch": "npm run clean && npm run compile:watch"
+    "watch": "npm run clean && npm run compile:watch",
+    "bench": "npm run bench:sync && npm run bench:async && npm run bench:stream",
+    "bench:sync": "hereby bench:sync",
+    "bench:async": "hereby bench:async",
+    "bench:stream": "hereby bench:stream"
   },
   "dependencies": {
     "@nodelib/fs.scandir": "2.1.5",
     "fastq": "^1.13.0"
   },
   "devDependencies": {
-    "@nodelib/fs.macchiato": "1.0.4"
+    "@nodelib/fs.macchiato": "1.0.4",
+    "@nodelib/fs.walk.previous": "npm:@nodelib/fs.walk@1"
   }
 }

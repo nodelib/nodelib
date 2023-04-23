@@ -1,2 +1,2 @@
-export { default as Dirent } from './dirent';
-export { default as Stats } from './stats';
+export { Dirent, DirentType } from './dirent';
+export { Stats, StatsMode } from './stats';

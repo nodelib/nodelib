@@ -1,5 +1,5 @@
 import * as sinon from 'sinon';
-import { Dirent } from '@nodelib/fs.macchiato';
+import { Dirent, DirentType } from '@nodelib/fs.macchiato';
 
 import type { Entry, Errno } from '../types';
 
@@ -7,7 +7,7 @@ export function buildFakeFileEntry(entry?: Partial<Entry>): Entry {
 	return {
 		name: 'fake.txt',
 		path: 'directory/fake.txt',
-		dirent: new Dirent({ name: 'fake.txt', isFile: true }),
+		dirent: new Dirent('fake.txt', DirentType.File),
 		...entry,
 	};
 }
@@ -16,7 +16,7 @@ export function buildFakeDirectoryEntry(entry?: Partial<Entry>): Entry {
 	return {
 		name: 'fake',
 		path: 'directory/fake',
-		dirent: new Dirent({ name: 'fake', isDirectory: true }),
+		dirent: new Dirent('fake', DirentType.Directory),
 		...entry,
 	};
 }

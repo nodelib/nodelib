@@ -1,10 +1,12 @@
 import * as assert from 'assert';
 import * as fs from 'fs';
 
-import Stats from './stats';
+import { Stats, StatsMode } from './stats';
 
-const uid = process.platform === 'win32' ? undefined : process.getuid();
-const gid = process.platform === 'win32' ? undefined : process.getgid();
+const isWindows = process.platform === 'win32';
+
+const uid = isWindows ? undefined : process.getuid();
+const gid = isWindows ? undefined : process.getgid();
 
 describe('Stats', () => {
 	it('should be instance of fs.Stats', () => {
@@ -16,7 +18,7 @@ describe('Stats', () => {
 	it('should create a fake instance without options', () => {
 		const stats = new Stats();
 
-		const date = stats._date;
+		const date = new Date();
 
 		assert.strictEqual(stats.dev, 0);
 		assert.strictEqual(stats.ino, 0);
@@ -32,10 +34,10 @@ describe('Stats', () => {
 		assert.strictEqual(stats.mtimeMs, date.getTime());
 		assert.strictEqual(stats.ctimeMs, date.getTime());
 		assert.strictEqual(stats.birthtimeMs, date.getTime());
-		assert.strictEqual(stats.atime, date);
-		assert.strictEqual(stats.mtime, date);
-		assert.strictEqual(stats.ctime, date);
-		assert.strictEqual(stats.birthtime, date);
+		assert.deepStrictEqual(stats.atime, date);
+		assert.deepStrictEqual(stats.mtime, date);
+		assert.deepStrictEqual(stats.ctime, date);
+		assert.deepStrictEqual(stats.birthtime, date);
 		assert.ok(!stats.isFile());
 		assert.ok(!stats.isDirectory());
 		assert.ok(!stats.isSymbolicLink());
@@ -48,11 +50,11 @@ describe('Stats', () => {
 	it('should create a fake instance with empty options', () => {
 		const stats = new Stats();
 
-		const date = stats._date;
+		const date = new Date();
 
 		assert.strictEqual(stats.dev, 0);
 		assert.strictEqual(stats.ino, 0);
-		assert.strictEqual(stats.mode, 0);
+		assert.strictEqual(stats.mode, StatsMode.Unknown);
 		assert.strictEqual(stats.nlink, 0);
 		assert.strictEqual(stats.uid, uid);
 		assert.strictEqual(stats.gid, gid);
@@ -64,10 +66,10 @@ describe('Stats', () => {
 		assert.strictEqual(stats.mtimeMs, date.getTime());
 		assert.strictEqual(stats.ctimeMs, date.getTime());
 		assert.strictEqual(stats.birthtimeMs, date.getTime());
-		assert.strictEqual(stats.atime, date);
-		assert.strictEqual(stats.mtime, date);
-		assert.strictEqual(stats.ctime, date);
-		assert.strictEqual(stats.birthtime, date);
+		assert.deepStrictEqual(stats.atime, date);
+		assert.deepStrictEqual(stats.mtime, date);
+		assert.deepStrictEqual(stats.ctime, date);
+		assert.deepStrictEqual(stats.birthtime, date);
 		assert.ok(!stats.isFile());
 		assert.ok(!stats.isDirectory());
 		assert.ok(!stats.isSymbolicLink());
@@ -83,7 +85,7 @@ describe('Stats', () => {
 		const stats = new Stats({
 			dev: 1,
 			ino: 1,
-			mode: 1,
+			mode: StatsMode.Directory,
 			nlink: 1,
 			uid: 1,
 			gid: 1,
@@ -99,18 +101,11 @@ describe('Stats', () => {
 			mtime: date,
 			ctime: date,
 			birthtime: date,
-			isDirectory: true,
-			isFile: true,
-			isSymbolicLink: true,
-			isBlockDevice: true,
-			isCharacterDevice: true,
-			isFIFO: true,
-			isSocket: true,
 		});
 
 		assert.strictEqual(stats.dev, 1);
 		assert.strictEqual(stats.ino, 1);
-		assert.strictEqual(stats.mode, 1);
+		assert.strictEqual(stats.mode, StatsMode.Directory);
 		assert.strictEqual(stats.nlink, 1);
 		assert.strictEqual(stats.uid, 1);
 		assert.strictEqual(stats.gid, 1);
@@ -122,24 +117,26 @@ describe('Stats', () => {
 		assert.strictEqual(stats.mtimeMs, date.getTime());
 		assert.strictEqual(stats.ctimeMs, date.getTime());
 		assert.strictEqual(stats.birthtimeMs, date.getTime());
-		assert.strictEqual(stats.atime, date);
-		assert.strictEqual(stats.mtime, date);
-		assert.strictEqual(stats.ctime, date);
-		assert.strictEqual(stats.birthtime, date);
-		assert.ok(stats.isFile());
+		assert.deepStrictEqual(stats.atime, date);
+		assert.deepStrictEqual(stats.mtime, date);
+		assert.deepStrictEqual(stats.ctime, date);
+		assert.deepStrictEqual(stats.birthtime, date);
+		assert.ok(!stats.isFile());
 		assert.ok(stats.isDirectory());
-		assert.ok(stats.isSymbolicLink());
-		assert.ok(stats.isBlockDevice());
-		assert.ok(stats.isCharacterDevice());
-		assert.ok(stats.isFIFO());
-		assert.ok(stats.isSocket());
+		assert.ok(!stats.isSymbolicLink());
+		assert.ok(!stats.isBlockDevice());
+		assert.ok(!stats.isCharacterDevice());
+		assert.ok(!stats.isFIFO());
+		assert.ok(!stats.isSocket());
 	});
 
 	it('should create a fake instance with undefined as values', () => {
 		const stats = new Stats({
 			uid: undefined,
+			gid: undefined,
 		});
 
 		assert.strictEqual(stats.uid, undefined);
+		assert.strictEqual(stats.gid, undefined);
 	});
 });

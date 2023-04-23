@@ -11,10 +11,10 @@ $ npm install @nodelib/fs.macchiato
 ## Usage
 
 ```js
-import { Stats, Dirent } from '@nodelib/fs.macchiato';
+import { Stats, StatsMode, Dirent, DirentType } from '@nodelib/fs.macchiato';
 
-const stats = new Stats();
-const dirent = new Dirent();
+const stats = new Stats({ mode: StatsMode.File });
+const dirent = new Dirent('file.txt', DirentType.File);
 ```
 
 ## API
@@ -25,7 +25,7 @@ Creates a fake instance of `fs.Stats`. Can accept options to control parameter v
 
 ```js
 const stats = new Stats({
-	isSymbolicLink: true,
+	mode: StatsMode.File,
 	ino: 3
 });
 ```
@@ -35,9 +35,7 @@ const stats = new Stats({
 Creates a fake instance of `fs.Dirent`. Can accept options to control parameter values.
 
 ```js
-const dirent = new Dirent({
-	isSymbolicLink: true
-});
+const dirent = new Dirent('file.txt', DirentType.Link);
 ```
 
 ## Changelog

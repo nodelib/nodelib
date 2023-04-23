@@ -1,41 +1,21 @@
 import * as fs from 'fs';
 
-import type { PrepareOptionsFromClass } from './types';
+// https://github.com/nodejs/node/blob/6675505686310771b8016805a381945826aad887/typings/internalBinding/constants.d.ts#L139-L146
+export enum DirentType {
+	Unknown = 0,
+	File = 1,
+	Directory = 2,
+	Link = 3,
+	Fifo = 4,
+	Socket = 5,
+	Char = 6,
+	Block = 7,
+}
 
-type DirentOptions = PrepareOptionsFromClass<fs.Dirent>;
-
-export default class Dirent extends fs.Dirent {
-	public override readonly name: string = this._options.name ?? 'unknown.txt';
-
-	constructor(private readonly _options: DirentOptions = {}) {
-		super();
-	}
-
-	public override isFile(): boolean {
-		return this._options.isFile ?? false;
-	}
-
-	public override isDirectory(): boolean {
-		return this._options.isDirectory ?? false;
-	}
-
-	public override isBlockDevice(): boolean {
-		return this._options.isBlockDevice ?? false;
-	}
-
-	public override isCharacterDevice(): boolean {
-		return this._options.isCharacterDevice ?? false;
-	}
-
-	public override isSymbolicLink(): boolean {
-		return this._options.isSymbolicLink ?? false;
-	}
-
-	public override isFIFO(): boolean {
-		return this._options.isFIFO ?? false;
-	}
-
-	public override isSocket(): boolean {
-		return this._options.isSocket ?? false;
+export class Dirent extends fs.Dirent {
+	constructor(name: string = 'unknown.txt', type: DirentType = DirentType.Unknown) {
+		// @ts-expect-error Types do not provide arguments.
+		// https://github.com/nodejs/node/blob/6675505686310771b8016805a381945826aad887/lib/internal/fs/utils.js#L164
+		super(name, type);
 	}
 }

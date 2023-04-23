@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 
 import * as sinon from 'sinon';
-import { Stats } from '@nodelib/fs.macchiato';
+import { Stats, StatsMode } from '@nodelib/fs.macchiato';
 
 import Settings from '../settings';
 import * as provider from './async';
@@ -23,7 +23,7 @@ describe('Providers → Async', () => {
 		});
 
 		it('should return lstat for symlink entry when the "followSymbolicLink" option is disabled', (done) => {
-			const lstat = sinon.stub().yields(null, new Stats({ isSymbolicLink: true }));
+			const lstat = sinon.stub().yields(null, new Stats({ mode: StatsMode.Link }));
 
 			const settings = new Settings({
 				followSymbolicLink: false,
@@ -38,7 +38,7 @@ describe('Providers → Async', () => {
 		});
 
 		it('should return stat for symlink entry', (done) => {
-			const lstat = sinon.stub().yields(null, new Stats({ isSymbolicLink: true }));
+			const lstat = sinon.stub().yields(null, new Stats({ mode: StatsMode.Link }));
 			const stat = sinon.stub().yields(null, new Stats({ ino: 1 }));
 
 			const settings = new Settings({
@@ -53,7 +53,7 @@ describe('Providers → Async', () => {
 		});
 
 		it('should return marked stat for symlink entry when the "markSymbolicLink" option is enabled', (done) => {
-			const lstat = sinon.stub().yields(null, new Stats({ isSymbolicLink: true }));
+			const lstat = sinon.stub().yields(null, new Stats({ mode: StatsMode.Link }));
 			const stat = sinon.stub().yields(null, new Stats({ ino: 1 }));
 
 			const settings = new Settings({
@@ -69,7 +69,7 @@ describe('Providers → Async', () => {
 		});
 
 		it('should return lstat for broken symlink entry when the "throwErrorOnBrokenSymbolicLink" option is disabled', (done) => {
-			const lstat = sinon.stub().yields(null, new Stats({ isSymbolicLink: true }));
+			const lstat = sinon.stub().yields(null, new Stats({ mode: StatsMode.Link }));
 			const stat = sinon.stub().yields(new Error('error_message'));
 
 			const settings = new Settings({
@@ -85,7 +85,7 @@ describe('Providers → Async', () => {
 		});
 
 		it('should throw an error when symlink entry is broken', (done) => {
-			const lstat = sinon.stub().yields(null, new Stats({ isSymbolicLink: true }));
+			const lstat = sinon.stub().yields(null, new Stats({ mode: StatsMode.Link }));
 			const stat = sinon.stub().yields(new Error('broken'));
 
 			const settings = new Settings({

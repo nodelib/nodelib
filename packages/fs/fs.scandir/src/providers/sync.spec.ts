@@ -2,7 +2,7 @@ import * as assert from 'assert';
 import * as path from 'path';
 
 import * as sinon from 'sinon';
-import { Dirent, Stats } from '@nodelib/fs.macchiato';
+import { Dirent, DirentType, Stats, StatsMode } from '@nodelib/fs.macchiato';
 
 import Settings from '../settings';
 import * as utils from '../utils';
@@ -13,7 +13,7 @@ import type { Entry } from '../types';
 describe('Providers → Sync', () => {
 	describe('.read', () => {
 		it('should return entries', () => {
-			const dirent = new Dirent({ name: 'file.txt', isFile: true });
+			const dirent = new Dirent('file.txt', DirentType.File);
 
 			const readdirSync = sinon.stub().returns([dirent]);
 
@@ -33,7 +33,7 @@ describe('Providers → Sync', () => {
 		});
 
 		it('should return entries with the "stats" property', () => {
-			const dirent = new Dirent({ name: 'file.txt', isFile: true });
+			const dirent = new Dirent('file.txt', DirentType.File);
 			const stats = new Stats();
 
 			const readdirSync = sinon.stub().returns([dirent]);
@@ -57,11 +57,11 @@ describe('Providers → Sync', () => {
 		});
 
 		it('should update Dirent when the "stats" and "followSymbolicLinks" options are enabled', () => {
-			const dirent = new Dirent({ name: 'file.txt', isSymbolicLink: true });
+			const dirent = new Dirent('file.txt', DirentType.Link);
 			const stats = new Stats();
 
 			const readdirSync = sinon.stub().returns([dirent]);
-			const lstatSync = sinon.stub().returns(new Stats({ isSymbolicLink: true }));
+			const lstatSync = sinon.stub().returns(new Stats({ mode: StatsMode.Link }));
 			const statSync = sinon.stub().returns(stats);
 
 			const settings = new Settings({
@@ -83,7 +83,7 @@ describe('Providers → Sync', () => {
 		});
 
 		it('should update Dirent when the "followSymbolicLinks" option is enabled', () => {
-			const dirent = new Dirent({ name: 'file.txt', isSymbolicLink: true });
+			const dirent = new Dirent('file.txt', DirentType.Link);
 			const stats = new Stats();
 
 			const readdirSync = sinon.stub().returns([dirent]);
@@ -106,7 +106,7 @@ describe('Providers → Sync', () => {
 		});
 
 		it('should do nothing with symbolic links when the "followSymbolicLinks" option is disabled', () => {
-			const dirent = new Dirent({ name: 'file.txt', isSymbolicLink: true });
+			const dirent = new Dirent('file.txt', DirentType.Link);
 
 			const readdirSync = sinon.stub().returns([dirent]);
 
@@ -126,7 +126,7 @@ describe('Providers → Sync', () => {
 		});
 
 		it('should return lstat for broken symbolic link when the "throwErrorOnBrokenSymbolicLink" option is disabled', () => {
-			const dirent = new Dirent({ name: 'file.txt', isSymbolicLink: true });
+			const dirent = new Dirent('file.txt', DirentType.Link);
 
 			const readdirSync = sinon.stub().returns([dirent]);
 			const statSync = sinon.stub().throws(new Error('error'));
@@ -149,7 +149,7 @@ describe('Providers → Sync', () => {
 		});
 
 		it('should throw an error for broken symbolic link when the "throwErrorOnBrokenSymbolicLink" option is enabled', () => {
-			const dirent = new Dirent({ name: 'file.txt', isSymbolicLink: true });
+			const dirent = new Dirent('file.txt', DirentType.Link);
 
 			const readdirSync = sinon.stub().returns([dirent]);
 			const statSync = sinon.stub().throws(new Error('error'));

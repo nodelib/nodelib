@@ -2,7 +2,7 @@ import * as assert from 'assert';
 import * as path from 'path';
 
 import * as sinon from 'sinon';
-import { Dirent, DirentType, Stats } from '@nodelib/fs.macchiato';
+import { Dirent, DirentType, Stats, StatsMode } from '@nodelib/fs.macchiato';
 
 import Settings from '../settings';
 import * as utils from '../utils';
@@ -61,7 +61,7 @@ describe('Providers → Sync', () => {
 			const stats = new Stats();
 
 			const readdirSync = sinon.stub().returns([dirent]);
-			const lstatSync = sinon.stub().returns(new Stats({ isSymbolicLink: true }));
+			const lstatSync = sinon.stub().returns(new Stats({ mode: StatsMode.Link }));
 			const statSync = sinon.stub().returns(stats);
 
 			const settings = new Settings({

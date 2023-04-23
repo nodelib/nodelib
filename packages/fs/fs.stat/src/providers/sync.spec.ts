@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 
 import * as sinon from 'sinon';
-import { Stats } from '@nodelib/fs.macchiato';
+import { Stats, StatsMode } from '@nodelib/fs.macchiato';
 
 import Settings from '../settings';
 import * as provider from './sync';
@@ -21,7 +21,7 @@ describe('Providers → Sync', () => {
 		});
 
 		it('should return lstat for symlink entry when the "followSymbolicLink" option is disabled', () => {
-			const lstatSync = sinon.stub().returns(new Stats({ isSymbolicLink: true }));
+			const lstatSync = sinon.stub().returns(new Stats({ mode: StatsMode.Link }));
 
 			const settings = new Settings({
 				followSymbolicLink: false,
@@ -34,7 +34,7 @@ describe('Providers → Sync', () => {
 		});
 
 		it('should return stat for symlink entry', () => {
-			const lstatSync = sinon.stub().returns(new Stats({ isSymbolicLink: true }));
+			const lstatSync = sinon.stub().returns(new Stats({ mode: StatsMode.Link }));
 			const statSync = sinon.stub().returns(new Stats({ ino: 1 }));
 
 			const settings = new Settings({
@@ -47,7 +47,7 @@ describe('Providers → Sync', () => {
 		});
 
 		it('should return marked stat for symlink entry when the "markSymbolicLink" option is enabled', () => {
-			const lstatSync = sinon.stub().returns(new Stats({ isSymbolicLink: true }));
+			const lstatSync = sinon.stub().returns(new Stats({ mode: StatsMode.Link }));
 			const statSync = sinon.stub().returns(new Stats({ ino: 1 }));
 
 			const settings = new Settings({
@@ -61,7 +61,7 @@ describe('Providers → Sync', () => {
 		});
 
 		it('should return lstat for broken symlink entry when the "throwErrorOnBrokenSymbolicLink" option is disabled', () => {
-			const lstatSync = sinon.stub().returns(new Stats({ isSymbolicLink: true }));
+			const lstatSync = sinon.stub().returns(new Stats({ mode: StatsMode.Link }));
 			const statSync = sinon.stub().throws(new Error('error'));
 
 			const settings = new Settings({
@@ -75,7 +75,7 @@ describe('Providers → Sync', () => {
 		});
 
 		it('should throw an error when symlink entry is broken', () => {
-			const lstatSync = sinon.stub().returns(new Stats({ isSymbolicLink: true }));
+			const lstatSync = sinon.stub().returns(new Stats({ mode: StatsMode.Link }));
 			const statSync = sinon.stub().throws(new Error('broken'));
 
 			const settings = new Settings({

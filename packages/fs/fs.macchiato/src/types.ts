@@ -1,17 +1,7 @@
 export type PrepareOptionsFromClass<T> = {
-	[TKey in keyof T]?: UnboxReturnTypeFromClassItem<T[TKey]>;
+	[TKey in NonFunctionPropertyNames<T>]?: T[TKey];
 };
 
-export type UnboxReturnTypeFromClassItem<T> =
-	/**
-	 * Unbox return type from class method.
-	 */
-	T extends (...args: unknown[]) => infer TReturnType ? TReturnType :
-		/**
-		 * Unbox return type from class property.
-		 */
-		T extends (infer TReturnType) ? TReturnType :
-			/**
-			 * Default branch. Potentially impossible case.
-			 */
-			T;
+type NonFunctionPropertyNames<T> = {
+	[TKey in keyof T]: T[TKey] extends () => unknown ? never : TKey;
+}[keyof T];

@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as util from 'util';
 
 import * as sinon from 'sinon';
-import { Dirent, DirentType, Stats } from '@nodelib/fs.macchiato';
+import { Dirent, DirentType, Stats, StatsMode } from '@nodelib/fs.macchiato';
 
 import Settings from '../settings';
 import * as utils from '../utils';
@@ -64,7 +64,7 @@ describe('Providers → Async', () => {
 			const stats = new Stats();
 
 			const readdir = sinon.stub().yields(null, [dirent]);
-			const lstat = sinon.stub().yields(null, new Stats({ isSymbolicLink: true }));
+			const lstat = sinon.stub().yields(null, new Stats({ mode: StatsMode.Link }));
 			const stat = sinon.stub().yields(null, stats);
 
 			const settings = new Settings({

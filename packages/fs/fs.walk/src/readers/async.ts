@@ -32,15 +32,11 @@ export default class AsyncReader extends Reader {
 		};
 	}
 
-	public read(): EventEmitter {
+	public read(): void {
 		this._isFatalError = false;
 		this._isDestroyed = false;
 
-		setImmediate(() => {
-			this._pushToQueue(this._root, this._settings.basePath);
-		});
-
-		return this._emitter;
+		this._pushToQueue(this._root, this._settings.basePath);
 	}
 
 	public get isDestroyed(): boolean {

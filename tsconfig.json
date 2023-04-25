@@ -1,6 +1,6 @@
 {
 	"compilerOptions": {
-		"target": "ES2020",
+		"target": "ES2022",
 		"lib": ["ES2020"],
 		"module": "commonjs",
 		"moduleResolution": "node",
@@ -22,7 +22,6 @@
 
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
-		"useDefineForClassFields": true,
 		"downlevelIteration": true,
 		"declaration": true,
 		"newLine": "lf",

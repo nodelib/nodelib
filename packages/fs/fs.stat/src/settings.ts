@@ -8,14 +8,15 @@ export interface Options {
 }
 
 export default class Settings {
-	public readonly followSymbolicLink: boolean = this._getValue(this._options.followSymbolicLink, true);
-	public readonly fs: fs.FileSystemAdapter = fs.createFileSystemAdapter(this._options.fs);
-	public readonly markSymbolicLink: boolean = this._getValue(this._options.markSymbolicLink, false);
-	public readonly throwErrorOnBrokenSymbolicLink: boolean = this._getValue(this._options.throwErrorOnBrokenSymbolicLink, true);
+	public readonly followSymbolicLink: boolean;
+	public readonly fs: fs.FileSystemAdapter;
+	public readonly markSymbolicLink: boolean;
+	public readonly throwErrorOnBrokenSymbolicLink: boolean;
 
-	constructor(private readonly _options: Options = {}) {}
-
-	private _getValue<T>(option: T | undefined, value: T): T {
-		return option ?? value;
+	constructor(options: Options = {}) {
+		this.followSymbolicLink = options.followSymbolicLink ?? true;
+		this.fs = fs.createFileSystemAdapter(options.fs);
+		this.markSymbolicLink = options.markSymbolicLink ?? false;
+		this.throwErrorOnBrokenSymbolicLink = options.throwErrorOnBrokenSymbolicLink ?? true;
 	}
 }

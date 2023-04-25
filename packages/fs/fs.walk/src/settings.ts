@@ -23,24 +23,28 @@ export interface Options {
 }
 
 export default class Settings {
-	public readonly basePath?: string = this._getValue(this._options.basePath, undefined);
-	public readonly concurrency: number = this._getValue(this._options.concurrency, Number.POSITIVE_INFINITY);
-	public readonly deepFilter: DeepFilterFunction | null = this._getValue(this._options.deepFilter, null);
-	public readonly entryFilter: EntryFilterFunction | null = this._getValue(this._options.entryFilter, null);
-	public readonly errorFilter: ErrorFilterFunction | null = this._getValue(this._options.errorFilter, null);
-	public readonly pathSegmentSeparator: string = this._getValue(this._options.pathSegmentSeparator, path.sep);
+	public readonly basePath?: string;
+	public readonly concurrency: number;
+	public readonly deepFilter: DeepFilterFunction | null;
+	public readonly entryFilter: EntryFilterFunction | null;
+	public readonly errorFilter: ErrorFilterFunction | null;
+	public readonly pathSegmentSeparator: string;
+	public readonly fsScandirSettings: fsScandir.Settings;
 
-	public readonly fsScandirSettings: fsScandir.Settings = new fsScandir.Settings({
-		followSymbolicLinks: this._options.followSymbolicLinks,
-		fs: this._options.fs,
-		pathSegmentSeparator: this._options.pathSegmentSeparator,
-		stats: this._options.stats,
-		throwErrorOnBrokenSymbolicLink: this._options.throwErrorOnBrokenSymbolicLink,
-	});
+	constructor(options: Options = {}) {
+		this.basePath = options.basePath ?? undefined;
+		this.concurrency = options.concurrency ?? Number.POSITIVE_INFINITY;
+		this.deepFilter = options.deepFilter ?? null;
+		this.entryFilter = options.entryFilter ?? null;
+		this.errorFilter = options.errorFilter ?? null;
+		this.pathSegmentSeparator = options.pathSegmentSeparator ?? path.sep;
 
-	constructor(private readonly _options: Options = {}) {}
-
-	private _getValue<T>(option: T | undefined, value: T): T {
-		return option ?? value;
+		this.fsScandirSettings = new fsScandir.Settings({
+			followSymbolicLinks: options.followSymbolicLinks,
+			fs: options.fs,
+			pathSegmentSeparator: this.pathSegmentSeparator,
+			stats: options.stats,
+			throwErrorOnBrokenSymbolicLink: options.throwErrorOnBrokenSymbolicLink,
+		});
 	}
 }

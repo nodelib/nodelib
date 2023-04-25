@@ -17,13 +17,14 @@ export default class AsyncReader extends Reader {
 	protected readonly _scandir: typeof fsScandir.scandir = fsScandir.scandir;
 	protected readonly _emitter: EventEmitter = new EventEmitter();
 
-	private readonly _queue: fastq.queue = fastq(this._worker.bind(this), this._settings.concurrency);
+	private readonly _queue: fastq.queue;
 	private _isFatalError: boolean = false;
 	private _isDestroyed: boolean = false;
 
 	constructor(_root: string, protected override readonly _settings: Settings) {
 		super(_root, _settings);
 
+		this._queue = fastq(this._worker.bind(this), this._settings.concurrency);
 		this._queue.drain = () => {
 			if (!this._isFatalError) {
 				this._emitter.emit('end');

@@ -9,11 +9,13 @@ type SuccessCallback = (error: null, entries: Entry[]) => void;
 export type AsyncCallback = (error: Errno, entries: Entry[]) => void;
 
 export default class AsyncProvider {
-	protected readonly _reader: AsyncReader = new AsyncReader(this._root, this._settings);
+	protected readonly _reader: AsyncReader;
 
 	private readonly _storage: Entry[] = [];
 
-	constructor(private readonly _root: string, private readonly _settings: Settings) {}
+	constructor(private readonly _root: string, private readonly _settings: Settings) {
+		this._reader = new AsyncReader(this._root, this._settings);
+	}
 
 	public read(callback: AsyncCallback): void {
 		this._reader.onError((error) => {

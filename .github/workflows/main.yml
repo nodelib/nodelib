@@ -20,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node_version: [14, 16, 18, 20]
+        node_version: [14.17, 14, 16.0.0, 16, 18, 20]
         os:
           - ubuntu-latest
           - macos-latest
@@ -40,11 +40,14 @@ jobs:
         run: npm run compile
       - name: Run hygiene checks
         run: npm run lint
+        if: ${{ !contains(fromJson('["14.17", "16.0.0"]'), matrix.node_version) }}
       - name: Run dependencies checks
         run: npm run lint:dependencies
+        if: ${{ !contains(fromJson('["14.17", "16.0.0"]'), matrix.node_version) }}
       - name: Run size limit check
         run: npm run lint:size
         env:
           TOOLS_SIZE_LIMIT_SKIP: '1'
+        if: ${{ !contains(fromJson('["14.17", "16.0.0"]'), matrix.node_version) }}
       - name: Run unit tests
         run: npm run test

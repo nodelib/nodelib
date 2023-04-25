@@ -2,7 +2,7 @@ import * as assert from 'assert';
 
 import * as fsScandir from '@nodelib/fs.scandir';
 
-import Settings from './settings';
+import { Settings } from './settings';
 
 describe('Settings', () => {
 	it('should return instance with default values', () => {

@@ -1,8 +1,7 @@
-import type { FilterFunction } from '../settings';
-import type Settings from '../settings';
-import type { Errno } from '../types';
+import type { FilterFunction, Settings } from '../settings';
+import type { ErrnoException } from '../types';
 
-export function isFatalError(settings: Settings, error: Errno): boolean {
+export function isFatalError(settings: Settings, error: ErrnoException): boolean {
 	if (settings.errorFilter === null) {
 		return true;
 	}

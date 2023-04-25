@@ -1,41 +1,43 @@
 import { Readable } from 'stream';
 
-import AsyncReader from '../readers/async';
+import type { IAsyncReader } from '../readers';
 
-import type Settings from '../settings';
+export class StreamProvider {
+	readonly #reader: IAsyncReader;
+	readonly #stream: Readable;
 
-export default class StreamProvider {
-	protected readonly _reader: AsyncReader;
-	protected readonly _stream: Readable;
+	constructor(reader: IAsyncReader) {
+		this.#reader = reader;
+		this.#stream = this.#createOutputStream();
+	}
 
-	constructor(private readonly _root: string, private readonly _settings: Settings) {
-		this._reader = new AsyncReader(this._root, this._settings);
-		this._stream = new Readable({
+	public read(root: string): Readable {
+		this.#reader.onError((error) => {
+			this.#stream.emit('error', error);
+		});
+
+		this.#reader.onEntry((entry) => {
+			this.#stream.push(entry);
+		});
+
+		this.#reader.onEnd(() => {
+			this.#stream.push(null);
+		});
+
+		this.#reader.read(root);
+
+		return this.#stream;
+	}
+
+	#createOutputStream(): Readable {
+		return new Readable({
 			objectMode: true,
 			read: () => { /* noop */ },
 			destroy: () => {
-				if (!this._reader.isDestroyed) {
-					this._reader.destroy();
+				if (!this.#reader.isDestroyed) {
+					this.#reader.destroy();
 				}
 			},
 		});
-	}
-
-	public read(): Readable {
-		this._reader.onError((error) => {
-			this._stream.emit('error', error);
-		});
-
-		this._reader.onEntry((entry) => {
-			this._stream.push(entry);
-		});
-
-		this._reader.onEnd(() => {
-			this._stream.push(null);
-		});
-
-		this._reader.read();
-
-		return this._stream;
 	}
 }

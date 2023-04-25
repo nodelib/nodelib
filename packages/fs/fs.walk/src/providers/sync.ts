@@ -1,16 +1,14 @@
-import SyncReader from '../readers/sync';
-
-import type Settings from '../settings';
+import type { ISyncReader } from '../readers';
 import type { Entry } from '../types';
 
-export default class SyncProvider {
-	protected readonly _reader: SyncReader;
+export class SyncProvider {
+	readonly #reader: ISyncReader;
 
-	constructor(private readonly _root: string, private readonly _settings: Settings) {
-		this._reader = new SyncReader(this._root, this._settings);
+	constructor(reader: ISyncReader) {
+		this.#reader = reader;
 	}
 
-	public read(): Entry[] {
-		return this._reader.read();
+	public read(root: string): Entry[] {
+		return this.#reader.read(root);
 	}
 }

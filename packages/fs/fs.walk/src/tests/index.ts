@@ -1,7 +1,7 @@
 import * as sinon from 'sinon';
 import { Dirent, DirentType } from '@nodelib/fs.macchiato';
 
-import type { Entry, Errno } from '../types';
+import type { Entry, ErrnoException } from '../types';
 
 export function buildFakeFileEntry(entry?: Partial<Entry>): Entry {
 	return {
@@ -21,7 +21,7 @@ export function buildFakeDirectoryEntry(entry?: Partial<Entry>): Entry {
 	};
 }
 
-export const EPERM_ERRNO: Errno = {
+export const EPERM_ERRNO: ErrnoException = {
 	name: 'EPERM',
 	code: 'EPERM',
 	message: 'EPERM',
@@ -33,8 +33,14 @@ export class TestAsyncReader {
 	public onError: sinon.SinonStub = sinon.stub();
 	public onEntry: sinon.SinonStub = sinon.stub();
 	public onEnd: sinon.SinonStub = sinon.stub();
+	public isDestroyed: boolean = false;
 }
 
 export class TestSyncReader {
 	public read: sinon.SinonStub = sinon.stub();
+}
+
+export class TestFileSystemAdapter {
+	public scandir = sinon.stub();
+	public scandirSync = sinon.stub();
 }

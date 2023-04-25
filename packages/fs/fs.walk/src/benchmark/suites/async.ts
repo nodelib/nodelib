@@ -17,35 +17,41 @@ interface WalkOptions extends Options {
 }
 
 class Walk {
-	constructor(private readonly _cwd: string, private readonly _options: WalkOptions) {
-		if (_options.defaultFilter === true) {
-			utils.assignDefaultFilter(_options);
+	readonly #cwd: string;
+	readonly #options: WalkOptions;
+
+	constructor(cwd: string, options: WalkOptions) {
+		this.#cwd = cwd;
+		this.#options = options;
+
+		if (options.defaultFilter === true) {
+			utils.assignDefaultFilter(this.#options);
 		}
 
-		if (_options.depthFilter === true) {
-			utils.assignDepthFilter(_options);
+		if (options.depthFilter === true) {
+			utils.assignDepthFilter(this.#options);
 		}
 	}
 
 	public async measurePreviousVersion(): Promise<void> {
 		const walk = await utils.importAndMeasure(utils.importPrevious);
-		const settings = new walk.Settings(this._options);
+		const settings = new walk.Settings(this.#options);
 
 		const action = util.promisify(walk.walk);
 
-		await this._measure(() => action(this._cwd, settings));
+		await this.#measure(() => action(this.#cwd, settings));
 	}
 
 	public async measureCurrentVersion(): Promise<void> {
 		const walk = await utils.importAndMeasure(utils.importCurrent);
-		const settings = new walk.Settings(this._options);
+		const settings = new walk.Settings(this.#options);
 
 		const action = util.promisify(walk.walk);
 
-		await this._measure(() => action(this._cwd, settings));
+		await this.#measure(() => action(this.#cwd, settings));
 	}
 
-	private async _measure(function_: WalkImplFunction): Promise<void> {
+	async #measure(function_: WalkImplFunction): Promise<void> {
 		const timeStart = utils.timeStart();
 
 		const matches = await function_();

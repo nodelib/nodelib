@@ -1,6 +1,8 @@
 import * as assert from 'assert';
 import * as fs from 'fs';
 
+import * as sinon from 'sinon';
+
 import { Stats, StatsMode } from './stats';
 
 const isWindows = process.platform === 'win32';
@@ -8,7 +10,21 @@ const isWindows = process.platform === 'win32';
 const uid = isWindows ? undefined : process.getuid();
 const gid = isWindows ? undefined : process.getgid();
 
+const FAKE_DATE = new Date();
+
 describe('Stats', () => {
+	let sandbox: sinon.SinonSandbox;
+
+	before(() => {
+		sandbox = sinon.createSandbox();
+
+		sandbox.useFakeTimers({ now: FAKE_DATE });
+	});
+
+	after(() => {
+		sandbox.reset();
+	});
+
 	it('should be instance of fs.Stats', () => {
 		const stats = new Stats();
 
@@ -17,8 +33,6 @@ describe('Stats', () => {
 
 	it('should create a fake instance without options', () => {
 		const stats = new Stats();
-
-		const date = new Date();
 
 		assert.strictEqual(stats.dev, 0);
 		assert.strictEqual(stats.ino, 0);
@@ -30,14 +44,14 @@ describe('Stats', () => {
 		assert.strictEqual(stats.size, 0);
 		assert.strictEqual(stats.blksize, 0);
 		assert.strictEqual(stats.blocks, 0);
-		assert.strictEqual(stats.atimeMs, date.getTime());
-		assert.strictEqual(stats.mtimeMs, date.getTime());
-		assert.strictEqual(stats.ctimeMs, date.getTime());
-		assert.strictEqual(stats.birthtimeMs, date.getTime());
-		assert.deepStrictEqual(stats.atime, date);
-		assert.deepStrictEqual(stats.mtime, date);
-		assert.deepStrictEqual(stats.ctime, date);
-		assert.deepStrictEqual(stats.birthtime, date);
+		assert.strictEqual(stats.atimeMs, FAKE_DATE.getTime());
+		assert.strictEqual(stats.mtimeMs, FAKE_DATE.getTime());
+		assert.strictEqual(stats.ctimeMs, FAKE_DATE.getTime());
+		assert.strictEqual(stats.birthtimeMs, FAKE_DATE.getTime());
+		assert.deepStrictEqual(stats.atime, FAKE_DATE);
+		assert.deepStrictEqual(stats.mtime, FAKE_DATE);
+		assert.deepStrictEqual(stats.ctime, FAKE_DATE);
+		assert.deepStrictEqual(stats.birthtime, FAKE_DATE);
 		assert.ok(!stats.isFile());
 		assert.ok(!stats.isDirectory());
 		assert.ok(!stats.isSymbolicLink());
@@ -50,8 +64,6 @@ describe('Stats', () => {
 	it('should create a fake instance with empty options', () => {
 		const stats = new Stats();
 
-		const date = new Date();
-
 		assert.strictEqual(stats.dev, 0);
 		assert.strictEqual(stats.ino, 0);
 		assert.strictEqual(stats.mode, StatsMode.Unknown);
@@ -62,14 +74,14 @@ describe('Stats', () => {
 		assert.strictEqual(stats.size, 0);
 		assert.strictEqual(stats.blksize, 0);
 		assert.strictEqual(stats.blocks, 0);
-		assert.strictEqual(stats.atimeMs, date.getTime());
-		assert.strictEqual(stats.mtimeMs, date.getTime());
-		assert.strictEqual(stats.ctimeMs, date.getTime());
-		assert.strictEqual(stats.birthtimeMs, date.getTime());
-		assert.deepStrictEqual(stats.atime, date);
-		assert.deepStrictEqual(stats.mtime, date);
-		assert.deepStrictEqual(stats.ctime, date);
-		assert.deepStrictEqual(stats.birthtime, date);
+		assert.strictEqual(stats.atimeMs, FAKE_DATE.getTime());
+		assert.strictEqual(stats.mtimeMs, FAKE_DATE.getTime());
+		assert.strictEqual(stats.ctimeMs, FAKE_DATE.getTime());
+		assert.strictEqual(stats.birthtimeMs, FAKE_DATE.getTime());
+		assert.deepStrictEqual(stats.atime, FAKE_DATE);
+		assert.deepStrictEqual(stats.mtime, FAKE_DATE);
+		assert.deepStrictEqual(stats.ctime, FAKE_DATE);
+		assert.deepStrictEqual(stats.birthtime, FAKE_DATE);
 		assert.ok(!stats.isFile());
 		assert.ok(!stats.isDirectory());
 		assert.ok(!stats.isSymbolicLink());

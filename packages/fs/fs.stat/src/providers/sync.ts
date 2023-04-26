@@ -1,5 +1,5 @@
-import type Settings from '../settings';
-import type { ErrnoException, Stats } from '../types';
+import type { Settings } from '../settings';
+import type { Stats } from '../types';
 
 export function read(path: string, settings: Settings): Stats {
 	const lstat = settings.fs.lstatSync(path);
@@ -16,11 +16,11 @@ export function read(path: string, settings: Settings): Stats {
 		}
 
 		return stat;
-	} catch (error: unknown) {
+	} catch (error) {
 		if (!settings.throwErrorOnBrokenSymbolicLink) {
 			return lstat;
 		}
 
-		throw (error as ErrnoException);
+		throw error;
 	}
 }

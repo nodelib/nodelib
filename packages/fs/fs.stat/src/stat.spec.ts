@@ -5,7 +5,7 @@ import * as rimraf from 'rimraf';
 
 import { Settings, stat, statSync } from '.';
 
-describe('Package', () => {
+describe('Stat', () => {
 	before(() => {
 		rimraf.sync('fixtures');
 

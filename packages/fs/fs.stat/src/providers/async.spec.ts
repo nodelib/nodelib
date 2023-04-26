@@ -3,7 +3,7 @@ import * as assert from 'assert';
 import * as sinon from 'sinon';
 import { Stats, StatsMode } from '@nodelib/fs.macchiato';
 
-import Settings from '../settings';
+import { Settings } from '../settings';
 import * as provider from './async';
 
 describe('Providers → Async', () => {

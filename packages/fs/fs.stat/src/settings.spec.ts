@@ -3,7 +3,7 @@ import * as assert from 'assert';
 import { Stats } from '@nodelib/fs.macchiato';
 
 import * as fs from './adapters/fs';
-import Settings from './settings';
+import { Settings } from './settings';
 
 describe('Settings', () => {
 	it('should return instance with default values', () => {

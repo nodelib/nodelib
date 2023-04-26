@@ -1,9 +1,7 @@
-import type Settings from '../settings';
-import type { ErrnoException, Stats } from '../types';
+import type { Settings } from '../settings';
+import type { AsyncCallback, ErrnoException, Stats } from '../types';
 
 type FailureCallback = (error: ErrnoException | null) => void;
-
-export type AsyncCallback = (error: ErrnoException | null, stats: Stats) => void;
 
 export function read(path: string, settings: Settings, callback: AsyncCallback): void {
 	settings.fs.lstat(path, (lstatError, lstat) => {

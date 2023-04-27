@@ -4,14 +4,13 @@ import * as rpl from 'run-parallel';
 import * as utils from '../utils';
 import * as common from './common';
 
-import type Settings from '../settings';
-import type { Entry, ErrnoException } from '../types';
+import type { Settings } from '../settings';
+import type { AsyncCallback, Entry, ErrnoException } from '../types';
 
 type RplTaskEntry = rpl.Task<Entry>;
 type StatsAction = (callback: fsStat.AsyncCallback) => void;
 
 type FailureCallback = (error: ErrnoException | null) => void;
-export type AsyncCallback = (error: ErrnoException | null, entries: Entry[]) => void;
 
 export function read(directory: string, settings: Settings, callback: AsyncCallback): void {
 	settings.fs.readdir(directory, { withFileTypes: true }, (readdirError, dirents) => {

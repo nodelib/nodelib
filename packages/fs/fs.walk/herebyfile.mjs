@@ -6,8 +6,8 @@ const REGRESSION_ASYNC_SUITE = './out/benchmark/suites/async.js';
 const REGRESSION_STREAM_SUITE = './out/benchmark/suites/stream.js';
 
 const REPORTER = process.env.REPORTER ?? 'compact';
-const WARMUP_COUNT = process.env.WARMUP_COUNT ?? 50;
-const RUNS_COUNT = process.env.RUNS_COUNT ?? 150;
+const WARMUP_COUNT = Number.parseInt(process.env.WARMUP_COUNT, 10) || 50;
+const RUNS_COUNT = Number.parseInt(process.env.RUNS_COUNT, 10) || 150;
 
 function getRepositoryRoot() {
 	const cp = execaSync('git', ['rev-parse', '--show-toplevel']);

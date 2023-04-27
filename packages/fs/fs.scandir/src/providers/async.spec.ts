@@ -5,7 +5,7 @@ import * as util from 'util';
 import * as sinon from 'sinon';
 import { Dirent, DirentType, Stats, StatsMode } from '@nodelib/fs.macchiato';
 
-import Settings from '../settings';
+import { Settings } from '../settings';
 import * as utils from '../utils';
 import * as provider from './async';
 

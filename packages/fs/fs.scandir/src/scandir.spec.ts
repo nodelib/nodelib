@@ -3,9 +3,10 @@ import * as fs from 'fs';
 
 import * as rimraf from 'rimraf';
 
-import { scandir, scandirSync, Settings } from '.';
+import { scandir, scandirSync } from './scandir';
+import { Settings } from './settings';
 
-describe('Package', () => {
+describe('Scandir', () => {
 	before(() => {
 		rimraf.sync('fixtures');
 

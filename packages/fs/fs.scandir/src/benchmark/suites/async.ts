@@ -12,27 +12,33 @@ type ScandirImplementation = 'current' | 'previous';
 type ScandirImplFunction = (...args: any[]) => Promise<unknown[]>;
 
 class Scandir {
-	constructor(private readonly _cwd: string, private readonly _options: Options) {}
+	readonly #cwd: string;
+	readonly #options: Options;
+
+	constructor(cwd: string, options: Options) {
+		this.#cwd = cwd;
+		this.#options = options;
+	}
 
 	public async measurePreviousVersion(): Promise<void> {
 		const scandir = await utils.importAndMeasure(utils.importPrevious);
-		const settings = new scandir.Settings(this._options);
+		const settings = new scandir.Settings(this.#options);
 
 		const action = util.promisify(scandir.scandir);
 
-		await this._measure(() => action(this._cwd, settings));
+		await this.#measure(() => action(this.#cwd, settings));
 	}
 
 	public async measureCurrentVersion(): Promise<void> {
 		const scandir = await utils.importAndMeasure(utils.importCurrent);
-		const settings = new scandir.Settings(this._options);
+		const settings = new scandir.Settings(this.#options);
 
 		const action = util.promisify(scandir.scandir);
 
-		await this._measure(() => action(this._cwd, settings));
+		await this.#measure(() => action(this.#cwd, settings));
 	}
 
-	private async _measure(function_: ScandirImplFunction): Promise<void> {
+	async #measure(function_: ScandirImplFunction): Promise<void> {
 		const timeStart = utils.timeStart();
 
 		const matches = await function_();

@@ -12,7 +12,7 @@ export interface Options {
 	throwErrorOnBrokenSymbolicLink?: boolean;
 }
 
-export default class Settings {
+export class Settings {
 	public readonly followSymbolicLinks: boolean;
 	public readonly fs: fs.FileSystemAdapter;
 	public readonly pathSegmentSeparator: string;

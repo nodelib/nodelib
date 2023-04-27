@@ -3,7 +3,8 @@ import * as fs from 'fs';
 
 import * as rimraf from 'rimraf';
 
-import { walk, walkSync, walkStream, Settings } from '.';
+import { walk, walkSync, walkStream } from './walk';
+import { Settings } from './settings';
 
 import type { Readable } from 'stream';
 import type { ErrnoException, Entry } from './types';

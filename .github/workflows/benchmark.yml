@@ -8,6 +8,17 @@ on:
   pull_request:
     branches:
       - '*'
+  workflow_dispatch:
+    inputs:
+      warmup_count:
+        description: Perform NUM warmup runs sequentially before the actual benchmark.
+        type: string
+        required: true
+
+      runs_count:
+        description: Perform exactly NUM runs for each command.
+        type: string
+        required: true
 
 jobs:
   regress:
@@ -31,3 +42,6 @@ jobs:
         run: npm run compile
       - name: Benchmark
         run: npm run bench
+        env:
+          WARMUP_COUNT: ${{ inputs.warmup_count }}
+          RUNS_COUNT: ${{ inputs.runs_count }}

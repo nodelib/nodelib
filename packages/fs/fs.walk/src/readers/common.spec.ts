@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 import * as path from 'path';
 
-import Settings from '../settings';
+import { Settings } from '../settings';
 import * as tests from '../tests';
 import * as common from './common';
 

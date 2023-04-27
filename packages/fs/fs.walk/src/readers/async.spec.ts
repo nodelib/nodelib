@@ -1,68 +1,66 @@
 import * as assert from 'assert';
 import * as path from 'path';
 
-import * as sinon from 'sinon';
-
-import Settings from '../settings';
+import { Settings } from '../settings';
 import * as tests from '../tests';
-import AsyncReader from './async';
+import { AsyncReader } from './async';
 
+import type { IFileSystemAdapter } from '../adapters/fs';
+import type * as sinon from 'sinon';
 import type { Entry } from '../types';
-import type * as fsScandir from '@nodelib/fs.scandir';
-
-type ScandirSignature = typeof fsScandir.scandir;
 
 class TestReader extends AsyncReader {
-	protected override readonly _scandir: ScandirSignature = sinon.stub() as unknown as ScandirSignature;
+	public readonly fs: sinon.SinonStubbedInstance<IFileSystemAdapter>;
 
-	constructor(_root: string, _settings: Settings = new Settings()) {
-		super(_root, _settings);
-	}
+	constructor(
+		settings: Settings = new Settings(),
+		fs: IFileSystemAdapter = new tests.TestFileSystemAdapter(),
+	) {
+		super(fs, settings);
 
-	public get scandir(): sinon.SinonStub {
-		return this._scandir as unknown as sinon.SinonStub;
+		this.fs = fs as sinon.SinonStubbedInstance<IFileSystemAdapter>;
 	}
 }
 
 describe('Readers → Async', () => {
 	describe('.read', () => {
 		it('should emit "error" event when the first call of scandir is broken', (done) => {
-			const reader = new TestReader('non-exist-directory');
+			const reader = new TestReader();
 
-			reader.scandir.yields(tests.EPERM_ERRNO);
+			reader.fs.scandir.yields(tests.EPERM_ERRNO);
 
 			reader.onError((error) => {
 				assert.ok(error);
 				done();
 			});
 
-			reader.read();
+			reader.read('non-exist-directory');
 		});
 
 		it('should emit "end" event when the first call of scandir is broken but this error can be suppressed', (done) => {
 			const settings = new Settings({
 				errorFilter: (error) => error.code === 'EPERM',
 			});
-			const reader = new TestReader('non-exist-directory', settings);
+			const reader = new TestReader(settings);
 
-			reader.scandir.yields(tests.EPERM_ERRNO);
+			reader.fs.scandir.yields(tests.EPERM_ERRNO);
 
 			reader.onEnd(() => {
 				done();
 			});
 
-			reader.read();
+			reader.read('non-exist-directory');
 		});
 
 		it('should do not emit events after first broken scandir call', (done) => {
-			const reader = new TestReader('directory');
+			const reader = new TestReader();
 
 			const firstFakeDirectoryEntry = tests.buildFakeDirectoryEntry({ name: 'a', path: 'directory/a' });
 			const secondFakeDirectoryEntry = tests.buildFakeDirectoryEntry({ name: 'b', path: 'directory/b' });
 
-			reader.scandir.onFirstCall().yields(null, [firstFakeDirectoryEntry, secondFakeDirectoryEntry]);
-			reader.scandir.onSecondCall().yieldsAsync(tests.EPERM_ERRNO);
-			reader.scandir.onThirdCall().yieldsAsync(tests.EPERM_ERRNO);
+			reader.fs.scandir.onFirstCall().yields(null, [firstFakeDirectoryEntry, secondFakeDirectoryEntry]);
+			reader.fs.scandir.onSecondCall().yieldsAsync(tests.EPERM_ERRNO);
+			reader.fs.scandir.onThirdCall().yieldsAsync(tests.EPERM_ERRNO);
 
 			/**
 			 * If the behavior is broken, then a third scandir call will trigger an unhandled error.
@@ -72,17 +70,17 @@ describe('Readers → Async', () => {
 				done();
 			});
 
-			reader.read();
+			reader.read('directory');
 		});
 
 		it('should return entries', (done) => {
-			const reader = new TestReader('directory');
+			const reader = new TestReader();
 
 			const fakeDirectoryEntry = tests.buildFakeDirectoryEntry();
 			const fakeFileEntry = tests.buildFakeFileEntry();
 
-			reader.scandir.onFirstCall().yields(null, [fakeDirectoryEntry]);
-			reader.scandir.onSecondCall().yields(null, [fakeFileEntry]);
+			reader.fs.scandir.onFirstCall().yields(null, [fakeDirectoryEntry]);
+			reader.fs.scandir.onSecondCall().yields(null, [fakeFileEntry]);
 
 			const entries: Entry[] = [];
 
@@ -93,18 +91,18 @@ describe('Readers → Async', () => {
 				done();
 			});
 
-			reader.read();
+			reader.read('directory');
 		});
 
 		it('should push to results only directories', (done) => {
 			const settings = new Settings({ entryFilter: (entry) => !entry.dirent.isFile() });
-			const reader = new TestReader('directory', settings);
+			const reader = new TestReader(settings);
 
 			const fakeDirectoryEntry = tests.buildFakeDirectoryEntry();
 			const fakeFileEntry = tests.buildFakeFileEntry();
 
-			reader.scandir.onFirstCall().yields(null, [fakeDirectoryEntry]);
-			reader.scandir.onSecondCall().yields(null, [fakeFileEntry]);
+			reader.fs.scandir.onFirstCall().yields(null, [fakeDirectoryEntry]);
+			reader.fs.scandir.onSecondCall().yields(null, [fakeFileEntry]);
 
 			const entries: Entry[] = [];
 
@@ -115,18 +113,18 @@ describe('Readers → Async', () => {
 				done();
 			});
 
-			reader.read();
+			reader.read('directory');
 		});
 
 		it('should do not read root directory', (done) => {
 			const settings = new Settings({ deepFilter: () => false });
-			const reader = new TestReader('directory', settings);
+			const reader = new TestReader(settings);
 
 			const fakeDirectoryEntry = tests.buildFakeDirectoryEntry();
 			const fakeFileEntry = tests.buildFakeFileEntry();
 
-			reader.scandir.onFirstCall().yields(null, [fakeDirectoryEntry]);
-			reader.scandir.onSecondCall().yields(null, [fakeFileEntry]);
+			reader.fs.scandir.onFirstCall().yields(null, [fakeDirectoryEntry]);
+			reader.fs.scandir.onSecondCall().yields(null, [fakeFileEntry]);
 
 			const entries: Entry[] = [];
 
@@ -137,18 +135,18 @@ describe('Readers → Async', () => {
 				done();
 			});
 
-			reader.read();
+			reader.read('directory');
 		});
 
 		it('should set base path to entry when the `basePath` option is exist', (done) => {
 			const settings = new Settings({ basePath: 'base' });
-			const reader = new TestReader('directory', settings);
+			const reader = new TestReader(settings);
 
 			const fakeDirectoryEntry = tests.buildFakeDirectoryEntry();
 			const fakeFileEntry = tests.buildFakeFileEntry();
 
-			reader.scandir.onFirstCall().yields(null, [fakeDirectoryEntry]);
-			reader.scandir.onSecondCall().yields(null, [fakeFileEntry]);
+			reader.fs.scandir.onFirstCall().yields(null, [fakeDirectoryEntry]);
+			reader.fs.scandir.onSecondCall().yields(null, [fakeFileEntry]);
 
 			const entries: Entry[] = [];
 
@@ -160,18 +158,18 @@ describe('Readers → Async', () => {
 				done();
 			});
 
-			reader.read();
+			reader.read('directory');
 		});
 
 		it('should set base path to entry when the `basePath` option is exist and value is an empty string', (done) => {
 			const settings = new Settings({ basePath: '' });
-			const reader = new TestReader('directory', settings);
+			const reader = new TestReader(settings);
 
 			const fakeDirectoryEntry = tests.buildFakeDirectoryEntry();
 			const fakeFileEntry = tests.buildFakeFileEntry();
 
-			reader.scandir.onFirstCall().yields(null, [fakeDirectoryEntry]);
-			reader.scandir.onSecondCall().yields(null, [fakeFileEntry]);
+			reader.fs.scandir.onFirstCall().yields(null, [fakeDirectoryEntry]);
+			reader.fs.scandir.onSecondCall().yields(null, [fakeFileEntry]);
 
 			const entries: Entry[] = [];
 
@@ -183,19 +181,19 @@ describe('Readers → Async', () => {
 				done();
 			});
 
-			reader.read();
+			reader.read('directory');
 		});
 	});
 
 	describe('.destroy', () => {
 		it('should do not emit entries after destroy', (done) => {
-			const reader = new TestReader('directory');
+			const reader = new TestReader();
 
 			const firstFakeDirectoryEntry = tests.buildFakeDirectoryEntry({ name: 'a', path: 'directory/a' });
 			const fakeFileEntry = tests.buildFakeFileEntry();
 
-			reader.scandir.onFirstCall().yields(null, [firstFakeDirectoryEntry]);
-			reader.scandir.onSecondCall().yields(null, [fakeFileEntry]);
+			reader.fs.scandir.onFirstCall().yields(null, [firstFakeDirectoryEntry]);
+			reader.fs.scandir.onSecondCall().yields(null, [fakeFileEntry]);
 
 			reader.onEntry((entry) => {
 				if (entry.name === 'a') {
@@ -209,11 +207,11 @@ describe('Readers → Async', () => {
 				done();
 			});
 
-			reader.read();
+			reader.read('directory');
 		});
 
 		it('should mark stream as "destroyed" after first destroy', () => {
-			const reader = new TestReader('directory');
+			const reader = new TestReader();
 
 			reader.destroy();
 
@@ -221,7 +219,7 @@ describe('Readers → Async', () => {
 		});
 
 		it('should throw an error when trying to destroy reader twice', () => {
-			const reader = new TestReader('directory');
+			const reader = new TestReader();
 
 			const expectedErrorMessageRe = /The reader is already destroyed/;
 

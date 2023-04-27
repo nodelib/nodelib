@@ -10,9 +10,9 @@ const REGRESSION_SYNC_SUITE = './out/benchmark/suites/sync.js';
 const REGRESSION_ASYNC_SUITE = './out/benchmark/suites/async.js';
 
 const REPORTER = process.env.REPORTER ?? 'compact';
-const WARMUP_COUNT = process.env.WARMUP_COUNT ?? 50;
-const RUNS_COUNT = process.env.RUNS_COUNT ?? 150;
-const FIXTURES_COUNT = process.env.FIXTURES_COUNT ?? 30;
+const WARMUP_COUNT = Number.parseInt(process.env.WARMUP_COUNT, 10) || 50;
+const RUNS_COUNT = Number.parseInt(process.env.RUNS_COUNT, 10) || 150;
+const FIXTURES_COUNT = Number.parseInt(process.env.FIXTURES_COUNT, 10) || 30;
 
 /**
  * @typedef {Object} BenchTaskSpec

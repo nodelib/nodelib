@@ -1,43 +1,39 @@
-import AsyncReader from '../readers/async';
+import type { IAsyncReader } from '../readers';
+import type { Entry, ErrnoException } from '../types';
 
-import type Settings from '../settings';
-import type { Entry, Errno } from '../types';
+export type AsyncCallback = (error: ErrnoException | null, entries: Entry[]) => void;
+type FailureCallback = (error: ErrnoException) => void;
 
-type FailureCallback = (error: Errno) => void;
-type SuccessCallback = (error: null, entries: Entry[]) => void;
+export class AsyncProvider {
+	readonly #reader: IAsyncReader;
 
-export type AsyncCallback = (error: Errno, entries: Entry[]) => void;
-
-export default class AsyncProvider {
-	protected readonly _reader: AsyncReader;
-
-	private readonly _storage: Entry[] = [];
-
-	constructor(private readonly _root: string, private readonly _settings: Settings) {
-		this._reader = new AsyncReader(this._root, this._settings);
+	constructor(reader: IAsyncReader) {
+		this.#reader = reader;
 	}
 
-	public read(callback: AsyncCallback): void {
-		this._reader.onError((error) => {
+	public read(root: string, callback: AsyncCallback): void {
+		const entries: Entry[] = [];
+
+		this.#reader.onError((error) => {
 			callFailureCallback(callback, error);
 		});
 
-		this._reader.onEntry((entry: Entry) => {
-			this._storage.push(entry);
+		this.#reader.onEntry((entry: Entry) => {
+			entries.push(entry);
 		});
 
-		this._reader.onEnd(() => {
-			callSuccessCallback(callback, this._storage);
+		this.#reader.onEnd(() => {
+			callSuccessCallback(callback, entries);
 		});
 
-		this._reader.read();
+		this.#reader.read(root);
 	}
 }
 
-function callFailureCallback(callback: AsyncCallback, error: Errno): void {
+function callFailureCallback(callback: AsyncCallback, error: ErrnoException): void {
 	(callback as FailureCallback)(error);
 }
 
 function callSuccessCallback(callback: AsyncCallback, entries: Entry[]): void {
-	(callback as unknown as SuccessCallback)(null, entries);
+	callback(null, entries);
 }

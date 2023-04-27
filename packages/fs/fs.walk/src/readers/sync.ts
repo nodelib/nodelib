@@ -1,70 +1,78 @@
-import * as fsScandir from '@nodelib/fs.scandir';
-
 import * as common from './common';
-import Reader from './reader';
 
-import type { Entry, Errno, QueueItem } from '../types';
+import type { IFileSystemAdapter } from '../adapters/fs';
+import type { Settings } from '../settings';
+import type { Entry, ErrnoException, QueueItem } from '../types';
 
-export default class SyncReader extends Reader {
-	protected readonly _scandir: typeof fsScandir.scandirSync = fsScandir.scandirSync;
+export interface ISyncReader {
+	read: (root: string) => Entry[];
+}
 
-	private readonly _storage: Entry[] = [];
-	private readonly _queue = new Set<QueueItem>();
+export class SyncReader implements ISyncReader {
+	readonly #fs: IFileSystemAdapter;
+	readonly #settings: Settings;
+	readonly #queue = new Set<QueueItem>();
+	readonly #storage: Entry[] = [];
 
-	public read(): Entry[] {
-		this._pushToQueue(this._root, this._settings.basePath);
-		this._handleQueue();
-
-		return this._storage;
+	constructor(fs: IFileSystemAdapter, settings: Settings) {
+		this.#fs = fs;
+		this.#settings = settings;
 	}
 
-	private _pushToQueue(directory: string, base: string | undefined): void {
-		this._queue.add({ directory, base });
+	public read(root: string): Entry[] {
+		const directory = common.replacePathSegmentSeparator(root, this.#settings.pathSegmentSeparator);
+
+		this.#pushToQueue(directory, this.#settings.basePath);
+		this.#handleQueue();
+
+		return this.#storage;
 	}
 
-	private _handleQueue(): void {
-		for (const item of this._queue.values()) {
-			this._handleDirectory(item.directory, item.base);
+	#pushToQueue(directory: string, base: string | undefined): void {
+		this.#queue.add({ directory, base });
+	}
+
+	#handleQueue(): void {
+		for (const item of this.#queue.values()) {
+			this.#handleDirectory(item.directory, item.base);
 		}
 	}
 
-	private _handleDirectory(directory: string, base: string | undefined): void {
+	#handleDirectory(directory: string, base: string | undefined): void {
 		try {
-			const entries = this._scandir(directory, this._settings.fsScandirSettings);
+			const entries = this.#fs.scandirSync(directory, this.#settings.fsScandirSettings);
 
 			for (const entry of entries) {
-				this._handleEntry(entry, base);
+				this.#handleEntry(entry, base);
 			}
-		} catch (error: unknown) {
-			this._handleError(error as Errno);
+		} catch (error) {
+			this.#handleError(error as ErrnoException);
 		}
 	}
 
-	private _handleError(error: Errno): void {
-		if (!common.isFatalError(this._settings, error)) {
-			return;
+	#handleError(error: ErrnoException): void {
+		if (common.isFatalError(this.#settings, error)) {
+			throw error;
 		}
-
-		throw error;
 	}
 
-	private _handleEntry(entry: Entry, base: string | undefined): void {
+	#handleEntry(entry: Entry, base: string | undefined): void {
 		const fullpath = entry.path;
 
 		if (base !== undefined) {
-			entry.path = common.joinPathSegments(base, entry.name, this._settings.pathSegmentSeparator);
+			entry.path = common.joinPathSegments(base, entry.name, this.#settings.pathSegmentSeparator);
 		}
 
-		if (common.isAppliedFilter(this._settings.entryFilter, entry)) {
-			this._pushToStorage(entry);
+		if (common.isAppliedFilter(this.#settings.entryFilter, entry)) {
+			this.#pushToStorage(entry);
 		}
 
-		if (entry.dirent.isDirectory() && common.isAppliedFilter(this._settings.deepFilter, entry)) {
-			this._pushToQueue(fullpath, base === undefined ? undefined : entry.path);
+		if (entry.dirent.isDirectory() && common.isAppliedFilter(this.#settings.deepFilter, entry)) {
+			this.#pushToQueue(fullpath, base === undefined ? undefined : entry.path);
 		}
 	}
 
-	private _pushToStorage(entry: Entry): void {
-		this._storage.push(entry);
+	#pushToStorage(entry: Entry): void {
+		this.#storage.push(entry);
 	}
 }

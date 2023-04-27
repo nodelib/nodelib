@@ -2,12 +2,12 @@ import * as path from 'path';
 
 import * as fsScandir from '@nodelib/fs.scandir';
 
-import type { Entry, Errno } from './types';
+import type { Entry, ErrnoException } from './types';
 
 export type FilterFunction<T> = (value: T) => boolean;
 export type DeepFilterFunction = FilterFunction<Entry>;
 export type EntryFilterFunction = FilterFunction<Entry>;
-export type ErrorFilterFunction = FilterFunction<Errno>;
+export type ErrorFilterFunction = FilterFunction<ErrnoException>;
 
 export interface Options {
 	basePath?: string;
@@ -22,7 +22,7 @@ export interface Options {
 	throwErrorOnBrokenSymbolicLink?: boolean;
 }
 
-export default class Settings {
+export class Settings {
 	public readonly basePath?: string;
 	public readonly concurrency: number;
 	public readonly deepFilter: DeepFilterFunction | null;

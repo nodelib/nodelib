@@ -1,107 +1,109 @@
 import * as assert from 'assert';
 import * as path from 'path';
 
-import * as sinon from 'sinon';
-
-import Settings from '../settings';
+import { Settings } from '../settings';
 import * as tests from '../tests';
-import SyncReader from './sync';
+import { SyncReader } from './sync';
+
+import type * as sinon from 'sinon';
+import type { IFileSystemAdapter } from '../adapters/fs';
 
 class TestReader extends SyncReader {
-	protected override readonly _scandir: sinon.SinonStub = sinon.stub();
+	public readonly fs: sinon.SinonStubbedInstance<IFileSystemAdapter>;
 
-	constructor(_root: string, _settings: Settings = new Settings()) {
-		super(_root, _settings);
-	}
+	constructor(
+		settings: Settings = new Settings(),
+		fs: IFileSystemAdapter = new tests.TestFileSystemAdapter(),
+	) {
+		super(fs, settings);
 
-	public get scandir(): sinon.SinonStub {
-		return this._scandir;
+		this.fs = fs as sinon.SinonStubbedInstance<IFileSystemAdapter>;
 	}
 }
 
 describe('Readers → Sync', () => {
 	describe('.read', () => {
 		it('should throw an error when the first call of scandir is broken', () => {
-			const reader = new TestReader('non-exist-directory');
+			const reader = new TestReader();
 
-			reader.scandir.throws(tests.EPERM_ERRNO);
+			reader.fs.scandirSync.throws(tests.EPERM_ERRNO);
 
-			assert.throws(() => reader.read(), { code: 'EPERM' });
+			assert.throws(() => reader.read('non-exist-directory'), { code: 'EPERM' });
 		});
 
 		it('should return empty array when the first call of scandir is broken but this error can be suppressed', () => {
 			const settings = new Settings({
 				errorFilter: (error) => error.code === 'EPERM',
 			});
-			const reader = new TestReader('non-exist-directory', settings);
+			const reader = new TestReader(settings);
 
-			reader.scandir.throws(tests.EPERM_ERRNO);
+			reader.fs.scandirSync.throws(tests.EPERM_ERRNO);
 
-			const actual = reader.read();
+			const actual = reader.read('non-exist-directory');
 
 			assert.deepStrictEqual(actual, []);
 		});
 
 		it('should return entries', () => {
-			const reader = new TestReader('directory');
+			const reader = new TestReader();
 			const fakeDirectoryEntry = tests.buildFakeDirectoryEntry();
 			const fakeFileEntry = tests.buildFakeFileEntry();
 
-			reader.scandir.onFirstCall().returns([fakeDirectoryEntry]);
-			reader.scandir.onSecondCall().returns([fakeFileEntry]);
+			reader.fs.scandirSync.onFirstCall().returns([fakeDirectoryEntry]);
+			reader.fs.scandirSync.onSecondCall().returns([fakeFileEntry]);
 
 			const expected = [fakeDirectoryEntry, fakeFileEntry];
 
-			const actual = reader.read();
+			const actual = reader.read('directory');
 
 			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should push to results only directories', () => {
 			const settings = new Settings({ entryFilter: (entry) => !entry.dirent.isFile() });
-			const reader = new TestReader('directory', settings);
+			const reader = new TestReader(settings);
 
 			const fakeDirectoryEntry = tests.buildFakeDirectoryEntry();
 			const fakeFileEntry = tests.buildFakeFileEntry();
 
-			reader.scandir.onFirstCall().returns([fakeDirectoryEntry]);
-			reader.scandir.onSecondCall().returns([fakeFileEntry]);
+			reader.fs.scandirSync.onFirstCall().returns([fakeDirectoryEntry]);
+			reader.fs.scandirSync.onSecondCall().returns([fakeFileEntry]);
 
 			const expected = [fakeDirectoryEntry];
 
-			const actual = reader.read();
+			const actual = reader.read('directory');
 
 			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should do not read root directory', () => {
 			const settings = new Settings({ deepFilter: () => false });
-			const reader = new TestReader('directory', settings);
+			const reader = new TestReader(settings);
 
 			const fakeDirectoryEntry = tests.buildFakeDirectoryEntry();
 			const fakeFileEntry = tests.buildFakeFileEntry();
 
-			reader.scandir.onFirstCall().returns([fakeDirectoryEntry]);
-			reader.scandir.onSecondCall().returns([fakeFileEntry]);
+			reader.fs.scandirSync.onFirstCall().returns([fakeDirectoryEntry]);
+			reader.fs.scandirSync.onSecondCall().returns([fakeFileEntry]);
 
 			const expected = [fakeDirectoryEntry];
 
-			const actual = reader.read();
+			const actual = reader.read('directory');
 
 			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should set base path to entry when the `basePath` option is exist', () => {
 			const settings = new Settings({ basePath: 'base' });
-			const reader = new TestReader('directory', settings);
+			const reader = new TestReader(settings);
 
 			const fakeDirectoryEntry = tests.buildFakeDirectoryEntry();
 			const fakeFileEntry = tests.buildFakeFileEntry();
 
-			reader.scandir.onFirstCall().returns([fakeDirectoryEntry]);
-			reader.scandir.onSecondCall().returns([fakeFileEntry]);
+			reader.fs.scandirSync.onFirstCall().returns([fakeDirectoryEntry]);
+			reader.fs.scandirSync.onSecondCall().returns([fakeFileEntry]);
 
-			const actual = reader.read();
+			const actual = reader.read('directory');
 
 			assert.strictEqual(actual[0]?.path, path.join('base', fakeDirectoryEntry.name));
 			assert.strictEqual(actual[1]?.path, path.join('base', 'fake', fakeFileEntry.name));
@@ -109,15 +111,15 @@ describe('Readers → Sync', () => {
 
 		it('should set base path to entry when the `basePath` option is exist and value is an empty string', () => {
 			const settings = new Settings({ basePath: '' });
-			const reader = new TestReader('directory', settings);
+			const reader = new TestReader(settings);
 
 			const fakeDirectoryEntry = tests.buildFakeDirectoryEntry();
 			const fakeFileEntry = tests.buildFakeFileEntry();
 
-			reader.scandir.onFirstCall().returns([fakeDirectoryEntry]);
-			reader.scandir.onSecondCall().returns([fakeFileEntry]);
+			reader.fs.scandirSync.onFirstCall().returns([fakeDirectoryEntry]);
+			reader.fs.scandirSync.onSecondCall().returns([fakeFileEntry]);
 
-			const actual = reader.read();
+			const actual = reader.read('directory');
 
 			assert.strictEqual(actual[0]?.path, fakeDirectoryEntry.name);
 			assert.strictEqual(actual[1]?.path, path.join('fake', fakeFileEntry.name));

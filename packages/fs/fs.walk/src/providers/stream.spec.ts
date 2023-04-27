@@ -1,86 +1,87 @@
 import * as assert from 'assert';
 import { Readable } from 'stream';
 
-import * as sinon from 'sinon';
-
-import Settings from '../settings';
 import * as tests from '../tests';
-import StreamProvider from './stream';
-
-import type AsyncReader from '../readers/async';
-
-class TestProvider extends StreamProvider {
-	protected override readonly _reader: AsyncReader = new tests.TestAsyncReader() as unknown as AsyncReader;
-
-	constructor(_root: string, _settings: Settings = new Settings()) {
-		super(_root, _settings);
-
-		this._stream.emit = sinon.stub();
-		this._stream.push = sinon.stub();
-	}
-
-	public get reader(): tests.TestAsyncReader {
-		return this._reader as unknown as tests.TestAsyncReader;
-	}
-
-	public get stream(): sinon.SinonStubbedInstance<Readable> {
-		return this._stream as unknown as sinon.SinonStubbedInstance<Readable>;
-	}
-}
+import { StreamProvider } from './stream';
 
 describe('Providers → Stream', () => {
 	describe('.read', () => {
 		it('should return stream', () => {
-			const provider = new TestProvider('directory');
+			const reader = new tests.TestAsyncReader();
+			const provider = new StreamProvider(reader);
 
-			const stream = provider.read();
+			const stream = provider.read('directory');
 
 			assert.ok(stream instanceof Readable);
 		});
 
-		it('should call reader function with correct set of arguments', () => {
-			const provider = new TestProvider('directory');
+		it('should call the reader with correct set of arguments', () => {
+			const reader = new tests.TestAsyncReader();
+			const provider = new StreamProvider(reader);
 
-			provider.read();
+			provider.read('directory');
 
-			assert.ok(provider.reader.read.called);
+			assert.deepStrictEqual(reader.read.firstCall.args, ['directory']);
 		});
 
-		it('should re-emit the "error" event from reader', () => {
-			const provider = new TestProvider('directory');
+		it('should pass the error to the stream', async () => {
+			const reader = new tests.TestAsyncReader();
+			const provider = new StreamProvider(reader);
 
-			provider.reader.onError.yields(tests.EPERM_ERRNO);
+			reader.onError.yieldsAsync(tests.EPERM_ERRNO);
 
-			provider.read();
+			const stream = provider.read('directory');
 
-			assert.deepStrictEqual(provider.stream.emit.args, [['error', tests.EPERM_ERRNO]]);
+			const actual = await new Promise((resolve) => {
+				stream.once('error', resolve);
+			});
+
+			assert.deepStrictEqual(actual, tests.EPERM_ERRNO);
 		});
 
-		it('should call the "push" method with entry value for the "entry" event from reader', () => {
-			const provider = new TestProvider('directory');
+		it('should pass the entry to the stream', async () => {
+			const reader = new tests.TestAsyncReader();
+			const provider = new StreamProvider(reader);
 			const fakeEntry = tests.buildFakeFileEntry();
 
-			provider.reader.onEntry.yields(fakeEntry);
+			reader.onEntry.yieldsAsync(fakeEntry);
 
-			provider.read();
+			const stream = provider.read('directory');
 
-			assert.deepStrictEqual(provider.stream.push.args, [[fakeEntry]]);
+			const actual = await new Promise((resolve) => {
+				stream.on('data', resolve);
+			});
+
+			assert.deepStrictEqual(actual, fakeEntry);
 		});
 
-		it('should call the "push" method with "null" value for the "end" event from reader', () => {
-			const provider = new TestProvider('directory');
+		it('should close the stream when passing null as an entry', async () => {
+			const reader = new tests.TestAsyncReader();
+			const provider = new StreamProvider(reader);
 
-			provider.reader.onEnd.yields();
+			reader.onEnd.yieldsAsync();
 
-			provider.read();
+			const stream = provider.read('directory');
 
-			assert.deepStrictEqual(provider.stream.push.args, [[null]]);
+			// Manually start the stream, emulating reading.
+			stream.resume();
+
+			const actual = await new Promise((resolve) => {
+				stream.once('end', () => {
+					resolve(true);
+				});
+			});
+
+			assert.ok(actual);
 		});
 
-		it('should do not destroy reader when it is already destroyed', () => {
-			const provider = new TestProvider('directory');
+		it('should do not destroy the reader when it has already been destroyed', () => {
+			const reader = new tests.TestAsyncReader();
+			const provider = new StreamProvider(reader);
 
-			const stream = provider.read();
+			const stream = provider.read('directory');
+
+			assert.ok(!stream.destroyed);
 
 			stream.destroy();
 

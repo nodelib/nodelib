@@ -6,7 +6,7 @@ import * as rimraf from 'rimraf';
 import { walk, walkSync, walkStream, Settings } from '.';
 
 import type { Readable } from 'stream';
-import type { Errno, Entry } from './types';
+import type { ErrnoException, Entry } from './types';
 
 const entryFilter = (entry: Entry): boolean => !entry.dirent.isDirectory();
 
@@ -39,7 +39,7 @@ describe('Package', () => {
 	describe('.walk', () => {
 		it('should throw an error for non-exist directory', (done) => {
 			walk('non-exist-directory', (error, entries) => {
-				assert.strictEqual(error.code, 'ENOENT');
+				assert.strictEqual(error?.code, 'ENOENT');
 				assert.strictEqual(entries, undefined);
 				done();
 			});
@@ -76,7 +76,7 @@ describe('Package', () => {
 		it('should throw an error for non-exist directory', async () => {
 			const stream = walkStream('non-exist-directory');
 
-			await assert.rejects(() => streamToPromise(stream), (error: Errno) => error.code === 'ENOENT');
+			await assert.rejects(() => streamToPromise(stream), (error: ErrnoException) => error.code === 'ENOENT');
 		});
 
 		it('should work without options or settings', async () => {
@@ -104,7 +104,7 @@ describe('Package', () => {
 
 	describe('.walkSync', () => {
 		it('should throw an error for non-exist directory', () => {
-			const matcher = (error: Errno): boolean => error.code === 'ENOENT';
+			const matcher = (error: ErrnoException): boolean => error.code === 'ENOENT';
 
 			assert.throws(() => walkSync('non-exist-directory'), matcher);
 		});

@@ -1,32 +1,31 @@
 import * as assert from 'assert';
 
-import Settings from '../settings';
 import * as tests from '../tests';
-import SyncProvider from './sync';
+import { SyncProvider } from './sync';
 
-import type SyncReader from '../readers/sync';
+import type { ISyncReader } from '../readers';
 
 class TestProvider extends SyncProvider {
-	protected override readonly _reader: SyncReader = new tests.TestSyncReader() as unknown as SyncReader;
+	public readonly reader: sinon.SinonStubbedInstance<ISyncReader>;
 
-	constructor(_root: string, _settings: Settings = new Settings()) {
-		super(_root, _settings);
-	}
+	constructor(
+		reader: ISyncReader = new tests.TestSyncReader(),
+	) {
+		super(reader);
 
-	public get reader(): tests.TestSyncReader {
-		return this._reader as unknown as tests.TestSyncReader;
+		this.reader = reader as sinon.SinonStubbedInstance<ISyncReader>;
 	}
 }
 
 describe('Providers → Sync', () => {
 	describe('.read', () => {
 		it('should call reader function with correct set of arguments and got result', () => {
-			const provider = new TestProvider('directory');
+			const provider = new TestProvider();
 			const fakeEntry = tests.buildFakeFileEntry();
 
 			provider.reader.read.returns([fakeEntry]);
 
-			const actual = provider.read();
+			const actual = provider.read('directory');
 
 			assert.deepStrictEqual(actual, [fakeEntry]);
 			assert.ok(provider.reader.read.called);

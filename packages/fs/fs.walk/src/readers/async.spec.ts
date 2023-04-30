@@ -218,16 +218,14 @@ describe('Readers → Async', () => {
 			assert.ok(reader.isDestroyed);
 		});
 
-		it('should throw an error when trying to destroy reader twice', () => {
+		it('should do nothing when trying to destroy reader twice', () => {
 			const reader = new TestReader();
-
-			const expectedErrorMessageRe = /The reader is already destroyed/;
 
 			reader.destroy();
 
-			assert.throws(() => {
+			assert.doesNotThrow(() => {
 				reader.destroy();
-			}, expectedErrorMessageRe);
+			});
 		});
 	});
 });

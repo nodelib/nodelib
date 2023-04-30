@@ -85,7 +85,7 @@ export class AsyncReader extends AsyncReaderEmitter implements IAsyncReader {
 
 	public destroy(): void {
 		if (this.#isDestroyed) {
-			throw new Error('The reader is already destroyed');
+			return;
 		}
 
 		this.#isDestroyed = true;

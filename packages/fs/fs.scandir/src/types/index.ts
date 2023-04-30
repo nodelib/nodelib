@@ -7,17 +7,7 @@ export interface Entry {
 	stats?: Stats;
 }
 
+export type Dirent = fs.Dirent;
 export type Stats = fs.Stats;
 export type ErrnoException = NodeJS.ErrnoException;
 export type AsyncCallback = (error: ErrnoException | null, entries: Entry[]) => void;
-
-export interface Dirent {
-	isBlockDevice: () => boolean;
-	isCharacterDevice: () => boolean;
-	isDirectory: () => boolean;
-	isFIFO: () => boolean;
-	isFile: () => boolean;
-	isSocket: () => boolean;
-	isSymbolicLink: () => boolean;
-	name: string;
-}

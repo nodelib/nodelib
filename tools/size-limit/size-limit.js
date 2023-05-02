@@ -18,6 +18,10 @@ async function main() {
 	const remote = await getPackageSize(`${LERNA_PACKAGE_NAME}@latest`);
 	const local = await getPackageSize('.');
 
+	if (remote === null) {
+		return;
+	}
+
 	// How much the current value is greater than the previous one.
 	const sizeRatio = (local.size - remote.size) / remote.size * 100;
 	const unpackedSizeRatio = (local.unpackedSize - remote.unpackedSize) / remote.unpackedSize * 100;
@@ -57,18 +61,26 @@ async function main() {
 
 /**
  * @param {string} name
- * @returns {Promise<PackageInfo>}
+ * @returns {Promise<PackageInfo | null>}
  */
 async function getPackageSize(name) {
-	const { stdout } = await executeCommand(`npm pack ${name} --dry --json`);
+	try {
+		const { stdout } = await executeCommand(`npm pack ${name} --dry --json`);
 
-	const data = JSON.parse(stdout);
+		const data = JSON.parse(stdout);
 
-	return {
-		size: data[0].size,
-		unpackedSize: data[0].unpackedSize,
-		entryCount: data[0].entryCount,
-	};
+		return {
+			size: data[0].size,
+			unpackedSize: data[0].unpackedSize,
+			entryCount: data[0].entryCount,
+		};
+	} catch (error) {
+		if (error.stderr.includes('E404')) {
+			return null;
+		}
+
+		throw error;
+	}
 }
 
 (async () => {

@@ -1,28 +1,23 @@
 import * as fs from 'fs';
 
-import type { Dirent, Stats } from '../types';
+import type { Dirent } from '../types';
+
+type DirentStatsKeysIntersection = keyof fs.Dirent & keyof fs.Stats;
 
 const kStats = Symbol('stats');
 
-type DirentStatsKeysIntersection = keyof Dirent & keyof Stats;
-
-export function createDirentFromStats(name: string, stats: Stats): Dirent {
+export function createDirentFromStats(name: string, stats: fs.Stats): Dirent {
 	return new DirentFromStats(name, stats);
 }
 
-/**
- * Adapting an internal class from Node.js.
- * https://github.com/nodejs/node/blob/8e42eaec53e7fc70c90c4aaebaf672e89c598afe/lib/internal/fs/utils.js#L193-L207
- *
- * We use it to mimic built-in types and provide continuity with the 'fs.Dirent' class.
- * https://github.com/nodejs/node/blob/8e42eaec53e7fc70c90c4aaebaf672e89c598afe/lib/internal/fs/utils.js#L265
- */
-class DirentFromStats extends fs.Dirent {
-	private readonly [kStats]: Stats;
+// Adapting an internal class in Node.js to mimic the behavior of `fs.Dirent` when creating it manually from `fs.Stats`.
+// https://github.com/nodejs/node/blob/a4cf6b204f0b160480153dc293ae748bf15225f9/lib/internal/fs/utils.js#L199C1-L213
+export class DirentFromStats extends fs.Dirent {
+	private readonly [kStats]: fs.Stats;
 
-	constructor(name: string, stats: Stats) {
-		// @ts-expect-error Awaiting type correction. The constructor has arguments.
-		// https://github.com/nodejs/node/blob/8e42eaec53e7fc70c90c4aaebaf672e89c598afe/lib/internal/fs/utils.js#L158
+	constructor(name: string, stats: fs.Stats) {
+		// @ts-expect-error The constructor has parameters, but they are not represented in types.
+		// https://github.com/nodejs/node/blob/a4cf6b204f0b160480153dc293ae748bf15225f9/lib/internal/fs/utils.js#L164
 		super(name, null);
 
 		this[kStats] = stats;

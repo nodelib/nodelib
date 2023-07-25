@@ -1,4 +1,4 @@
-import * as fs from 'fs';
+import * as fs from 'node:fs';
 
 // https://github.com/nodejs/node/blob/6675505686310771b8016805a381945826aad887/typings/internalBinding/constants.d.ts#L139-L146
 export enum DirentType {

@@ -1,12 +1,12 @@
-import * as assert from 'assert';
-import * as path from 'path';
+import * as assert from 'node:assert';
+import * as path from 'node:path';
 
 import { Settings } from '../settings';
 import * as tests from '../tests';
 import { SyncReader } from './sync';
 
-import type * as sinon from 'sinon';
 import type { IFileSystemAdapter } from '../adapters/fs';
+import type * as sinon from 'sinon';
 
 class TestReader extends SyncReader {
 	public readonly fs: sinon.SinonStubbedInstance<IFileSystemAdapter>;

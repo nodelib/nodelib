@@ -1,5 +1,5 @@
-import * as assert from 'assert';
-import * as fs from 'fs';
+import * as assert from 'node:assert';
+import * as fs from 'node:fs';
 
 import { Dirent, DirentType } from './dirent';
 

@@ -5,7 +5,7 @@ import { FileSystemAdapter } from './adapters/fs';
 
 import type { Options } from './settings';
 import type { AsyncCallback } from './providers';
-import type { Readable } from 'stream';
+import type { Readable } from 'node:stream';
 import type { Entry } from './types';
 
 const fs = new FileSystemAdapter();

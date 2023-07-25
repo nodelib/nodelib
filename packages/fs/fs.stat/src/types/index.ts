@@ -1,4 +1,4 @@
-import type * as fs from 'fs';
+import type * as fs from 'node:fs';
 
 export type Stats = fs.Stats;
 export type ErrnoException = NodeJS.ErrnoException;

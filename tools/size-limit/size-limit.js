@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-const cp = require('child_process');
-const util = require('util');
+const cp = require('node:child_process');
+const util = require('node:util');
 
 const prettyBytes = require('pretty-bytes');
 const chalk = require('chalk');

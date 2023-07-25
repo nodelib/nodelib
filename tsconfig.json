@@ -20,8 +20,6 @@
 		"forceConsistentCasingInFileNames": true,
 		"verbatimModuleSyntax": false,
 
-		"emitDecoratorMetadata": true,
-		"experimentalDecorators": true,
 		"downlevelIteration": true,
 		"declaration": true,
 		"newLine": "lf",

@@ -1,6 +1,6 @@
 {
   "name": "@nodelib/fs.scandir",
-  "version": "2.1.5",
+  "version": "3.0.0",
   "description": "List files and directories inside the specified directory",
   "license": "MIT",
   "repository": "https://github.com/nodelib/nodelib/tree/master/packages/fs/fs.scandir",
@@ -37,12 +37,12 @@
     "bench:async": "hereby bench:async"
   },
   "dependencies": {
-    "@nodelib/fs.stat": "2.0.5",
+    "@nodelib/fs.stat": "3.0.0",
     "run-parallel": "^1.2.0"
   },
   "devDependencies": {
-    "@nodelib/fs.macchiato": "1.0.4",
-    "@types/run-parallel": "^1.1.0",
-    "@nodelib/fs.scandir.previous": "npm:@nodelib/fs.scandir@2"
+    "@nodelib/fs.macchiato": "2.0.0",
+    "@nodelib/fs.scandir.previous": "npm:@nodelib/fs.scandir@2",
+    "@types/run-parallel": "^1.1.0"
   }
 }

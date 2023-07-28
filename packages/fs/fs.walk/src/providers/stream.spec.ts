@@ -1,5 +1,5 @@
-import * as assert from 'assert';
-import { Readable } from 'stream';
+import * as assert from 'node:assert';
+import { Readable } from 'node:stream';
 
 import * as tests from '../tests';
 import { StreamProvider } from './stream';

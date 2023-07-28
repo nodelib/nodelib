@@ -1,4 +1,4 @@
-import type * as fs from 'fs';
+import type * as fs from 'node:fs';
 
 export interface Entry {
 	dirent: Dirent;

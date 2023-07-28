@@ -1,5 +1,5 @@
-import * as assert from 'assert';
-import * as path from 'path';
+import * as assert from 'node:assert';
+import * as path from 'node:path';
 
 import * as sinon from 'sinon';
 import { Dirent, DirentType, Stats, StatsMode } from '@nodelib/fs.macchiato';

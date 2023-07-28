@@ -1,4 +1,4 @@
-import * as fs from 'fs';
+import * as fs from 'node:fs';
 
 import type * as fsStat from '@nodelib/fs.stat';
 import type { Dirent, ErrnoException } from '../types';

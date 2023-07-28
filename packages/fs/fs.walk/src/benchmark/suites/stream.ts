@@ -1,10 +1,10 @@
-import * as path from 'path';
+import * as path from 'node:path';
 
 import * as bencho from 'bencho';
 
 import * as utils from '../utils';
 
-import type { Readable } from 'stream';
+import type { Readable } from 'node:stream';
 import type { Options } from '@nodelib/fs.walk.previous';
 
 type WalkImplementation = 'current' | 'previous';

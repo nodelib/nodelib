@@ -14,7 +14,7 @@
     "crawler"
   ],
   "engines": {
-    "node": "^14.17.0 || >=16.0.0"
+    "node": ">=16.14.0"
   },
   "files": [
     "out/**",
@@ -40,7 +40,7 @@
   },
   "dependencies": {
     "@nodelib/fs.scandir": "2.1.5",
-    "fastq": "^1.13.0"
+    "fastq": "^1.15.0"
   },
   "devDependencies": {
     "@nodelib/fs.macchiato": "1.0.4",

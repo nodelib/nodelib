@@ -42,7 +42,7 @@
   },
   "devDependencies": {
     "@nodelib/fs.macchiato": "2.0.0",
-    "@nodelib/fs.scandir.previous": "npm:@nodelib/fs.scandir@2",
+    "@nodelib/fs.scandir.previous": "npm:@nodelib/fs.scandir@3",
     "@types/run-parallel": "^1.1.0"
   }
 }

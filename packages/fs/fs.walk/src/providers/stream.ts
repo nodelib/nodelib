@@ -33,10 +33,12 @@ export class StreamProvider {
 		return new Readable({
 			objectMode: true,
 			read: () => { /* noop */ },
-			destroy: () => {
+			destroy: (error, callback) => {
 				if (!this.#reader.isDestroyed) {
 					this.#reader.destroy();
 				}
+
+				callback(error);
 			},
 		});
 	}

@@ -90,5 +90,42 @@ describe('Providers → Stream', () => {
 				stream.destroy();
 			});
 		});
+
+		it('should support async iteration', async () => {
+			const reader = new tests.TestAsyncReader();
+			const provider = new StreamProvider(reader);
+
+			const fakeEntry = tests.buildFakeFileEntry();
+			reader.onEntry.yieldsAsync(fakeEntry);
+			reader.onEnd.yieldsAsync();
+
+			const stream = provider.read('directory');
+
+			const results = [];
+			for await (const x of stream) {
+				results.push(x);
+			}
+
+			// Above loop will never complete, and cause a test timeout, if the stream
+			// is not properly closed.
+
+			assert.equal(results[0], fakeEntry);
+		});
+
+		it('should support errors during async iteration', async () => {
+			const reader = new tests.TestAsyncReader();
+			const provider = new StreamProvider(reader);
+
+			const fakeEntry = tests.buildFakeFileEntry();
+			reader.onEntry.yieldsAsync(fakeEntry);
+			reader.onError.yieldsAsync(tests.EPERM_ERRNO);
+
+			const stream = provider.read('directory');
+
+			await assert.rejects(async () => {
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars,no-empty
+				for await (const _ of stream) {}
+			}, tests.EPERM_ERRNO);
+		});
 	});
 });

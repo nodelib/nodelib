@@ -21,6 +21,7 @@ describe('Settings', () => {
 		assert.strictEqual(fsWalkSettings.entryFilter, null);
 		assert.strictEqual(fsWalkSettings.errorFilter, null);
 		assert.deepStrictEqual(fsWalkSettings.fsScandirSettings, fsScandirSettings);
+		assert.strictEqual(fsWalkSettings.signal, undefined);
 	});
 
 	it('should return instance with custom values', () => {

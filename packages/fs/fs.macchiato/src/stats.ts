@@ -2,10 +2,8 @@ import * as fs from 'node:fs';
 
 import type { PrepareOptionsFromClass } from './types';
 
-const isWindows = process.platform === 'win32';
-
-const uid = isWindows ? undefined : process.getuid();
-const gid = isWindows ? undefined : process.getgid();
+const uid = process.getuid?.();
+const gid = process.getgid?.();
 
 // https://github.com/nodejs/node/blob/6675505686310771b8016805a381945826aad887/typings/internalBinding/constants.d.ts#L148-L154
 export enum StatsMode {

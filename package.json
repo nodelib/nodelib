@@ -23,7 +23,7 @@
     "@nodelib-internal/tools.size-limit": "file:tools/size-limit",
     "@times-components/depend": "2.3.0",
     "@types/mocha": "^10.0.1",
-    "@types/node": "^16.18.39",
+    "@types/node": "^18.19.6",
     "@types/sinon": "^10.0.14",
     "bencho": "^0.1.1",
     "eslint": "^8.45.0",

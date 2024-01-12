@@ -5,10 +5,8 @@ import * as sinon from 'sinon';
 
 import { Stats, StatsMode } from './stats';
 
-const isWindows = process.platform === 'win32';
-
-const uid = isWindows ? undefined : process.getuid();
-const gid = isWindows ? undefined : process.getgid();
+const uid = process.getuid?.();
+const gid = process.getgid?.();
 
 const FAKE_DATE = new Date();
 

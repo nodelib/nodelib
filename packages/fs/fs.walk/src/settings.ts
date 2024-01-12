@@ -20,6 +20,7 @@ export interface Options {
 	pathSegmentSeparator?: string;
 	stats?: boolean;
 	throwErrorOnBrokenSymbolicLink?: boolean;
+	signal?: AbortSignal;
 }
 
 export class Settings {
@@ -30,6 +31,7 @@ export class Settings {
 	public readonly errorFilter: ErrorFilterFunction | null;
 	public readonly pathSegmentSeparator: string;
 	public readonly fsScandirSettings: fsScandir.Settings;
+	public readonly signal?: AbortSignal;
 
 	constructor(options: Options = {}) {
 		this.basePath = options.basePath ?? undefined;
@@ -38,6 +40,7 @@ export class Settings {
 		this.entryFilter = options.entryFilter ?? null;
 		this.errorFilter = options.errorFilter ?? null;
 		this.pathSegmentSeparator = options.pathSegmentSeparator ?? path.sep;
+		this.signal = options.signal;
 
 		this.fsScandirSettings = new fsScandir.Settings({
 			followSymbolicLinks: options.followSymbolicLinks,

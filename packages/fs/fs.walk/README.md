@@ -205,6 +205,13 @@ const settings = new fsWalk.Settings({
 });
 ```
 
+### `signal`
+
+* Type: [`AbortSignal`](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal)
+* Default: `undefined`
+
+A signal to abort the walk. Works only with asynchronous walk.
+
 ## Changelog
 
 See the [Releases section of our GitHub project](https://github.com/nodelib/nodelib/releases) for changelog for each release version.

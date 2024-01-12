@@ -183,6 +183,44 @@ describe('Readers → Async', () => {
 
 			reader.read('directory');
 		});
+
+		describe('AbortSignal', () => {
+			it('should abort processing with abort signal', (done) => {
+				const ac = new AbortController();
+
+				const settings = new Settings({ signal: ac.signal });
+				const reader = new TestReader(settings);
+
+				reader.onError((error) => {
+					assert.deepStrictEqual(error.name, 'AbortError');
+
+					done();
+				});
+
+				reader.read('directory');
+
+				setTimeout(() => {
+					ac.abort();
+				}, 100);
+			});
+
+			it('should work with already aborted signal', (done) => {
+				const ac = new AbortController();
+
+				ac.abort();
+
+				const settings = new Settings({ signal: ac.signal });
+				const reader = new TestReader(settings);
+
+				reader.onError((error) => {
+					assert.deepStrictEqual(error.name, 'AbortError');
+
+					done();
+				});
+
+				reader.read('directory');
+			});
+		});
 	});
 
 	describe('.destroy', () => {

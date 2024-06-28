@@ -19,38 +19,30 @@ describe('Scandir', () => {
 	});
 
 	describe('.scandir', () => {
-		it('should work without options or settings', (done) => {
-			scandir('fixtures', (error, entries) => {
-				assert.strictEqual(error, null);
-				assert.ok(entries[0]?.name);
-				assert.ok(entries[0]?.path);
-				assert.ok(entries[0]?.dirent);
-				done();
-			});
+		it('should work without options or settings', async () => {
+			const entries = await scandir('fixtures');
+			assert.ok(entries[0]?.name);
+			assert.ok(entries[0]?.path);
+			assert.ok(entries[0]?.dirent);
 		});
 
-		it('should work with options', (done) => {
-			scandir('fixtures', { stats: true }, (error, entries) => {
-				assert.strictEqual(error, null);
-				assert.ok(entries[0]?.name);
-				assert.ok(entries[0]?.path);
-				assert.ok(entries[0]?.dirent);
-				assert.ok(entries[0]?.stats);
-				done();
-			});
+		it('should work with options', async () => {
+			const entries = await scandir('fixtures', { stats: true });
+			assert.ok(entries[0]?.name);
+			assert.ok(entries[0]?.path);
+			assert.ok(entries[0]?.dirent);
+			assert.ok(entries[0]?.stats);
 		});
 
-		it('should work with settings', (done) => {
+		it('should work with settings', async () => {
 			const settings = new Settings({ stats: true });
 
-			scandir('fixtures', settings, (error, entries) => {
-				assert.strictEqual(error, null);
-				assert.ok(entries[0]?.name);
-				assert.ok(entries[0]?.path);
-				assert.ok(entries[0]?.dirent);
-				assert.ok(entries[0]?.stats);
-				done();
-			});
+			const entries = await scandir('fixtures', settings);
+
+			assert.ok(entries[0]?.name);
+			assert.ok(entries[0]?.path);
+			assert.ok(entries[0]?.dirent);
+			assert.ok(entries[0]?.stats);
 		});
 	});
 

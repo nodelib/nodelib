@@ -6,15 +6,17 @@ import * as utils from '../utils';
 
 import type { Options } from '@nodelib/fs.scandir.previous';
 
+type BenchOptions = Omit<Options, 'fs'>;
+
 type ScandirImplementation = 'current' | 'previous';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ScandirImplFunction = (...args: any[]) => unknown[];
 
 class Scandir {
 	readonly #cwd: string;
-	readonly #options: Options;
+	readonly #options: BenchOptions;
 
-	constructor(cwd: string, options: Options) {
+	constructor(cwd: string, options: BenchOptions) {
 		this.#cwd = cwd;
 		this.#options = options;
 	}

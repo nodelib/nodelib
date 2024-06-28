@@ -1,9 +1,9 @@
 import * as fs from 'node:fs';
 
 import type * as fsStat from '@nodelib/fs.stat';
-import type { Dirent, ErrnoException } from '../types';
+import type { Dirent } from '../types';
 
-export type ReaddirAsynchronousMethod = (filepath: string, options: { withFileTypes: true }, callback: (error: ErrnoException | null, files: Dirent[]) => void) => void;
+export type ReaddirAsynchronousMethod = (filepath: string, options: { withFileTypes: true }) => Promise<Dirent[]>;
 export type ReaddirSynchronousMethod = (filepath: string, options: { withFileTypes: true }) => Dirent[];
 
 export type FileSystemAdapter = fsStat.FileSystemAdapter & {
@@ -12,11 +12,11 @@ export type FileSystemAdapter = fsStat.FileSystemAdapter & {
 };
 
 export const FILE_SYSTEM_ADAPTER: FileSystemAdapter = {
-	lstat: fs.lstat,
-	stat: fs.stat,
+	lstat: fs.promises.lstat,
+	stat: fs.promises.stat,
 	lstatSync: fs.lstatSync,
 	statSync: fs.statSync,
-	readdir: fs.readdir,
+	readdir: fs.promises.readdir,
 	readdirSync: fs.readdirSync,
 };
 

@@ -1,8 +1,6 @@
 import * as fs from 'node:fs';
 
-import type { ErrnoException } from '../types';
-
-export type StatAsynchronousMethod = (path: string, callback: (error: ErrnoException | null, stats: fs.Stats) => void) => void;
+export type StatAsynchronousMethod = (path: string) => Promise<fs.Stats>;
 export type StatSynchronousMethod = (path: string) => fs.Stats;
 
 export interface FileSystemAdapter {
@@ -13,8 +11,8 @@ export interface FileSystemAdapter {
 }
 
 export const FILE_SYSTEM_ADAPTER: FileSystemAdapter = {
-	lstat: fs.lstat,
-	stat: fs.stat,
+	lstat: fs.promises.lstat,
+	stat: fs.promises.stat,
 	lstatSync: fs.lstatSync,
 	statSync: fs.statSync,
 };

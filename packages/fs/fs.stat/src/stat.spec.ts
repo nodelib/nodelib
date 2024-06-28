@@ -20,30 +20,21 @@ describe('Stat', () => {
 	});
 
 	describe('.stat', () => {
-		it('should work without options or settings', (done) => {
-			stat('fixtures/b', (error, stats) => {
-				assert.strictEqual(error, null);
-				assert.ok(stats);
-				done();
-			});
+		it('should work without options or settings', async () => {
+			const stats = await stat('fixtures/b');
+			assert.ok(stats);
 		});
 
-		it('should work with options', (done) => {
-			stat('fixtures/b', { markSymbolicLink: true }, (error, stats) => {
-				assert.strictEqual(error, null);
-				assert.strictEqual(stats.isSymbolicLink(), true);
-				done();
-			});
+		it('should work with options', async () => {
+			const stats = await stat('fixtures/b', { markSymbolicLink: true });
+			assert.strictEqual(stats.isSymbolicLink(), true);
 		});
 
-		it('should work with settings', (done) => {
+		it('should work with settings', async () => {
 			const settings = new Settings({ markSymbolicLink: true });
 
-			stat('fixtures/b', settings, (error, stats) => {
-				assert.strictEqual(error, null);
-				assert.strictEqual(stats.isSymbolicLink(), true);
-				done();
-			});
+			const stats = await stat('fixtures/b', settings);
+			assert.strictEqual(stats.isSymbolicLink(), true);
 		});
 	});
 

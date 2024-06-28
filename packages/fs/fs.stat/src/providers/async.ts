@@ -1,44 +1,26 @@
 import type { Settings } from '../settings';
-import type { AsyncCallback, ErrnoException, Stats } from '../types';
+import type { Stats } from '../types';
 
-type FailureCallback = (error: ErrnoException | null) => void;
+export async function read(path: string, settings: Settings): Promise<Stats> {
+	const lstat = await settings.fs.lstat(path);
 
-export function read(path: string, settings: Settings, callback: AsyncCallback): void {
-	settings.fs.lstat(path, (lstatError, lstat) => {
-		if (lstatError !== null) {
-			callFailureCallback(callback, lstatError);
-			return;
+	if (!lstat.isSymbolicLink() || !settings.followSymbolicLink) {
+		return lstat;
+	}
+
+	try {
+		const stat = await settings.fs.stat(path);
+
+		if (settings.markSymbolicLink) {
+			stat.isSymbolicLink = () => true;
 		}
 
-		if (!lstat.isSymbolicLink() || !settings.followSymbolicLink) {
-			callSuccessCallback(callback, lstat);
-			return;
+		return stat;
+	} catch (error) {
+		if (!settings.throwErrorOnBrokenSymbolicLink) {
+			return lstat;
 		}
 
-		settings.fs.stat(path, (statError, stat) => {
-			if (statError !== null) {
-				if (settings.throwErrorOnBrokenSymbolicLink) {
-					callFailureCallback(callback, statError);
-					return;
-				}
-
-				callSuccessCallback(callback, lstat);
-				return;
-			}
-
-			if (settings.markSymbolicLink) {
-				stat.isSymbolicLink = () => true;
-			}
-
-			callSuccessCallback(callback, stat);
-		});
-	});
-}
-
-function callFailureCallback(callback: AsyncCallback, error: ErrnoException | null): void {
-	(callback as FailureCallback)(error);
-}
-
-function callSuccessCallback(callback: AsyncCallback, result: Stats): void {
-	callback(null, result);
+		throw error;
+	}
 }

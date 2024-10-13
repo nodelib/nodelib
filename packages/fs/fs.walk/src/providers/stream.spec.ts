@@ -1,5 +1,5 @@
 import * as assert from 'node:assert';
-import { Readable } from 'node:stream';
+import { ReadableStream } from 'node:stream/web';
 
 import * as tests from '../tests';
 import { StreamProvider } from './stream';
@@ -12,7 +12,7 @@ describe('Providers → Stream', () => {
 
 			const stream = provider.read('directory');
 
-			assert.ok(stream instanceof Readable);
+			assert.ok(stream instanceof ReadableStream);
 		});
 
 		it('should call the reader with correct set of arguments', () => {
@@ -32,11 +32,12 @@ describe('Providers → Stream', () => {
 
 			const stream = provider.read('directory');
 
-			const actual = await new Promise((resolve) => {
-				stream.once('error', resolve);
-			});
-
-			assert.deepStrictEqual(actual, tests.EPERM_ERRNO);
+			try {
+				await stream.getReader().read();
+				assert.fail('Expected error');
+			} catch (error) {
+				assert.deepStrictEqual(error, tests.EPERM_ERRNO);
+			}
 		});
 
 		it('should pass the entry to the stream', async () => {
@@ -48,11 +49,10 @@ describe('Providers → Stream', () => {
 
 			const stream = provider.read('directory');
 
-			const actual = await new Promise((resolve) => {
-				stream.on('data', resolve);
-			});
+			const result = await stream.getReader().read();
 
-			assert.deepStrictEqual(actual, fakeEntry);
+			assert.ok(!result.done);
+			assert.deepStrictEqual(result.value, fakeEntry);
 		});
 
 		it('should close the stream when passing null as an entry', async () => {
@@ -63,32 +63,25 @@ describe('Providers → Stream', () => {
 
 			const stream = provider.read('directory');
 
-			// Manually start the stream, emulating reading.
-			stream.resume();
+			// // Manually start the stream, emulating reading.
+			// stream.resume();
 
-			const actual = await new Promise((resolve) => {
-				stream.once('end', () => {
-					resolve(true);
-				});
-			});
+			const actual = [];
+			for await (const value of stream) {
+				actual.push(value);
+			}
 
-			assert.ok(actual);
+			assert.equal(actual.length, 0);
 		});
 
-		it('should do not destroy the reader when it has already been destroyed', () => {
+		it('should do not destroy the reader when it has already been destroyed', async () => {
 			const reader = new tests.TestAsyncReader();
 			const provider = new StreamProvider(reader);
-
 			const stream = provider.read('directory');
 
-			assert.ok(!stream.destroyed);
+			await stream.cancel();
 
-			stream.destroy();
-
-			assert.ok(stream.destroyed);
-			assert.doesNotThrow(() => {
-				stream.destroy();
-			});
+			await assert.doesNotReject(stream.cancel());
 		});
 
 		it('should support async iteration', async () => {
@@ -112,7 +105,7 @@ describe('Providers → Stream', () => {
 			assert.equal(results[0], fakeEntry);
 		});
 
-		it('should support errors during async iteration', async () => {
+		it('should support errors during async iteration', () => {
 			const reader = new tests.TestAsyncReader();
 			const provider = new StreamProvider(reader);
 
@@ -122,7 +115,7 @@ describe('Providers → Stream', () => {
 
 			const stream = provider.read('directory');
 
-			await assert.rejects(async () => {
+			return assert.rejects(async () => {
 				// eslint-disable-next-line @typescript-eslint/no-unused-vars,no-empty
 				for await (const _ of stream) {}
 			}, tests.EPERM_ERRNO);

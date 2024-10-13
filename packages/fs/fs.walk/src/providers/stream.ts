@@ -1,45 +1,47 @@
-import { Readable } from 'node:stream';
+import { ReadableStream } from 'node:stream/web';
 
 import type { IAsyncReader } from '../readers';
 
 export class StreamProvider {
 	readonly #reader: IAsyncReader;
-	readonly #stream: Readable;
+	#isDestroyed: boolean;
 
 	constructor(reader: IAsyncReader) {
 		this.#reader = reader;
-		this.#stream = this.#createOutputStream();
+		this.#isDestroyed = false;
 	}
 
-	public read(root: string): Readable {
-		this.#reader.onError((error) => {
-			this.#stream.emit('error', error);
-		});
+	public read(root: string): ReadableStream {
+		return new ReadableStream({
+			start: (controller) => {
+				this.#reader.onError((error) => {
+					this.#destroy();
+					controller.error(error);
+				});
 
-		this.#reader.onEntry((entry) => {
-			this.#stream.push(entry);
-		});
+				this.#reader.onEntry((entry) => {
+					if (!this.#isDestroyed) {
+						controller.enqueue(entry);
+					}
+				});
 
-		this.#reader.onEnd(() => {
-			this.#stream.push(null);
-		});
+				this.#reader.onEnd(() => {
+					this.#destroy();
+					controller.close();
+				});
 
-		this.#reader.read(root);
-
-		return this.#stream;
-	}
-
-	#createOutputStream(): Readable {
-		return new Readable({
-			objectMode: true,
-			read: () => { /* noop */ },
-			destroy: (error, callback) => {
-				if (!this.#reader.isDestroyed) {
-					this.#reader.destroy();
-				}
-
-				callback(error);
+				this.#reader.read(root);
+			},
+			cancel: () => {
+				this.#destroy();
 			},
 		});
+	}
+
+	#destroy(): void {
+		if (!this.#isDestroyed) {
+			this.#reader.destroy();
+			this.#isDestroyed = true;
+		}
 	}
 }

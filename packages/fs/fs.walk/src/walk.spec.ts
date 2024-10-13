@@ -6,21 +6,19 @@ import * as rimraf from 'rimraf';
 import { walk, walkSync, walkStream } from './walk';
 import { Settings } from './settings';
 
-import type { Readable } from 'node:stream';
+import type { ReadableStream } from 'node:stream/web';
 import type { ErrnoException, Entry } from './types';
 
 const entryFilter = (entry: Entry): boolean => !entry.dirent.isDirectory();
 
-function streamToPromise(stream: Readable): Promise<Entry[]> {
+async function streamToPromise(stream: ReadableStream): Promise<Entry[]> {
 	const entries: Entry[] = [];
 
-	return new Promise((resolve, reject) => {
-		stream.on('data', (entry: Entry) => entries.push(entry));
-		stream.once('error', reject);
-		stream.once('end', () => {
-			resolve(entries);
-		});
-	});
+	for await (const entry of stream as ReadableStream<Entry>) {
+		entries.push(entry);
+	}
+
+	return entries;
 }
 
 describe('Package', () => {

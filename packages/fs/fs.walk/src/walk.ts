@@ -5,7 +5,7 @@ import { FileSystemAdapter } from './adapters/fs';
 
 import type { Options } from './settings';
 import type { AsyncCallback } from './providers';
-import type { Readable } from 'node:stream';
+import type { ReadableStream } from 'node:stream/web';
 import type { Entry } from './types';
 
 const fs = new FileSystemAdapter();
@@ -37,7 +37,7 @@ export function walkSync(directory: string, optionsOrSettings?: Options | Settin
 	return provider.read(directory);
 }
 
-export function walkStream(directory: string, optionsOrSettings?: Options | Settings): Readable {
+export function walkStream(directory: string, optionsOrSettings?: Options | Settings): ReadableStream {
 	const settings = getSettings(optionsOrSettings);
 
 	const reader = new AsyncReader(fs, settings);

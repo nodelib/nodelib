@@ -3,7 +3,7 @@
   "version": "3.0.0",
   "description": "List files and directories inside the specified directory",
   "license": "MIT",
-  "repository": "https://github.com/nodelib/nodelib/tree/master/packages/fs/fs.scandir",
+  "repository": "https://github.com/madtisa/nodelib/tree/master/packages/fs/fs.scandir",
   "keywords": [
     "NodeLib",
     "fs",

@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "description": "A set of classes for easy testing of built-in structures of FS",
   "license": "MIT",
-  "repository": "https://github.com/nodelib/nodelib/tree/master/packages/fs/fs.macchiato",
+  "repository": "https://github.com/madtisa/nodelib/tree/master/packages/fs/fs.macchiato",
   "keywords": [
     "NodeLib",
     "fs",

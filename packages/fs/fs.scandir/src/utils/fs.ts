@@ -27,11 +27,13 @@ export class DirentFromStats extends fs.Dirent {
 for (const key of Reflect.ownKeys(fs.Dirent.prototype)) {
 	const name = key as DirentStatsKeysIntersection | 'constructor';
 
-	if (name === 'constructor') {
+	const descriptor = Object.getOwnPropertyDescriptor(fs.Dirent.prototype, name);
+
+	if (descriptor && (!(descriptor.writable ?? false) && !descriptor.set)) {
 		continue;
 	}
 
-	DirentFromStats.prototype[name] = function () {
-		return this[kStats][name]();
+	DirentFromStats.prototype[name] = function <T>(): T {
+		return this[kStats][name]() as T;
 	};
 }

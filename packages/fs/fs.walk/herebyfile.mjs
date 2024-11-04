@@ -29,7 +29,7 @@ function getRepositoryRoot() {
 async function benchTask(suite, spec) {
 	const root = getRepositoryRoot();
 	const label = spec.label;
-	const implementations = spec.implementations;
+	const implementations = spec.implementations.filter((it) => (spec.exclude ?? []).includes(it) === false);
 	const options = spec.options ?? {};
 
 	await execa('bencho', [
@@ -84,6 +84,7 @@ function makeBenchSuiteTask(label, suite, implementations = []) {
 			label,
 			implementations,
 			options: { stats: true },
+			exclude: ['native'],
 		}),
 	});
 
@@ -94,6 +95,7 @@ function makeBenchSuiteTask(label, suite, implementations = []) {
 			label,
 			implementations,
 			options: { followSymbolicLinks: true, throwErrorOnBrokenSymbolicLink: false },
+			exclude: ['native'],
 		}),
 	});
 

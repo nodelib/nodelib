@@ -33,7 +33,7 @@ async function benchTask(suite, spec) {
 	const options = spec.options ?? {};
 
 	await execa('bencho', [
-		`'node ${suite} {impl} ${root}'`,
+		`"node ${suite} {impl} ${root}"`,
 		`-n "${label} {impl} <root>"`,
 		`-w ${WARMUP_COUNT}`,
 		`-r ${RUNS_COUNT}`,
@@ -109,7 +109,7 @@ export const {
 	asyncTask,
 	streamTask,
 } = {
-	syncTask: makeBenchSuiteTask('sync', REGRESSION_SYNC_SUITE, ['current', 'previous']),
-	asyncTask: makeBenchSuiteTask('async', REGRESSION_ASYNC_SUITE, ['current', 'previous']),
+	syncTask: makeBenchSuiteTask('sync', REGRESSION_SYNC_SUITE, ['current', 'previous', 'native']),
+	asyncTask: makeBenchSuiteTask('async', REGRESSION_ASYNC_SUITE, ['current', 'previous', 'native']),
 	streamTask: makeBenchSuiteTask('stream', REGRESSION_STREAM_SUITE, ['current', 'previous']),
 };

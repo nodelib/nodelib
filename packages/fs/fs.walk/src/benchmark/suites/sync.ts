@@ -6,7 +6,7 @@ import * as utils from '../utils';
 
 import type { Options } from '@nodelib/fs.walk.previous';
 
-type WalkImplementation = 'current' | 'previous';
+type WalkImplementation = 'current' | 'native' | 'previous';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type WalkImplFunction = (...args: any[]) => unknown[];
 
@@ -46,6 +46,34 @@ class Walk {
 		this.#measure(() => walk.walkSync(this.#cwd, settings));
 	}
 
+	public async measureNative(): Promise<void> {
+		const fs = await utils.importAndMeasure(() => import('node:fs'));
+
+		this.#measure(() => {
+			const dirents = fs.readdirSync(this.#cwd, {
+				withFileTypes: true,
+				recursive: true,
+			});
+
+			const hasDeepFilter = this.#options.deepFilter !== undefined;
+			const hasEntryFilter = this.#options.entryFilter !== undefined;
+
+			return dirents.filter((dirent) => {
+				if (hasDeepFilter && dirent.isDirectory()) {
+					return dirent.name !== '.git' && dirent.name !== 'node_modules';
+				}
+
+				if (hasEntryFilter && dirent.isFile()) {
+					const extname = dirent.name.slice(-3);
+
+					return extname === '.js' || extname === '.ts';
+				}
+
+				return true;
+			});
+		});
+	}
+
 	#measure(function_: WalkImplFunction): void {
 		const timeStart = utils.timeStart();
 
@@ -79,6 +107,11 @@ class Walk {
 
 		case 'previous': {
 			await walk.measurePreviousVersion();
+			break;
+		}
+
+		case 'native': {
+			await walk.measureNative();
 			break;
 		}
 

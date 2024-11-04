@@ -7,7 +7,7 @@ import * as utils from '../utils';
 
 import type { Options } from '@nodelib/fs.walk.previous';
 
-type WalkImplementation = 'current' | 'previous';
+type WalkImplementation = 'current' | 'native' | 'previous';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type WalkImplFunction = (...args: any[]) => Promise<unknown[]>;
 
@@ -51,6 +51,31 @@ class Walk {
 		await this.#measure(() => action(this.#cwd, settings));
 	}
 
+	public async measureNative(): Promise<void> {
+		const fs = await utils.importAndMeasure(() => import('node:fs'));
+
+		await this.#measure(async () => {
+			const dirents = await fs.promises.readdir(this.#cwd, { withFileTypes: true, recursive: true });
+
+			const hasDeepFilter = this.#options.deepFilter !== undefined;
+			const hasEntryFilter = this.#options.entryFilter !== undefined;
+
+			return dirents.filter((dirent) => {
+				if (hasDeepFilter && dirent.isDirectory()) {
+					return dirent.name !== '.git' && dirent.name !== 'node_modules';
+				}
+
+				if (hasEntryFilter && dirent.isFile()) {
+					const extname = dirent.name.slice(-3);
+
+					return extname === '.js' || extname === '.ts';
+				}
+
+				return true;
+			});
+		});
+	}
+
 	async #measure(function_: WalkImplFunction): Promise<void> {
 		const timeStart = utils.timeStart();
 
@@ -84,6 +109,11 @@ class Walk {
 
 		case 'previous': {
 			await walk.measurePreviousVersion();
+			break;
+		}
+
+		case 'native': {
+			await walk.measureNative();
 			break;
 		}
 

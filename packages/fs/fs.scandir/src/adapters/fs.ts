@@ -6,10 +6,10 @@ import type { Dirent, ErrnoException } from '../types';
 export type ReaddirAsynchronousMethod = (filepath: string, options: { withFileTypes: true }, callback: (error: ErrnoException | null, files: Dirent[]) => void) => void;
 export type ReaddirSynchronousMethod = (filepath: string, options: { withFileTypes: true }) => Dirent[];
 
-export type FileSystemAdapter = fsStat.FileSystemAdapter & {
+export type FileSystemAdapter = {
 	readdir: ReaddirAsynchronousMethod;
 	readdirSync: ReaddirSynchronousMethod;
-};
+} & fsStat.FileSystemAdapter;
 
 export const FILE_SYSTEM_ADAPTER: FileSystemAdapter = {
 	lstat: fs.lstat,

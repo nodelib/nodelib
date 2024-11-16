@@ -4,6 +4,7 @@ import * as util from 'node:util';
 
 import * as sinon from 'sinon';
 import { Dirent, DirentType, Stats, StatsMode } from '@nodelib/fs.macchiato';
+import { describe, it } from 'mocha';
 
 import { Settings } from '../settings';
 import * as utils from '../utils';

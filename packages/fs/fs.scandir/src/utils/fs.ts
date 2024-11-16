@@ -32,7 +32,7 @@ for (const key of Reflect.ownKeys(fs.Dirent.prototype)) {
 		continue;
 	}
 
-	DirentFromStats.prototype[name] = function <T>(): T {
-		return this[kStats][name]() as T;
+	DirentFromStats.prototype[name] = function () {
+		return this[kStats][name]();
 	};
 }

@@ -1,5 +1,7 @@
 import * as assert from 'node:assert';
 
+import { describe, it } from 'mocha';
+
 import * as common from './common';
 
 describe('Readers → Common', () => {
@@ -16,9 +18,9 @@ describe('Readers → Common', () => {
 
 			// Windows
 			assert.strictEqual(common.joinPathSegments('C:/', 'Users', '/'), 'C:/Users');
-			assert.strictEqual(common.joinPathSegments('C:\\', 'Users', '\\'), 'C:\\Users');
+			assert.strictEqual(common.joinPathSegments('C:\\', 'Users', '\\'), String.raw`C:\Users`);
 			assert.strictEqual(common.joinPathSegments('//?/C:/', 'Users', '/'), '//?/C:/Users');
-			assert.strictEqual(common.joinPathSegments('\\\\?\\C:\\', 'Users', '\\'), '\\\\?\\C:\\Users');
+			assert.strictEqual(common.joinPathSegments('\\\\?\\C:\\', 'Users', '\\'), String.raw`\\?\C:\Users`);
 		});
 	});
 });

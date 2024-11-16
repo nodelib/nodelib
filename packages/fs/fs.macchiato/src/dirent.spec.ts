@@ -1,6 +1,8 @@
 import * as assert from 'node:assert';
 import * as fs from 'node:fs';
 
+import { describe, it } from 'mocha';
+
 import { Dirent, DirentType } from './dirent';
 
 describe('Dirent', () => {

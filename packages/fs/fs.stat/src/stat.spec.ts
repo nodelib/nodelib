@@ -2,6 +2,7 @@ import * as assert from 'node:assert';
 import * as fs from 'node:fs';
 
 import * as rimraf from 'rimraf';
+import { after, before, describe, it } from 'mocha';
 
 import { stat, statSync } from './stat';
 import { Settings } from './settings';
@@ -23,7 +24,7 @@ describe('Stat', () => {
 		it('should work without options or settings', (done) => {
 			stat('fixtures/b', (error, stats) => {
 				assert.strictEqual(error, null);
-				assert.ok(stats);
+				assert.ok(stats instanceof fs.Stats);
 				done();
 			});
 		});
@@ -51,7 +52,7 @@ describe('Stat', () => {
 		it('should work without options or settings', () => {
 			const actual = statSync('fixtures/b');
 
-			assert.ok(actual);
+			assert.ok(actual instanceof fs.Stats);
 		});
 
 		it('should work with options', () => {

@@ -1,6 +1,8 @@
 import * as assert from 'node:assert';
 import * as path from 'node:path';
 
+import { describe, it } from 'mocha';
+
 import { Settings } from '../settings';
 import * as tests from '../tests';
 import { AsyncReader } from './async';
@@ -30,7 +32,7 @@ describe('Readers → Async', () => {
 			reader.fs.scandir.yields(tests.EPERM_ERRNO);
 
 			reader.onError((error) => {
-				assert.ok(error);
+				assert.equal(error.code, 'EPERM');
 				done();
 			});
 
@@ -66,7 +68,7 @@ describe('Readers → Async', () => {
 			 * If the behavior is broken, then a third scandir call will trigger an unhandled error.
 			 */
 			reader.onError((error) => {
-				assert.ok(error);
+				assert.equal(error.code, 'EPERM');
 				done();
 			});
 

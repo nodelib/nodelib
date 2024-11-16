@@ -40,6 +40,7 @@ jobs:
         run: npm run compile
       - name: Run hygiene checks
         run: npm run lint
+        if: ${{ matrix.node_version >= 18 }}
       - name: Run dependencies checks
         run: npm run lint:dependencies
       - name: Run size limit check

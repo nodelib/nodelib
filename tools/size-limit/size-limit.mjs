@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 
-const cp = require('node:child_process');
-const util = require('node:util');
+import { exec } from 'node:child_process';
+import { promisify } from 'node:util';
 
-const prettyBytes = require('pretty-bytes');
-const chalk = require('chalk');
+import prettyBytes from 'pretty-bytes';
+import { Chalk } from 'chalk';
 
-chalk.level = 1;
+const chalk = new Chalk({ level: 1 });
 
-const executeCommand = util.promisify(cp.exec);
+const executeCommand = promisify(exec);
 
 const RATIO_LIMIT = 10;
 const LERNA_PACKAGE_NAME = process.env.LERNA_PACKAGE_NAME;

@@ -17,9 +17,9 @@ export enum StatsMode {
 	Block = 24_576,
 }
 
-type StatsOptions = PrepareOptionsFromClass<fs.Stats> & {
+type StatsOptions = {
 	mode?: StatsMode;
-};
+} & PrepareOptionsFromClass<fs.Stats>;
 
 export class Stats extends fs.Stats implements fs.Stats {
 	constructor(options: StatsOptions = {}) {

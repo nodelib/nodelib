@@ -1,6 +1,8 @@
 import * as assert from 'node:assert';
 import { Readable } from 'node:stream';
 
+import { describe, it } from 'mocha';
+
 import * as tests from '../tests';
 import { StreamProvider } from './stream';
 
@@ -72,7 +74,7 @@ describe('Providers → Stream', () => {
 				});
 			});
 
-			assert.ok(actual);
+			assert.equal(actual, true);
 		});
 
 		it('should do not destroy the reader when it has already been destroyed', () => {

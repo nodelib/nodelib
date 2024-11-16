@@ -2,6 +2,7 @@ import * as assert from 'node:assert';
 import * as fs from 'node:fs';
 
 import * as rimraf from 'rimraf';
+import { after, before, describe, it } from 'mocha';
 
 import { walk, walkSync, walkStream } from './walk';
 import { Settings } from './settings';

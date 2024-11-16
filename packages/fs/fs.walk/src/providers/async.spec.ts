@@ -1,6 +1,7 @@
 import * as assert from 'node:assert';
 
 import * as sinon from 'sinon';
+import { describe, it } from 'mocha';
 
 import * as tests from '../tests';
 import { AsyncProvider } from './async';

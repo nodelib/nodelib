@@ -1,6 +1,7 @@
 import * as assert from 'node:assert';
 
 import * as fsScandir from '@nodelib/fs.scandir';
+import { describe, it } from 'mocha';
 
 import { Settings } from './settings';
 

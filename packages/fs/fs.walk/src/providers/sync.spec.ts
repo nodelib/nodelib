@@ -1,19 +1,22 @@
 import * as assert from 'node:assert';
 
+import { describe, it } from 'mocha';
+
 import * as tests from '../tests';
 import { SyncProvider } from './sync';
 
+import type { SinonStubbedInstance } from 'sinon';
 import type { ISyncReader } from '../readers';
 
 class TestProvider extends SyncProvider {
-	public readonly reader: sinon.SinonStubbedInstance<ISyncReader>;
+	public readonly reader: SinonStubbedInstance<ISyncReader>;
 
 	constructor(
 		reader: ISyncReader = new tests.TestSyncReader(),
 	) {
 		super(reader);
 
-		this.reader = reader as sinon.SinonStubbedInstance<ISyncReader>;
+		this.reader = reader as SinonStubbedInstance<ISyncReader>;
 	}
 }
 

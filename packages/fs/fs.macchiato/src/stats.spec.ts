@@ -128,10 +128,10 @@ describe('Stats', () => {
 		assert.strictEqual(stats.mtimeMs, date.getTime());
 		assert.strictEqual(stats.ctimeMs, date.getTime());
 		assert.strictEqual(stats.birthtimeMs, date.getTime());
-		assert.deepStrictEqual(stats.atime, date);
-		assert.deepStrictEqual(stats.mtime, date);
-		assert.deepStrictEqual(stats.ctime, date);
-		assert.deepStrictEqual(stats.birthtime, date);
+		assert.strictEqual(stats.atime.getTime(), date.getTime());
+		assert.strictEqual(stats.mtime.getTime(), date.getTime());
+		assert.strictEqual(stats.ctime.getTime(), date.getTime());
+		assert.strictEqual(stats.birthtime.getTime(), date.getTime());
 		assert.ok(!stats.isFile());
 		assert.ok(stats.isDirectory());
 		assert.ok(!stats.isSymbolicLink());

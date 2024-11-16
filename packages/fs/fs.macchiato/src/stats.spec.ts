@@ -2,6 +2,7 @@ import * as assert from 'node:assert';
 import * as fs from 'node:fs';
 
 import * as sinon from 'sinon';
+import { after, before, describe, it } from 'mocha';
 
 import { Stats, StatsMode } from './stats';
 

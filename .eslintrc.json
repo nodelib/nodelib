@@ -1,8 +1,0 @@
-{
-	"extends": "mrmlnc",
-	"rules": {
-		// https://github.com/benmosher/eslint-plugin-import/issues/1174
-		// https://github.com/benmosher/eslint-plugin-import/issues/1214
-		"import/no-extraneous-dependencies": "off"
-	}
-}

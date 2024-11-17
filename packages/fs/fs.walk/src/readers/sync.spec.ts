@@ -33,6 +33,64 @@ describe('Readers → Sync', () => {
 			assert.throws(() => reader.read('non-exist-directory'), { code: 'EPERM' });
 		});
 
+		it('should emit "error" event when the user entry filter throws an error', () => {
+			const errorFromUserFilter = new Error('This is an error from user filter.');
+
+			const settings = new Settings({
+				entryFilter: () => {
+					throw errorFromUserFilter;
+				},
+			});
+
+			const reader = new TestReader(settings);
+
+			const fakeDirectoryEntry = tests.buildFakeDirectoryEntry();
+
+			reader.fs.scandirSync.onFirstCall().returns([fakeDirectoryEntry]);
+
+			assert.throws(() => reader.read('directory'), errorFromUserFilter);
+		});
+
+		it('should emit "error" event when the user deep filter throws an error', () => {
+			const errorFromUserFilter = new Error('This is an error from user filter.');
+
+			const settings = new Settings({
+				deepFilter: () => {
+					throw errorFromUserFilter;
+				},
+			});
+
+			const reader = new TestReader(settings);
+
+			const fakeDirectoryEntry = tests.buildFakeDirectoryEntry();
+
+			reader.fs.scandirSync.onFirstCall().returns([fakeDirectoryEntry]);
+
+			assert.throws(() => reader.read('directory'), errorFromUserFilter);
+		});
+
+		it('should intercept errors from filters and redirect them to the error filtering function', () => {
+			const errorFromUserFilter = new Error('This is an error from user filter.');
+
+			const settings = new Settings({
+				deepFilter: () => {
+					throw errorFromUserFilter;
+				},
+				// When true, the error is filtered. Otherwise, the error will be emitted.
+				errorFilter: (error) => {
+					return error !== errorFromUserFilter;
+				},
+			});
+
+			const reader = new TestReader(settings);
+
+			const fakeDirectoryEntry = tests.buildFakeDirectoryEntry();
+
+			reader.fs.scandirSync.onFirstCall().returns([fakeDirectoryEntry]);
+
+			assert.throws(() => reader.read('directory'), errorFromUserFilter);
+		});
+
 		it('should return empty array when the first call of scandir is broken but this error can be suppressed', () => {
 			const settings = new Settings({
 				errorFilter: (error) => error.code === 'EPERM',

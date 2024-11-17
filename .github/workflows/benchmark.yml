@@ -34,14 +34,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Install root dependencies
-        run: npm install
-      - name: Link package dependencies
-        run: npx lerna bootstrap
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+      - name: Install dependencies
+        run: pnpm install
       - name: Compile sources
-        run: npm run compile
+        run: pnpm run compile
       - name: Benchmark
-        run: npm run bench
+        run: pnpm run bench
         env:
           WARMUP_COUNT: ${{ inputs.warmup_count }}
           RUNS_COUNT: ${{ inputs.runs_count }}

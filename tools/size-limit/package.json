@@ -3,13 +3,18 @@
   "name": "@nodelib-internal/tools.size-limit",
   "version": "0.0.0",
   "bin": {
-    "tools.size-limit": "size-limit.mjs"
+    "tools-size-limit": "./size-limit.mjs"
   },
   "scripts": {
-    "lint": "eslint \"**/*.mjs\" --cache"
+    "lint:code": "eslint \"**/*.mjs\" --cache"
   },
   "dependencies": {
     "chalk": "^5.3.0",
     "pretty-bytes": "^6.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "18.19.63",
+    "eslint": "9.14.0",
+    "eslint-config-mrmlnc": "5.0.0"
   }
 }

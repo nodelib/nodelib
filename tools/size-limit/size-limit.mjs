@@ -11,11 +11,11 @@ const chalk = new Chalk({ level: 1 });
 const executeCommand = promisify(exec);
 
 const RATIO_LIMIT = 10;
-const LERNA_PACKAGE_NAME = process.env.LERNA_PACKAGE_NAME;
+const PACKAGE_NAME = process.env.npm_package_name;
 const TOOLS_SIZE_LIMIT_SKIP = process.env.TOOLS_SIZE_LIMIT_SKIP;
 
 async function main() {
-	const remote = await getPackageSize(`${LERNA_PACKAGE_NAME}@latest`);
+	const remote = await getPackageSize(`${PACKAGE_NAME}@latest`);
 	const local = await getPackageSize('.');
 
 	if (remote === null) {

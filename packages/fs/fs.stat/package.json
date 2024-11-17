@@ -23,14 +23,25 @@
   "typings": "out/index.d.ts",
   "scripts": {
     "clean": "rimraf tsconfig.tsbuildinfo out",
-    "lint": "eslint \"src/**/*.ts\" --cache",
+    "lint:code": "eslint \"src/**/*.ts\" --cache",
+    "lint:size": "tools-size-limit",
     "compile": "tsc -b .",
     "compile:watch": "tsc -b . --watch --sourceMap",
     "test": "mocha \"out/**/*.spec.js\" -s 0",
-    "build": "npm run clean && npm run compile && npm run lint && npm test",
-    "watch": "npm run clean && npm run compile:watch"
+    "build": "pnpm run clean && pnpm run compile && pnpm run lint && npm test",
+    "watch": "pnpm run clean && pnpm run compile:watch"
   },
   "devDependencies": {
-    "@nodelib/fs.macchiato": "2.0.0"
+    "@nodelib/fs.macchiato": "workspace:*",
+    "@types/mocha": "10.0.9",
+    "@types/node": "18.19.63",
+    "@types/sinon": "17.0.3",
+    "eslint": "9.14.0",
+    "eslint-config-mrmlnc": "5.0.0",
+    "mocha": "10.8.2",
+    "rimraf": "6.0.1",
+    "sinon": "19.0.2",
+    "typescript": "5.6.3",
+    "@nodelib-internal/tools.size-limit": "workspace:*"
   }
 }

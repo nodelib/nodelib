@@ -31,41 +31,40 @@ If you find your issue already exists, make relevant comments and add your [reac
 * Install [Node.js](https://nodejs.org/en/).
 * Fork the project and clone the fork repository. ([how to create fork?](https://help.github.com/articles/fork-a-repo/#fork-an-example-repository)).
 * Create a topic branch from the master branch.
-* Run `npm i && npx lerna bootstrap` to install dependencies for all packages.
+* Run `pnpm isntall` to install dependencies for all packages.
 
 #### Setup
 
-> 📖 Only `npm` is supported for working with this repository. Problems with other package managers will be ignored.
+> 📖 Only `pnpm` is supported for working with this repository. Problems with other package managers will be ignored.
 
 ```console
 git clone https://github.com/nodelib/nodelib
 cd nodelib
-npm install
-npx lerna bootstrap
+pnpm install
 ```
 
 Then you can either run:
 
 ```console
-npm run build
+pnpm build
 ```
 
 For make changes, run the watch:
 
 ```console
-npx lerna run watch --scope=@nodelib/PACKAGE_NAME --stream
+pnpm run watch --filter ./packages/<package_name>
 ```
 
 To run tests in only one package:
 
 ```console
-npx lerna run test --scope=@nodelib/PACKAGE_NAME --stream
+pnpm run test --filter ./packages/<package_name>
 ```
 
 To run tests in all packages:
 
 ```console
-npm run test
+pnpm test
 ```
 
 #### Commit

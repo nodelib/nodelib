@@ -5,35 +5,26 @@
   "description": "A collection of standard libraries for Node.js",
   "license": "MIT",
   "engines": {
-    "node": ">=16.14.0"
+    "node": ">=16.14.0",
+    "pnpm": ">=9.13.2"
   },
+  "packageManager": "pnpm@9.13.2",
   "scripts": {
-    "preversion": "npm run lint:size",
-    "clean": "lerna run --parallel clean",
-    "lint": "lerna run --parallel lint",
+    "preversion": "pnpm lint:size",
+    "clean": "pnpm run --parallel clean",
+    "lint:code": "pnpm run --parallel lint:code",
     "lint:dependencies": "depend --lerna . --bail --hint --strategy=conservative",
-    "lint:size": "lerna exec tools.size-limit --no-private --parallel",
+    "lint:size": "pnpm run --parallel lint:size",
     "compile": "tsc -b ./packages --verbose",
-    "test": "lerna run --parallel test",
-    "build": "npm run clean && npm run compile && npm run lint && npm run test",
+    "test": "pnpm --parallel test",
+    "build": "pnpm run clean && pnpm run compile && pnpm run lint:code && pnpm run test",
     "watch": "tsc -b ./packages --watch",
-    "bench": "lerna run bench --stream"
+    "bench": "pnpm run --recursive --sequential bench"
   },
   "devDependencies": {
-    "@nodelib-internal/tools.size-limit": "file:tools/size-limit",
     "@times-components/depend": "2.3.0",
-    "@types/mocha": "10.0.9",
-    "@types/node": "18.19.64",
-    "@types/sinon": "17.0.3",
-    "bencho": "0.1.1",
-    "eslint": "9.14.0",
-    "eslint-config-mrmlnc": "5.0.0",
     "execa": "9.5.1",
     "hereby": "1.10.0",
-    "lerna": "5.6.2",
-    "mocha": "10.8.2",
-    "rimraf": "6.0.1",
-    "sinon": "19.0.2",
     "typescript": "5.6.3"
   }
 }

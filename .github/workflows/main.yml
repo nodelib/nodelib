@@ -32,20 +32,20 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node_version }}
-      - name: Install root dependencies
-        run: npm install
-      - name: Link package dependencies
-        run: npx lerna bootstrap
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+      - name: Install dependencies
+        run: pnpm install
       - name: Compile sources
-        run: npm run compile
+        run: pnpm run compile
       - name: Run hygiene checks
-        run: npm run lint
+        run: pnpm run lint
         if: ${{ matrix.node_version >= 18 }}
       - name: Run dependencies checks
-        run: npm run lint:dependencies
+        run: pnpm run lint:dependencies
       - name: Run size limit check
-        run: npm run lint:size
+        run: pnpm run lint:size
         env:
           TOOLS_SIZE_LIMIT_SKIP: '1'
       - name: Run unit tests
-        run: npm run test
+        run: pnpm run test

@@ -34,10 +34,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Install root dependencies
+      - name: Install dependencies
         run: npm install
-      - name: Link package dependencies
-        run: npx lerna bootstrap
       - name: Compile sources
         run: npm run compile
       - name: Benchmark

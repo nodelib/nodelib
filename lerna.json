@@ -14,9 +14,6 @@
 		"add": {
 			"exact": true
 		},
-		"bootstrap": {
-			"ci": false
-		},
 		"publish": {
 			"allowBranch": "master",
 			"exact": true,

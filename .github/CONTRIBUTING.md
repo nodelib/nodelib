@@ -31,7 +31,7 @@ If you find your issue already exists, make relevant comments and add your [reac
 * Install [Node.js](https://nodejs.org/en/).
 * Fork the project and clone the fork repository. ([how to create fork?](https://help.github.com/articles/fork-a-repo/#fork-an-example-repository)).
 * Create a topic branch from the master branch.
-* Run `npm i && npx lerna bootstrap` to install dependencies for all packages.
+* Run `npm install` to install dependencies for all packages.
 
 #### Setup
 
@@ -41,7 +41,6 @@ If you find your issue already exists, make relevant comments and add your [reac
 git clone https://github.com/nodelib/nodelib
 cd nodelib
 npm install
-npx lerna bootstrap
 ```
 
 Then you can either run:

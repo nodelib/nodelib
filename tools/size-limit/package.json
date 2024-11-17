@@ -3,7 +3,7 @@
   "name": "@nodelib-internal/tools.size-limit",
   "version": "0.0.0",
   "bin": {
-    "tools.size-limit": "size-limit.mjs"
+    "tools-size-limit": "size-limit.mjs"
   },
   "scripts": {
     "lint": "eslint \"**/*.mjs\" --cache"

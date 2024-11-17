@@ -5,6 +5,7 @@ import * as rimraf from 'rimraf';
 import { after, before, describe, it } from 'mocha';
 
 import { stat, statSync } from './stat';
+import { stat as statPromise } from './stat-promises';
 import { Settings } from './settings';
 
 describe('Stat', () => {
@@ -18,6 +19,28 @@ describe('Stat', () => {
 
 	after(() => {
 		rimraf.sync('fixtures');
+	});
+
+	describe('.stat (promise)', () => {
+		it('should work without options or settings', async () => {
+			const stats = await statPromise('fixtures/b');
+
+			assert.ok(stats instanceof fs.Stats);
+		});
+
+		it('should work with options', async () => {
+			const stats = await statPromise('fixtures/b', { markSymbolicLink: true });
+
+			assert.strictEqual(stats.isSymbolicLink(), true);
+		});
+
+		it('should work with settings', async () => {
+			const settings = new Settings({ markSymbolicLink: true });
+
+			const stats = await statPromise('fixtures/b', settings);
+
+			assert.strictEqual(stats.isSymbolicLink(), true);
+		});
 	});
 
 	describe('.stat', () => {

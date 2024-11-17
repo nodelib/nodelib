@@ -22,13 +22,21 @@ import * as fsWalk from '@nodelib/fs.walk';
 fsWalk.walk('path', (error, entries) => { /* … */ });
 ```
 
+Also available with the promise interface:
+
+```ts
+import * as fsWalk from '@nodelib/fs.walk/promises';
+
+await fsWalk.walk('path');
+```
+
 ## API
 
 ### .walk(path, [optionsOrSettings], callback)
 
 Reads the directory recursively and asynchronously. Requires a callback function.
 
-> :book: If you want to use the Promise API, use `util.promisify`.
+> :book: If you want to use the Promise API, import `@nodelib/fs.walk/promises` or use `util.promisify`.
 
 ```ts
 fsWalk.walk('path', (error, entries) => { /* … */ });

@@ -39,7 +39,7 @@ jobs:
       - name: Compile sources
         run: pnpm run compile
       - name: Run hygiene checks
-        run: pnpm run lint
+        run: pnpm run lint:code
         if: ${{ matrix.node_version >= 18 }}
       - name: Run dependencies checks
         run: pnpm run lint:dependencies

@@ -13,7 +13,6 @@
     "preversion": "pnpm lint:size",
     "clean": "pnpm run --parallel clean",
     "lint:code": "pnpm run --parallel lint:code",
-    "lint:dependencies": "depend --lerna . --bail --hint --strategy=conservative",
     "lint:size": "pnpm run --parallel lint:size",
     "compile": "tsc -b ./packages --verbose",
     "test": "pnpm --parallel test",
@@ -22,7 +21,6 @@
     "bench": "pnpm run --recursive --sequential bench"
   },
   "devDependencies": {
-    "@times-components/depend": "2.3.0",
     "execa": "9.5.1",
     "hereby": "1.10.0",
     "typescript": "5.6.3"

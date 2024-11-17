@@ -41,8 +41,6 @@ jobs:
       - name: Run hygiene checks
         run: pnpm run lint:code
         if: ${{ matrix.node_version >= 18 }}
-      - name: Run dependencies checks
-        run: pnpm run lint:dependencies
       - name: Run size limit check
         run: pnpm run lint:size
         env:

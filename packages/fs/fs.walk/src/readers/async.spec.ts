@@ -39,6 +39,79 @@ describe('Readers → Async', () => {
 			reader.read('non-exist-directory');
 		});
 
+		it('should emit "error" event when the user entry filter throws an error', (done) => {
+			const errorFromUserFilter = new Error('This is an error from user filter.');
+
+			const settings = new Settings({
+				entryFilter: () => {
+					throw errorFromUserFilter;
+				},
+			});
+
+			const reader = new TestReader(settings);
+
+			const fakeDirectoryEntry = tests.buildFakeDirectoryEntry();
+
+			reader.fs.scandir.onFirstCall().yields(null, [fakeDirectoryEntry]);
+
+			reader.onError((error) => {
+				assert.strictEqual(error, errorFromUserFilter);
+				done();
+			});
+
+			reader.read('directory');
+		});
+
+		it('should emit "error" event when the user deep filter throws an error', (done) => {
+			const errorFromUserFilter = new Error('This is an error from user filter.');
+
+			const settings = new Settings({
+				deepFilter: () => {
+					throw errorFromUserFilter;
+				},
+			});
+
+			const reader = new TestReader(settings);
+
+			const fakeDirectoryEntry = tests.buildFakeDirectoryEntry();
+
+			reader.fs.scandir.onFirstCall().yields(null, [fakeDirectoryEntry]);
+
+			reader.onError((error) => {
+				assert.strictEqual(error, errorFromUserFilter);
+				done();
+			});
+
+			reader.read('directory');
+		});
+
+		it('should intercept errors from filters and redirect them to the error filtering function', (done) => {
+			const errorFromUserFilter = new Error('This is an error from user filter.');
+
+			const settings = new Settings({
+				deepFilter: () => {
+					throw errorFromUserFilter;
+				},
+				// When true, the error is filtered. Otherwise, the error will be emitted.
+				errorFilter: (error) => {
+					return error !== errorFromUserFilter;
+				},
+			});
+
+			const reader = new TestReader(settings);
+
+			const fakeDirectoryEntry = tests.buildFakeDirectoryEntry();
+
+			reader.fs.scandir.onFirstCall().yields(null, [fakeDirectoryEntry]);
+
+			reader.onError((error) => {
+				assert.strictEqual(error, errorFromUserFilter);
+				done();
+			});
+
+			reader.read('directory');
+		});
+
 		it('should emit "end" event when the first call of scandir is broken but this error can be suppressed', (done) => {
 			const settings = new Settings({
 				errorFilter: (error) => error.code === 'EPERM',

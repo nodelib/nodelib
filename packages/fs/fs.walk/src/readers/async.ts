@@ -138,8 +138,19 @@ export class AsyncReader extends AsyncReaderEmitter implements IAsyncReader {
 				return;
 			}
 
-			for (const entry of entries) {
-				this.#handleEntry(entry, item.base);
+			/**
+			 * The user can define their own custom filtering and error handling functions.
+			 * If the user throws an error, we need to catch it and emit it to the user error handler.
+			 *
+			 * Without this, the error will be thrown immediately bypassing the error handler.
+			 */
+			try {
+				for (const entry of entries) {
+					this.#handleEntry(entry, item.base);
+				}
+			} catch (error) {
+				done(error as Error, undefined);
+				return;
 			}
 
 			done(null, undefined);

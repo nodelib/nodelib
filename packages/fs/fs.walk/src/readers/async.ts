@@ -3,7 +3,6 @@ import { EventEmitter } from 'node:events';
 import * as fastq from 'fastq';
 
 import * as common from './common';
-import { AbortError } from '../utils';
 
 import type { IFileSystemAdapter } from '../adapters/fs';
 import type { Settings } from '../settings';
@@ -99,28 +98,12 @@ export class AsyncReader extends AsyncReaderEmitter implements IAsyncReader {
 		const signal = this.#settings.signal;
 
 		if (signal?.aborted === true) {
-			this.#handleError(this.#getAbortSignalReason(signal));
+			this.#handleError(signal.reason as Error);
 		}
 
 		signal?.addEventListener('abort', () => {
-			this.#handleError(this.#getAbortSignalReason(signal));
+			this.#handleError(signal.reason as Error);
 		}, { once: true });
-	}
-
-	/**
-	 * In Node.js 16.14+ the AbortSignal has an empty reason by default. This issue was fixed in 16.17.
-	 * Remove this code and just use the `AbortSignal.reason` from event when targeting Node.js 18.
-	 */
-	#getAbortSignalReason(signal: AbortSignal): Error {
-		if (signal.reason instanceof Error) {
-			return signal.reason;
-		}
-
-		if (typeof signal.reason === 'string') {
-			return new AbortError(signal.reason);
-		}
-
-		return new AbortError();
 	}
 
 	#pushToQueue(directory: string, base: string | undefined): void {

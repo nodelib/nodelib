@@ -5,6 +5,7 @@ import * as rimraf from 'rimraf';
 import { after, before, describe, it } from 'mocha';
 
 import { walk, walkSync, walkStream } from './walk';
+import { walk as walkPromise } from './walk-promises';
 import { Settings } from './settings';
 
 import type { Readable } from 'node:stream';
@@ -36,6 +37,34 @@ describe('Package', () => {
 
 	after(() => {
 		rimraf.sync('fixtures');
+	});
+
+	describe('.walk (promise)', () => {
+		it('should throw an error for non-exist directory', async () => {
+			const action = walkPromise('non-exist-directory');
+
+			await assert.rejects(() => action, { code: 'ENOENT' });
+		});
+
+		it('should work without options or settings', async () => {
+			const entries = await walkPromise('fixtures');
+
+			assert.strictEqual(entries.length, 3);
+		});
+
+		it('should work with options', async () => {
+			const entries = await walkPromise('fixtures', { entryFilter });
+
+			assert.strictEqual(entries.length, 2);
+		});
+
+		it('should work with settings', async () => {
+			const settings = new Settings({ entryFilter });
+
+			const entries = await walkPromise('fixtures', settings);
+
+			assert.strictEqual(entries.length, 2);
+		});
 	});
 
 	describe('.walk', () => {

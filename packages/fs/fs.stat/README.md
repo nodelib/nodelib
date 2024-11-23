@@ -23,11 +23,21 @@ import * as fsStat from '@nodelib/fs.stat';
 fsStat.stat('path', (error, stats) => { /* … */ });
 ```
 
+Also available with the promise interface:
+
+```ts
+import * as fsStat from '@nodelib/fs.stat/promises';
+
+await fsStat.stat('path');
+```
+
 ## API
 
 ### .stat(path, [optionsOrSettings], callback)
 
 Returns an instance of `fs.Stats` class for provided path with standard callback-style.
+
+> :book: If you want to use the Promise API, import `@nodelib/fs.stat/promises` or use `util.promisify`.
 
 ```ts
 fsStat.stat('path', (error, stats) => { /* … */ });

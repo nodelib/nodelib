@@ -23,11 +23,21 @@ import * as fsScandir from '@nodelib/fs.scandir';
 fsScandir.scandir('path', (error, stats) => { /* … */ });
 ```
 
+Also available with the promise interface:
+
+```ts
+import * as fsScandir from '@nodelib/fs.scandir/promises';
+
+await fsScandir.scandir('path');
+```
+
 ## API
 
 ### .scandir(path, [optionsOrSettings], callback)
 
 Returns an array of plain objects ([`Entry`](#entry)) with information about entry for provided path with standard callback-style.
+
+> :book: If you want to use the Promise API, import `@nodelib/fs.scandir/promises` or use `util.promisify`.
 
 ```ts
 fsScandir.scandir('path', (error, entries) => { /* … */ });

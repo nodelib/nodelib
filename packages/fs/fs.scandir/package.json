@@ -24,6 +24,14 @@
   ],
   "main": "out/index.js",
   "typings": "out/index.d.ts",
+  "exports": {
+    ".": {
+      "default": "./out/index.js"
+    },
+    "./promises": {
+      "default": "./out/stat-promises.js"
+    }
+  },
   "scripts": {
     "clean": "rimraf {tsconfig.tsbuildinfo,out}",
     "lint": "eslint \"src/**/*.ts\" --cache",

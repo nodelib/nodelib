@@ -77,7 +77,7 @@ describe('Providers → Async', () => {
 			const expected: Entry[] = [{
 				name: 'file.txt',
 				path: path.join('root', 'file.txt'),
-				dirent: utils.fs.createDirentFromStats('file.txt', stats),
+				dirent: utils.fs.createDirentFromStats('file.txt', stats, 'root'),
 				stats,
 			}];
 
@@ -101,7 +101,7 @@ describe('Providers → Async', () => {
 			const expected: Entry[] = [{
 				name: 'file.txt',
 				path: path.join('root', 'file.txt'),
-				dirent: utils.fs.createDirentFromStats('file.txt', stats),
+				dirent: utils.fs.createDirentFromStats('file.txt', stats, 'root'),
 			}];
 
 			const actual = await read('root', settings);

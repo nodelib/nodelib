@@ -30,7 +30,7 @@ export function read(directory: string, settings: Settings, callback: AsyncCallb
 			return;
 		}
 
-		const tasks = makeRplTasks(entries, settings);
+		const tasks = makeRplTasks(directory, entries, settings);
 
 		rpl(tasks, (rplError: Error | null) => {
 			if (rplError !== null) {
@@ -43,11 +43,11 @@ export function read(directory: string, settings: Settings, callback: AsyncCallb
 	});
 }
 
-function makeRplTasks(entries: Entry[], settings: Settings): RplTaskEntry[] {
+function makeRplTasks(directory: string, entries: Entry[], settings: Settings): RplTaskEntry[] {
 	const tasks: RplTaskEntry[] = [];
 
 	for (const entry of entries) {
-		const task = makeRplTask(entry, settings);
+		const task = makeRplTask(directory, entry, settings);
 
 		if (task !== undefined) {
 			tasks.push(task);
@@ -61,7 +61,7 @@ function makeRplTasks(entries: Entry[], settings: Settings): RplTaskEntry[] {
  * The task mutates the incoming entry object depending on the settings.
  * Returns the task, or undefined if the task is empty.
  */
-function makeRplTask(entry: Entry, settings: Settings): RplTaskEntry | undefined {
+function makeRplTask(directory: string, entry: Entry, settings: Settings): RplTaskEntry | undefined {
 	const action = getStatsAction(entry, settings);
 
 	if (action === undefined) {
@@ -80,7 +80,7 @@ function makeRplTask(entry: Entry, settings: Settings): RplTaskEntry | undefined
 			}
 
 			if (settings.followSymbolicLinks) {
-				entry.dirent = utils.fs.createDirentFromStats(entry.name, stats);
+				entry.dirent = utils.fs.createDirentFromStats(entry.name, stats, directory);
 			}
 
 			done(null, entry);

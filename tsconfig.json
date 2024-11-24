@@ -20,9 +20,13 @@
 		"forceConsistentCasingInFileNames": true,
 		"verbatimModuleSyntax": false,
 
+		"useDefineForClassFields": true,
 		"downlevelIteration": true,
 		"declaration": true,
 		"newLine": "lf",
-		"stripInternal": true
+		"stripInternal": true,
+		"isolatedModules": true,
+
+		"incremental": true
 	}
 }

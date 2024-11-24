@@ -1,6 +1,6 @@
 {
   "name": "@nodelib/fs.walk",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "A library for efficiently walking a directory recursively",
   "license": "MIT",
   "repository": "https://github.com/nodelib/nodelib/tree/master/packages/fs/fs.walk",
@@ -47,11 +47,11 @@
     "bench:stream": "hereby bench:stream"
   },
   "dependencies": {
-    "@nodelib/fs.scandir": "3.0.0",
+    "@nodelib/fs.scandir": "4.0.0",
     "fastq": "^1.15.0"
   },
   "devDependencies": {
-    "@nodelib/fs.macchiato": "2.0.0",
+    "@nodelib/fs.macchiato": "3.0.0",
     "@nodelib/fs.walk.previous": "npm:@nodelib/fs.walk@2"
   }
 }

@@ -24,7 +24,7 @@ export function read(directory: string, settings: Settings): Entry[] {
 			try {
 				const stats = entry.stats ?? settings.fs.statSync(entry.path);
 
-				entry.dirent = utils.fs.createDirentFromStats(entry.name, stats);
+				entry.dirent = utils.fs.createDirentFromStats(entry.name, stats, directory);
 			} catch (error: unknown) {
 				if (settings.throwErrorOnBrokenSymbolicLink) {
 					throw (error as ErrnoException);

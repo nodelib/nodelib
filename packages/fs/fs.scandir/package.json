@@ -29,7 +29,7 @@
       "default": "./out/index.js"
     },
     "./promises": {
-      "default": "./out/stat-promises.js"
+      "default": "./out/scandir-promises.js"
     }
   },
   "scripts": {

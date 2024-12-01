@@ -30,7 +30,7 @@
       "default": "./out/index.js"
     },
     "./promises": {
-      "default": "./out/stat-promises.js"
+      "default": "./out/walk-promises.js"
     }
   },
   "scripts": {

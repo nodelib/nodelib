@@ -12,11 +12,12 @@
     "tools/*"
   ],
   "scripts": {
-    "preversion": "npm run lint:size",
+    "preversion": "npm run lint:size && npm run lint:npm-package-exports",
     "clean": "lerna run --parallel clean",
     "lint": "lerna run --parallel lint",
     "lint:dependencies": "depend --lerna . --bail --hint --strategy=conservative",
     "lint:size": "lerna exec tools-size-limit --no-private --stream",
+    "lint:npm-package-exports": "lerna exec npm-package-exports-linter --no-private --stream",
     "compile": "tsc -b ./packages --verbose",
     "test": "lerna run --parallel test",
     "build": "npm run clean && npm run compile && npm run lint && npm run test",
@@ -28,6 +29,7 @@
     "@lerna-lite/exec": "3.10.0",
     "@lerna-lite/run": "3.10.0",
     "@nodelib-internal/tools.size-limit": "file:tools/size-limit",
+    "@nodelib-internal/tools.npm-package-exports-linter": "file:tools/npm-package-exports-linter",
     "@times-components/depend": "2.3.0",
     "@types/mocha": "10.0.9",
     "@types/node": "18.19.65",

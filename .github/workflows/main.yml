@@ -40,6 +40,9 @@ jobs:
         run: npm run lint
       - name: Run dependencies checks
         run: npm run lint:dependencies
+      - name: Run npm package exports checks
+        run: npm run lint:npm-package-exports
+        if: matrix.node_version != '18.18.0'
       - name: Run size limit check
         run: npm run lint:size
         env:

@@ -1,0 +1,14 @@
+{
+  "private": true,
+  "name": "@nodelib-internal/tools.npm-package-exports-linter",
+  "version": "0.0.0",
+  "bin": {
+    "npm-package-exports-linter": "npm-package-exports-linter.mjs"
+  },
+  "scripts": {
+    "lint": "eslint \"**/*.mjs\" --cache"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0"
+  }
+}

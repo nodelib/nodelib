@@ -1,7 +1,7 @@
 import * as fsStat from '@nodelib/fs.stat';
 import * as rpl from 'run-parallel';
 
-import * as utils from '../utils';
+import * as fsUtils from '../utils/fs';
 import * as common from './common';
 
 import type { Settings } from '../settings';
@@ -80,7 +80,7 @@ function makeRplTask(directory: string, entry: Entry, settings: Settings): RplTa
 			}
 
 			if (settings.followSymbolicLinks) {
-				entry.dirent = utils.fs.createDirentFromStats(entry.name, stats, directory);
+				entry.dirent = fsUtils.createDirentFromStats(entry.name, stats, directory);
 			}
 
 			done(null, entry);

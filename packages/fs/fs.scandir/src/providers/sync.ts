@@ -1,6 +1,6 @@
 import * as fsStat from '@nodelib/fs.stat';
 
-import * as utils from '../utils';
+import * as fsUtils from '../utils/fs';
 import * as common from './common';
 
 import type { Settings } from '../settings';
@@ -24,7 +24,7 @@ export function read(directory: string, settings: Settings): Entry[] {
 			try {
 				const stats = entry.stats ?? settings.fs.statSync(entry.path);
 
-				entry.dirent = utils.fs.createDirentFromStats(entry.name, stats, directory);
+				entry.dirent = fsUtils.createDirentFromStats(entry.name, stats, directory);
 			} catch (error: unknown) {
 				if (settings.throwErrorOnBrokenSymbolicLink) {
 					throw (error as ErrnoException);

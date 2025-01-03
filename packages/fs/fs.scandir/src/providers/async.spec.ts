@@ -7,7 +7,7 @@ import { Dirent, DirentType, Stats, StatsMode } from '@nodelib/fs.macchiato';
 import { describe, it } from 'mocha';
 
 import { Settings } from '../settings';
-import * as utils from '../utils';
+import * as fsUtils from '../utils/fs';
 import * as provider from './async';
 
 import type { Entry } from '../types';
@@ -77,7 +77,7 @@ describe('Providers → Async', () => {
 			const expected: Entry[] = [{
 				name: 'file.txt',
 				path: path.join('root', 'file.txt'),
-				dirent: utils.fs.createDirentFromStats('file.txt', stats, 'root'),
+				dirent: fsUtils.createDirentFromStats('file.txt', stats, 'root'),
 				stats,
 			}];
 
@@ -101,7 +101,7 @@ describe('Providers → Async', () => {
 			const expected: Entry[] = [{
 				name: 'file.txt',
 				path: path.join('root', 'file.txt'),
-				dirent: utils.fs.createDirentFromStats('file.txt', stats, 'root'),
+				dirent: fsUtils.createDirentFromStats('file.txt', stats, 'root'),
 			}];
 
 			const actual = await read('root', settings);

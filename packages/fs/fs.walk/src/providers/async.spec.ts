@@ -6,7 +6,7 @@ import { describe, it } from 'mocha';
 import * as tests from '../tests';
 import { AsyncProvider } from './async';
 
-import type { IAsyncReader } from '../readers';
+import type { IAsyncReader } from '../readers/async';
 
 class TestProvider extends AsyncProvider {
 	public readonly reader: sinon.SinonStubbedInstance<IAsyncReader>;

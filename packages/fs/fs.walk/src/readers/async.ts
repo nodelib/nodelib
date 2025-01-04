@@ -129,6 +129,14 @@ export class AsyncReader extends AsyncReaderEmitter implements IAsyncReader {
 			 */
 			try {
 				for (const entry of entries) {
+					/**
+					 * When the reader is destroyed, there is no need to process entries.
+					 * Break the loop to avoid extra CPU ticks.
+					 */
+					if (this.#isDestroyed || this.#isFatalError) {
+						break;
+					}
+
 					this.#handleEntry(entry, item.base);
 				}
 			} catch (error) {
@@ -152,10 +160,6 @@ export class AsyncReader extends AsyncReaderEmitter implements IAsyncReader {
 	}
 
 	#handleEntry(entry: Entry, base: string | undefined): void {
-		if (this.#isDestroyed || this.#isFatalError) {
-			return;
-		}
-
 		const fullpath = entry.path;
 
 		if (base !== undefined) {

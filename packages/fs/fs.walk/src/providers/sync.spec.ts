@@ -6,7 +6,7 @@ import * as tests from '../tests';
 import { SyncProvider } from './sync';
 
 import type { SinonStubbedInstance } from 'sinon';
-import type { ISyncReader } from '../readers';
+import type { ISyncReader } from '../readers/sync';
 
 class TestProvider extends SyncProvider {
 	public readonly reader: SinonStubbedInstance<ISyncReader>;

@@ -1,6 +1,6 @@
 import { Readable } from 'node:stream';
 
-import type { IAsyncReader } from '../readers';
+import type { IAsyncReader } from '../readers/async';
 
 export class StreamProvider {
 	readonly #reader: IAsyncReader;

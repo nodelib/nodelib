@@ -1,12 +1,15 @@
-import { AsyncProvider, StreamProvider, SyncProvider } from './providers';
 import { Settings } from './settings';
-import { AsyncReader, SyncReader } from './readers';
 import { FileSystemAdapter } from './adapters/fs';
+import { AsyncProvider } from './providers/async';
+import { AsyncReader } from './readers/async';
+import { SyncReader } from './readers/sync';
+import { SyncProvider } from './providers/sync';
+import { StreamProvider } from './providers/stream';
 
-import type { Options } from './settings';
-import type { AsyncCallback } from './providers';
-import type { Readable } from 'node:stream';
+import type { AsyncCallback } from './providers/async';
 import type { Entry } from './types';
+import type { Readable } from 'node:stream';
+import type { Options } from './settings';
 
 const fs = new FileSystemAdapter();
 

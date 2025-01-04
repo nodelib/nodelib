@@ -1,4 +1,4 @@
-import type { IAsyncReader } from '../readers';
+import type { IAsyncReader } from '../readers/async';
 import type { Entry, ErrnoException } from '../types';
 
 export type AsyncCallback = (error: ErrnoException | null, entries: Entry[]) => void;

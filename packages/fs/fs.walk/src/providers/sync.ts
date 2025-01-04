@@ -1,4 +1,4 @@
-import type { ISyncReader } from '../readers';
+import type { ISyncReader } from '../readers/sync';
 import type { Entry } from '../types';
 
 export class SyncProvider {

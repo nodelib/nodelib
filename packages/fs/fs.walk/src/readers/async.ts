@@ -1,5 +1,3 @@
-import { EventEmitter } from 'node:events';
-
 import * as fastq from 'fastq';
 
 import * as common from './common';
@@ -18,35 +16,49 @@ export interface IAsyncReader {
 	destroy: () => void;
 }
 
-class AsyncReaderEmitter {
-	readonly #emitter = new EventEmitter();
+const noop = (): void => { /* noop */ };
+
+const throwError = (error: Error): void => {
+	throw error;
+};
+
+class AsyncReaderCallbacks {
+	#entryCallback: EntryEventCallback = noop;
+	#errorCallback: ErrorEventCallback = throwError;
+	#endCallback: EndEventCallback = noop;
 
 	public onEntry(callback: EntryEventCallback): void {
-		this.#emitter.on('entry', callback);
+		this.#entryCallback = callback;
 	}
 
 	public onError(callback: ErrorEventCallback): void {
-		this.#emitter.once('error', callback);
+		this.#errorCallback = callback;
 	}
 
 	public onEnd(callback: EndEventCallback): void {
-		this.#emitter.once('end', callback);
+		this.#endCallback = callback;
 	}
 
 	protected _emitEntry(entry: Entry): void {
-		this.#emitter.emit('entry', entry);
+		this.#entryCallback(entry);
 	}
 
 	protected _emitEnd(): void {
-		this.#emitter.emit('end');
+		const callback = this.#endCallback;
+
+		this.#endCallback = noop;
+		callback();
 	}
 
 	protected _emitError(error: Error): void {
-		this.#emitter.emit('error', error);
+		const callback = this.#errorCallback;
+
+		this.#errorCallback = throwError;
+		callback(error);
 	}
 }
 
-export class AsyncReader extends AsyncReaderEmitter implements IAsyncReader {
+export class AsyncReader extends AsyncReaderCallbacks implements IAsyncReader {
 	#isFatalError: boolean = false;
 	#isDestroyed: boolean = false;
 

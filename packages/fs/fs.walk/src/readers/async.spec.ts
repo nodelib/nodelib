@@ -148,6 +148,56 @@ describe('Readers → Async', () => {
 			reader.read('directory');
 		});
 
+		it('should throw an error when error callback is not defined', () => {
+			const reader = new TestReader();
+
+			reader.fs.scandir.yields(tests.EPERM_ERRNO);
+
+			assert.throws(() => {
+				reader.read('non-exist-directory');
+			}, { code: 'EPERM' });
+		});
+
+		it('should call error callback only once', () => {
+			const reader = new TestReader();
+			let calls = 0;
+
+			reader.fs.scandir.onFirstCall().yields(tests.EPERM_ERRNO);
+			reader.fs.scandir.onSecondCall().yields(tests.EPERM_ERRNO);
+
+			reader.onError(() => {
+				calls++;
+			});
+
+			reader.read('non-exist-directory');
+
+			assert.equal(calls, 1);
+			assert.throws(() => {
+				reader.read('non-exist-directory');
+			}, { code: 'EPERM' });
+			assert.equal(calls, 1);
+		});
+
+		it('should call end callback only once', (done) => {
+			const reader = new TestReader();
+			let calls = 0;
+
+			reader.fs.scandir.onFirstCall().yields(null, []);
+			reader.fs.scandir.onSecondCall().yields(null, []);
+
+			reader.onEnd(() => {
+				calls++;
+			});
+
+			reader.read('directory');
+			reader.read('directory');
+
+			setImmediate(() => {
+				assert.equal(calls, 1);
+				done();
+			});
+		});
+
 		it('should return entries', (done) => {
 			const reader = new TestReader();
 

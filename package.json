@@ -5,7 +5,7 @@
   "description": "A collection of standard libraries for Node.js",
   "license": "MIT",
   "engines": {
-    "node": ">=18.18.0"
+    "node": "^22.13.0 || >=24"
   },
   "workspaces": [
     "packages/*/*",
@@ -32,7 +32,7 @@
     "@nodelib-internal/tools.npm-package-exports-linter": "file:tools/npm-package-exports-linter",
     "@times-components/depend": "2.3.0",
     "@types/mocha": "10.0.9",
-    "@types/node": "18.19.65",
+    "@types/node": "22.20.1",
     "@types/sinon": "17.0.3",
     "bencho": "0.1.1",
     "eslint": "9.14.0",

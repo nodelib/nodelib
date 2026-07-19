@@ -81,34 +81,30 @@ describe('Readers → Common', () => {
 		});
 	});
 
-	describe('.joinPathSegments', () => {
-		it('should return concatenated string', () => {
-			const expected = 'a&b';
+	describe('.getPathPrefix', () => {
+		it('should append the separator only when it is missing', () => {
+			const windowsPath = String.raw`C:\Users`;
 
-			const actual = common.joinPathSegments('a', 'b', '&');
-
-			assert.strictEqual(actual, expected);
+			assert.strictEqual(common.getPathPrefix('directory', '/'), 'directory/');
+			assert.strictEqual(common.getPathPrefix('a', '&'), 'a&');
+			assert.strictEqual(common.getPathPrefix(windowsPath, '\\'), `${windowsPath}\\`);
 		});
 
-		it('should return second part of path when the first path is an empty string', () => {
-			const expected = 'b';
-
-			const actual = common.joinPathSegments('', 'b', '&');
-
-			assert.strictEqual(actual, expected);
-		});
-
-		it('should return correct string when the first segment ens with the separator symbol', () => {
+		it('should preserve paths that already end with the separator', () => {
 			// Unix
-			assert.strictEqual(common.joinPathSegments('/', 'a', '/'), '/a');
-			assert.strictEqual(common.joinPathSegments('//', 'a', '/'), '//a');
-			assert.strictEqual(common.joinPathSegments('/a/', 'b', '/'), '/a/b');
+			assert.strictEqual(common.getPathPrefix('/', '/'), '/');
+			assert.strictEqual(common.getPathPrefix('//', '/'), '//');
+			assert.strictEqual(common.getPathPrefix('/directory/', '/'), '/directory/');
 
 			// Windows
-			assert.strictEqual(common.joinPathSegments('C:/', 'Users', '/'), 'C:/Users');
-			assert.strictEqual(common.joinPathSegments('C:\\', 'Users', '\\'), String.raw`C:\Users`);
-			assert.strictEqual(common.joinPathSegments('//?/C:/', 'Users', '/'), '//?/C:/Users');
-			assert.strictEqual(common.joinPathSegments('\\\\?\\C:\\', 'Users', '\\'), String.raw`\\?\C:\Users`);
+			assert.strictEqual(common.getPathPrefix('C:/', '/'), 'C:/');
+			assert.strictEqual(common.getPathPrefix('C:\\', '\\'), 'C:\\');
+			assert.strictEqual(common.getPathPrefix('//?/C:/', '/'), '//?/C:/');
+			assert.strictEqual(common.getPathPrefix('\\\\?\\C:\\', '\\'), '\\\\?\\C:\\');
+		});
+
+		it('should preserve an empty base path', () => {
+			assert.strictEqual(common.getPathPrefix('', '/'), '');
 		});
 	});
 });

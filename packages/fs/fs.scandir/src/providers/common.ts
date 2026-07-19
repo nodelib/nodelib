@@ -1,10 +1,10 @@
-export function joinPathSegments(a: string, b: string, separator: string): string {
+export function getPathPrefix(filepath: string, separator: string): string {
 	/**
-	 * The correct handling of cases when the first segment is a root (`/`, `C:/`) or UNC path (`//?/C:/`).
+	 * Correctly handles roots (`/`, `C:/`) and UNC paths (`//?/C:/`) that already end with a separator.
 	 */
-	if (a.endsWith(separator)) {
-		return a + b;
+	if (filepath.endsWith(separator)) {
+		return filepath;
 	}
 
-	return a + separator + b;
+	return filepath + separator;
 }

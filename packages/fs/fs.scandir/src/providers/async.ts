@@ -19,10 +19,11 @@ export function read(directory: string, settings: Settings, callback: AsyncCallb
 			return;
 		}
 
+		const pathPrefix = common.getPathPrefix(directory, settings.pathSegmentSeparator);
 		const entries = dirents.map((dirent) => ({
 			dirent,
 			name: dirent.name,
-			path: common.joinPathSegments(directory, dirent.name, settings.pathSegmentSeparator),
+			path: pathPrefix + dirent.name,
 		}));
 
 		if (!settings.stats && !settings.followSymbolicLinks) {

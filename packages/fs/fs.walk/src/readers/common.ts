@@ -17,17 +17,13 @@ export function replacePathSegmentSeparator(filepath: string, separator: string)
 	return filepath.split(/[/\\]/).join(separator);
 }
 
-export function joinPathSegments(a: string, b: string, separator: string): string {
-	if (a === '') {
-		return b;
-	}
-
+export function getPathPrefix(filepath: string, separator: string): string {
 	/**
-	 * The correct handling of cases when the first segment is a root (`/`, `C:/`) or UNC path (`//?/C:/`).
+	 * Correctly handles an empty base path, roots (`/`, `C:/`) and UNC paths (`//?/C:/`).
 	 */
-	if (a.endsWith(separator)) {
-		return a + b;
+	if (filepath === '' || filepath.endsWith(separator)) {
+		return filepath;
 	}
 
-	return a + separator + b;
+	return filepath + separator;
 }

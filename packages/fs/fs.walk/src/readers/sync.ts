@@ -41,9 +41,10 @@ export class SyncReader implements ISyncReader {
 	#handleDirectory(directory: string, base: string | undefined): void {
 		try {
 			const entries = this.#fs.scandirSync(directory, this.#settings.fsScandirSettings);
+			const basePrefix = base === undefined ? undefined : common.getPathPrefix(base, this.#settings.pathSegmentSeparator);
 
 			for (const entry of entries) {
-				this.#handleEntry(entry, base);
+				this.#handleEntry(entry, basePrefix);
 			}
 		} catch (error) {
 			this.#handleError(error as ErrnoException);
@@ -60,7 +61,7 @@ export class SyncReader implements ISyncReader {
 		const fullpath = entry.path;
 
 		if (base !== undefined) {
-			entry.path = common.joinPathSegments(base, entry.name, this.#settings.pathSegmentSeparator);
+			entry.path = base + entry.name;
 		}
 
 		if (common.isAppliedFilter(this.#settings.entryFilter, entry)) {

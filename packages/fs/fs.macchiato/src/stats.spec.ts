@@ -1,13 +1,13 @@
 import * as assert from 'node:assert';
 import * as fs from 'node:fs';
 import * as process from 'node:process';
-import * as sinon from 'sinon';
 import {
 	after,
 	before,
 	describe,
 	it,
-} from 'mocha';
+} from 'node:test';
+import * as sinon from 'sinon';
 import { Stats, StatsMode } from './stats.js';
 
 const uid = process.getuid?.();
@@ -21,7 +21,10 @@ describe('Stats', () => {
 	before(() => {
 		sandbox = sinon.createSandbox();
 
-		sandbox.useFakeTimers({ now: FAKE_DATE });
+		sandbox.useFakeTimers({
+			now: FAKE_DATE,
+			toFake: ['Date'],
+		});
 	});
 
 	after(() => {

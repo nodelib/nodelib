@@ -1,6 +1,6 @@
 import * as assert from 'node:assert';
 import { Readable } from 'node:stream';
-import { describe, it } from 'mocha';
+import { describe, it } from 'node:test';
 import * as tests from '../tests/index.js';
 import { StreamProvider } from './stream.js';
 

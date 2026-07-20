@@ -1,6 +1,7 @@
 import * as assert from 'node:assert';
 import * as path from 'node:path';
 import * as util from 'node:util';
+import { describe, it } from 'node:test';
 import * as sinon from 'sinon';
 import {
 	Dirent,
@@ -8,7 +9,6 @@ import {
 	Stats,
 	StatsMode,
 } from '@nodelib/fs.macchiato';
-import { describe, it } from 'mocha';
 import { Settings } from '../settings.js';
 import * as fsUtils from '../utils/fs.js';
 import type { Entry } from '../types/index.js';

@@ -5,7 +5,8 @@ import {
 	before,
 	describe,
 	it,
-} from 'mocha';
+	type TestContext,
+} from 'node:test';
 import { stat, statSync } from './stat.js';
 import { stat as statPromise } from './stat-promises.js';
 import { Settings } from './settings.js';
@@ -46,28 +47,28 @@ describe('Stat', () => {
 	});
 
 	describe('.stat', () => {
-		it('should work without options or settings', (done) => {
+		it('should work without options or settings', (t: TestContext, done) => {
 			stat('fixtures/b', (error, stats) => {
-				assert.strictEqual(error, null);
-				assert.ok(stats instanceof fs.Stats);
+				t.assert.strictEqual(error, null);
+				t.assert.ok(stats instanceof fs.Stats);
 				done();
 			});
 		});
 
-		it('should work with options', (done) => {
+		it('should work with options', (t: TestContext, done) => {
 			stat('fixtures/b', { markSymbolicLink: true }, (error, stats) => {
-				assert.strictEqual(error, null);
-				assert.strictEqual(stats.isSymbolicLink(), true);
+				t.assert.strictEqual(error, null);
+				t.assert.strictEqual(stats.isSymbolicLink(), true);
 				done();
 			});
 		});
 
-		it('should work with settings', (done) => {
+		it('should work with settings', (t: TestContext, done) => {
 			const settings = new Settings({ markSymbolicLink: true });
 
 			stat('fixtures/b', settings, (error, stats) => {
-				assert.strictEqual(error, null);
-				assert.strictEqual(stats.isSymbolicLink(), true);
+				t.assert.strictEqual(error, null);
+				t.assert.strictEqual(stats.isSymbolicLink(), true);
 				done();
 			});
 		});

@@ -1,6 +1,6 @@
 import * as assert from 'node:assert';
+import { describe, it } from 'node:test';
 import * as sinon from 'sinon';
-import { describe, it } from 'mocha';
 import * as tests from '../tests/index.js';
 import type { AsyncReaderInterface } from '../readers/async.js';
 import { AsyncProvider, type AsyncCallback } from './async.js';

@@ -1,6 +1,6 @@
 import * as assert from 'node:assert';
 import * as path from 'node:path';
-import { describe, it } from 'mocha';
+import { describe, it } from 'node:test';
 import { Settings } from '../settings.js';
 import * as tests from '../tests/index.js';
 import * as common from './common.js';

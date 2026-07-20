@@ -1,6 +1,6 @@
 import * as assert from 'node:assert';
+import { describe, it } from 'node:test';
 import * as fsScandir from '@nodelib/fs.scandir';
-import { describe, it } from 'mocha';
 import { Settings } from './settings.js';
 
 describe('Settings', () => {

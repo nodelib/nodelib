@@ -1,6 +1,6 @@
 import * as assert from 'node:assert';
 import * as path from 'node:path';
-import { describe, it } from 'mocha';
+import { describe, it } from 'node:test';
 import type * as sinon from 'sinon';
 import { Settings } from '../settings.js';
 import * as tests from '../tests/index.js';

@@ -1,5 +1,5 @@
 import * as assert from 'node:assert';
-import { describe, it } from 'mocha';
+import { describe, it } from 'node:test';
 import type { SinonStubbedInstance } from 'sinon';
 import * as tests from '../tests/index.js';
 import type { SyncReaderInterface } from '../readers/sync.js';

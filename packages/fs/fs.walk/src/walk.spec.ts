@@ -6,7 +6,8 @@ import {
 	before,
 	describe,
 	it,
-} from 'mocha';
+	type TestContext,
+} from 'node:test';
 import { walk, walkSync, walkStream } from './walk.js';
 import { walk as walkPromise } from './walk-promises.js';
 import { Settings } from './settings.js';
@@ -71,36 +72,36 @@ describe('Package', () => {
 	});
 
 	describe('.walk', () => {
-		it('should throw an error for non-exist directory', (done) => {
+		it('should throw an error for non-exist directory', (t: TestContext, done) => {
 			walk('non-exist-directory', (error, entries) => {
-				assert.strictEqual(error?.code, 'ENOENT');
-				assert.strictEqual(entries, undefined);
+				t.assert.strictEqual(error?.code, 'ENOENT');
+				t.assert.strictEqual(entries, undefined);
 				done();
 			});
 		});
 
-		it('should work without options or settings', (done) => {
+		it('should work without options or settings', (t: TestContext, done) => {
 			walk('fixtures', (error, entries) => {
-				assert.strictEqual(error, null);
-				assert.strictEqual(entries.length, 3);
+				t.assert.strictEqual(error, null);
+				t.assert.strictEqual(entries.length, 3);
 				done();
 			});
 		});
 
-		it('should work with options', (done) => {
+		it('should work with options', (t: TestContext, done) => {
 			walk('fixtures', { entryFilter: isFileEntry }, (error, entries) => {
-				assert.strictEqual(error, null);
-				assert.strictEqual(entries.length, 2);
+				t.assert.strictEqual(error, null);
+				t.assert.strictEqual(entries.length, 2);
 				done();
 			});
 		});
 
-		it('should work with settings', (done) => {
+		it('should work with settings', (t: TestContext, done) => {
 			const settings = new Settings({ entryFilter: isFileEntry });
 
 			walk('fixtures', settings, (error, entries) => {
-				assert.strictEqual(error, null);
-				assert.strictEqual(entries.length, 2);
+				t.assert.strictEqual(error, null);
+				t.assert.strictEqual(entries.length, 2);
 				done();
 			});
 		});

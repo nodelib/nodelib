@@ -5,7 +5,8 @@ import {
 	before,
 	describe,
 	it,
-} from 'mocha';
+	type TestContext,
+} from 'node:test';
 import { scandir, scandirSync } from './scandir.js';
 import { scandir as scandirPromise } from './scandir-promises.js';
 import { Settings } from './settings.js';
@@ -53,36 +54,36 @@ describe('Scandir', () => {
 	});
 
 	describe('.scandir', () => {
-		it('should work without options or settings', (done) => {
+		it('should work without options or settings', (t: TestContext, done) => {
 			scandir('fixtures', (error, entries) => {
-				assert.strictEqual(error, null);
-				assert.notStrictEqual(entries[0]?.name, undefined);
-				assert.notStrictEqual(entries[0]?.path, undefined);
-				assert.ok(entries[0]?.dirent instanceof fs.Dirent);
+				t.assert.strictEqual(error, null);
+				t.assert.notStrictEqual(entries[0]?.name, undefined);
+				t.assert.notStrictEqual(entries[0]?.path, undefined);
+				t.assert.ok(entries[0]?.dirent instanceof fs.Dirent);
 				done();
 			});
 		});
 
-		it('should work with options', (done) => {
+		it('should work with options', (t: TestContext, done) => {
 			scandir('fixtures', { stats: true }, (error, entries) => {
-				assert.strictEqual(error, null);
-				assert.notStrictEqual(entries[0]?.name, undefined);
-				assert.notStrictEqual(entries[0]?.path, undefined);
-				assert.ok(entries[0]?.dirent instanceof fs.Dirent);
-				assert.ok(entries[0]?.stats);
+				t.assert.strictEqual(error, null);
+				t.assert.notStrictEqual(entries[0]?.name, undefined);
+				t.assert.notStrictEqual(entries[0]?.path, undefined);
+				t.assert.ok(entries[0]?.dirent instanceof fs.Dirent);
+				t.assert.ok(entries[0]?.stats);
 				done();
 			});
 		});
 
-		it('should work with settings', (done) => {
+		it('should work with settings', (t: TestContext, done) => {
 			const settings = new Settings({ stats: true });
 
 			scandir('fixtures', settings, (error, entries) => {
-				assert.strictEqual(error, null);
-				assert.notStrictEqual(entries[0]?.name, undefined);
-				assert.notStrictEqual(entries[0]?.path, undefined);
-				assert.ok(entries[0]?.dirent instanceof fs.Dirent);
-				assert.ok(entries[0]?.stats);
+				t.assert.strictEqual(error, null);
+				t.assert.notStrictEqual(entries[0]?.name, undefined);
+				t.assert.notStrictEqual(entries[0]?.path, undefined);
+				t.assert.ok(entries[0]?.dirent instanceof fs.Dirent);
+				t.assert.ok(entries[0]?.stats);
 				done();
 			});
 		});

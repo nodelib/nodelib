@@ -2,7 +2,7 @@ import * as path from 'node:path';
 
 import * as fsScandir from '@nodelib/fs.scandir';
 
-import type { Entry, ErrnoException } from './types';
+import type { Entry, ErrnoException } from './types/index.js';
 
 export type FilterFunction<T> = (value: T) => boolean;
 export type DeepFilterFunction = FilterFunction<Entry>;

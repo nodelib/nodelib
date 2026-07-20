@@ -2,11 +2,11 @@ import * as assert from 'node:assert';
 
 import { describe, it } from 'mocha';
 
-import * as tests from '../tests';
-import { SyncProvider } from './sync';
+import * as tests from '../tests/index.js';
+import { SyncProvider } from './sync.js';
 
 import type { SinonStubbedInstance } from 'sinon';
-import type { ISyncReader } from '../readers/sync';
+import type { ISyncReader } from '../readers/sync.js';
 
 class TestProvider extends SyncProvider {
 	public readonly reader: SinonStubbedInstance<ISyncReader>;

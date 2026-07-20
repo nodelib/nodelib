@@ -3,7 +3,7 @@ import * as fs from 'node:fs';
 
 import { describe, it } from 'mocha';
 
-import { Dirent, Stats } from '.';
+import { Dirent, Stats } from './index.js';
 
 describe('Package', () => {
 	it('should create a fake instance of fs.Stats', () => {

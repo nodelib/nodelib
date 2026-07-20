@@ -2,7 +2,7 @@ import * as path from 'node:path';
 
 import * as bencho from 'bencho';
 
-import * as utils from '../utils';
+import * as utils from '../utils.js';
 
 import type { Readable } from 'node:stream';
 import type { Options } from '@nodelib/fs.walk.previous';

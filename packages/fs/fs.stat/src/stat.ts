@@ -1,9 +1,9 @@
-import * as async from './providers/async';
-import * as sync from './providers/sync';
-import { Settings } from './settings';
+import * as async from './providers/async.js';
+import * as sync from './providers/sync.js';
+import { Settings } from './settings.js';
 
-import type { Options } from './settings';
-import type { AsyncCallback, Stats } from './types';
+import type { Options } from './settings.js';
+import type { AsyncCallback, Stats } from './types/index.js';
 
 export function stat(path: string, callback: AsyncCallback): void;
 export function stat(path: string, optionsOrSettings: Options | Settings, callback: AsyncCallback): void;

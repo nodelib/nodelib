@@ -1,10 +1,10 @@
-import * as fastq from 'fastq';
+import fastq from 'fastq';
 
-import * as common from './common';
+import * as common from './common.js';
 
-import type { IFileSystemAdapter } from '../adapters/fs';
-import type { Settings } from '../settings';
-import type { EndEventCallback, Entry, EntryEventCallback, ErrorEventCallback, QueueItem } from '../types';
+import type { IFileSystemAdapter } from '../adapters/fs.js';
+import type { Settings } from '../settings.js';
+import type { EndEventCallback, Entry, EntryEventCallback, ErrorEventCallback, QueueItem } from '../types/index.js';
 
 export interface IAsyncReader {
 	isDestroyed: boolean;

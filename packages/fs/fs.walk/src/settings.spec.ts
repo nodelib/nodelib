@@ -3,7 +3,7 @@ import * as assert from 'node:assert';
 import * as fsScandir from '@nodelib/fs.scandir';
 import { describe, it } from 'mocha';
 
-import { Settings } from './settings';
+import { Settings } from './settings.js';
 
 describe('Settings', () => {
 	it('should return instance with default values', () => {

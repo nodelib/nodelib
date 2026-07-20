@@ -3,10 +3,10 @@ import * as assert from 'node:assert';
 import * as sinon from 'sinon';
 import { describe, it } from 'mocha';
 
-import * as tests from '../tests';
-import { AsyncProvider } from './async';
+import * as tests from '../tests/index.js';
+import { AsyncProvider } from './async.js';
 
-import type { IAsyncReader } from '../readers/async';
+import type { IAsyncReader } from '../readers/async.js';
 
 class TestProvider extends AsyncProvider {
 	public readonly reader: sinon.SinonStubbedInstance<IAsyncReader>;

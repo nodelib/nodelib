@@ -1,5 +1,5 @@
-import type { Settings } from '../settings';
-import type { AsyncCallback, ErrnoException, Stats } from '../types';
+import type { Settings } from '../settings.js';
+import type { AsyncCallback, ErrnoException, Stats } from '../types/index.js';
 
 type FailureCallback = (error: ErrnoException | null) => void;
 

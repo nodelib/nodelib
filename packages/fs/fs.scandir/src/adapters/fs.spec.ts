@@ -3,7 +3,7 @@ import * as assert from 'node:assert';
 import { Stats } from '@nodelib/fs.macchiato';
 import { describe, it } from 'mocha';
 
-import * as adapter from './fs';
+import * as adapter from './fs.js';
 
 describe('Adapters → FileSystem', () => {
 	it('should return original FS methods', () => {

@@ -3,8 +3,8 @@ import { Readable } from 'node:stream';
 
 import { describe, it } from 'mocha';
 
-import * as tests from '../tests';
-import { StreamProvider } from './stream';
+import * as tests from '../tests/index.js';
+import { StreamProvider } from './stream.js';
 
 describe('Providers → Stream', () => {
 	describe('.read', () => {

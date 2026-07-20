@@ -4,7 +4,7 @@ import * as fs from 'node:fs';
 import * as sinon from 'sinon';
 import { after, before, describe, it } from 'mocha';
 
-import { Stats, StatsMode } from './stats';
+import { Stats, StatsMode } from './stats.js';
 
 const uid = process.getuid?.();
 const gid = process.getgid?.();
@@ -47,10 +47,10 @@ describe('Stats', () => {
 		assert.strictEqual(stats.mtimeMs, FAKE_DATE.getTime());
 		assert.strictEqual(stats.ctimeMs, FAKE_DATE.getTime());
 		assert.strictEqual(stats.birthtimeMs, FAKE_DATE.getTime());
-		assert.deepStrictEqual(stats.atime, FAKE_DATE);
-		assert.deepStrictEqual(stats.mtime, FAKE_DATE);
-		assert.deepStrictEqual(stats.ctime, FAKE_DATE);
-		assert.deepStrictEqual(stats.birthtime, FAKE_DATE);
+		assert.strictEqual(stats.atime.getTime(), FAKE_DATE.getTime());
+		assert.strictEqual(stats.mtime.getTime(), FAKE_DATE.getTime());
+		assert.strictEqual(stats.ctime.getTime(), FAKE_DATE.getTime());
+		assert.strictEqual(stats.birthtime.getTime(), FAKE_DATE.getTime());
 		assert.ok(!stats.isFile());
 		assert.ok(!stats.isDirectory());
 		assert.ok(!stats.isSymbolicLink());
@@ -77,10 +77,10 @@ describe('Stats', () => {
 		assert.strictEqual(stats.mtimeMs, FAKE_DATE.getTime());
 		assert.strictEqual(stats.ctimeMs, FAKE_DATE.getTime());
 		assert.strictEqual(stats.birthtimeMs, FAKE_DATE.getTime());
-		assert.deepStrictEqual(stats.atime, FAKE_DATE);
-		assert.deepStrictEqual(stats.mtime, FAKE_DATE);
-		assert.deepStrictEqual(stats.ctime, FAKE_DATE);
-		assert.deepStrictEqual(stats.birthtime, FAKE_DATE);
+		assert.strictEqual(stats.atime.getTime(), FAKE_DATE.getTime());
+		assert.strictEqual(stats.mtime.getTime(), FAKE_DATE.getTime());
+		assert.strictEqual(stats.ctime.getTime(), FAKE_DATE.getTime());
+		assert.strictEqual(stats.birthtime.getTime(), FAKE_DATE.getTime());
 		assert.ok(!stats.isFile());
 		assert.ok(!stats.isDirectory());
 		assert.ok(!stats.isSymbolicLink());

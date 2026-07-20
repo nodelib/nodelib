@@ -1,5 +1,5 @@
-import type { FilterFunction, Settings } from '../settings';
-import type { ErrnoException } from '../types';
+import type { FilterFunction, Settings } from '../settings.js';
+import type { ErrnoException } from '../types/index.js';
 
 export function isFatalError(settings: Settings, error: ErrnoException): boolean {
 	if (settings.errorFilter === null) {

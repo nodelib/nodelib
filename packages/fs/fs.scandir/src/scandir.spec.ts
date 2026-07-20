@@ -4,9 +4,9 @@ import * as fs from 'node:fs';
 import * as rimraf from 'rimraf';
 import { after, before, describe, it } from 'mocha';
 
-import { scandir, scandirSync } from './scandir';
-import { scandir as scandirPromise } from './scandir-promises';
-import { Settings } from './settings';
+import { scandir, scandirSync } from './scandir.js';
+import { scandir as scandirPromise } from './scandir-promises.js';
+import { Settings } from './settings.js';
 
 describe('Scandir', () => {
 	before(() => {

@@ -1,5 +1,5 @@
-import type { IAsyncReader } from '../readers/async';
-import type { Entry, ErrnoException } from '../types';
+import type { IAsyncReader } from '../readers/async.js';
+import type { Entry, ErrnoException } from '../types/index.js';
 
 export type AsyncCallback = (error: ErrnoException | null, entries: Entry[]) => void;
 type FailureCallback = (error: ErrnoException) => void;

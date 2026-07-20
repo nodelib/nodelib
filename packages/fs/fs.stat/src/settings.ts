@@ -1,4 +1,4 @@
-import * as fs from './adapters/fs';
+import * as fs from './adapters/fs.js';
 
 export interface Options {
 	followSymbolicLink?: boolean;

@@ -1,7 +1,7 @@
 import * as sinon from 'sinon';
 import { Dirent, DirentType } from '@nodelib/fs.macchiato';
 
-import type { Entry, ErrnoException } from '../types';
+import type { Entry, ErrnoException } from '../types/index.js';
 
 export function buildFakeFileEntry(entry?: Partial<Entry>): Entry {
 	return {

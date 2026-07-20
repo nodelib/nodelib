@@ -3,13 +3,13 @@ import * as path from 'node:path';
 
 import { describe, it } from 'mocha';
 
-import { Settings } from '../settings';
-import * as tests from '../tests';
-import { AsyncReader } from './async';
+import { Settings } from '../settings.js';
+import * as tests from '../tests/index.js';
+import { AsyncReader } from './async.js';
 
-import type { IFileSystemAdapter } from '../adapters/fs';
+import type { IFileSystemAdapter } from '../adapters/fs.js';
 import type * as sinon from 'sinon';
-import type { Entry } from '../types';
+import type { Entry } from '../types/index.js';
 
 class TestReader extends AsyncReader {
 	public readonly fs: sinon.SinonStubbedInstance<IFileSystemAdapter>;

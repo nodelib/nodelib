@@ -1,11 +1,11 @@
 import * as fsStat from '@nodelib/fs.stat';
-import * as rpl from 'run-parallel';
+import rpl from 'run-parallel';
 
-import * as fsUtils from '../utils/fs';
-import * as common from './common';
+import * as fsUtils from '../utils/fs.js';
+import * as common from './common.js';
 
-import type { Settings } from '../settings';
-import type { AsyncCallback, Entry, ErrnoException } from '../types';
+import type { Settings } from '../settings.js';
+import type { AsyncCallback, Entry, ErrnoException } from '../types/index.js';
 
 type RplTaskEntry = rpl.Task<Entry>;
 type StatsAction = (callback: fsStat.AsyncCallback) => void;

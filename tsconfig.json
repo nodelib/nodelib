@@ -1,10 +1,11 @@
 {
 	"compilerOptions": {
-		"target": "ES2022",
-		"lib": ["ES2020"],
-		"module": "commonjs",
-		"moduleResolution": "node",
+		"target": "es2024",
+		"lib": ["es2024"],
+		"module": "nodenext",
+		"moduleResolution": "nodenext",
 		"resolveJsonModule": true,
+		"types": ["node"],
 
 		"strict": true,
 		"noImplicitOverride": true,
@@ -18,15 +19,10 @@
 		"noFallthroughCasesInSwitch": true,
 
 		"forceConsistentCasingInFileNames": true,
-		"verbatimModuleSyntax": false,
+		"verbatimModuleSyntax": true,
 
-		"useDefineForClassFields": true,
-		"downlevelIteration": true,
 		"declaration": true,
 		"newLine": "lf",
-		"stripInternal": true,
-		"isolatedModules": true,
-
-		"incremental": true
+		"stripInternal": true
 	}
 }

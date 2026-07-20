@@ -5,11 +5,11 @@ import * as sinon from 'sinon';
 import { Dirent, DirentType, Stats, StatsMode } from '@nodelib/fs.macchiato';
 import { describe, it } from 'mocha';
 
-import { Settings } from '../settings';
-import * as fsUtils from '../utils/fs';
-import * as provider from './sync';
+import { Settings } from '../settings.js';
+import * as fsUtils from '../utils/fs.js';
+import * as provider from './sync.js';
 
-import type { Entry } from '../types';
+import type { Entry } from '../types/index.js';
 
 describe('Providers → Sync', () => {
 	describe('.read', () => {

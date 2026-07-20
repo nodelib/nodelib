@@ -3,11 +3,11 @@ import * as path from 'node:path';
 
 import { describe, it } from 'mocha';
 
-import { Settings } from '../settings';
-import * as tests from '../tests';
-import { SyncReader } from './sync';
+import { Settings } from '../settings.js';
+import * as tests from '../tests/index.js';
+import { SyncReader } from './sync.js';
 
-import type { IFileSystemAdapter } from '../adapters/fs';
+import type { IFileSystemAdapter } from '../adapters/fs.js';
 import type * as sinon from 'sinon';
 
 class TestReader extends SyncReader {

@@ -1,8 +1,8 @@
-import * as common from './common';
+import * as common from './common.js';
 
-import type { IFileSystemAdapter } from '../adapters/fs';
-import type { Settings } from '../settings';
-import type { Entry, ErrnoException, QueueItem } from '../types';
+import type { IFileSystemAdapter } from '../adapters/fs.js';
+import type { Settings } from '../settings.js';
+import type { Entry, ErrnoException, QueueItem } from '../types/index.js';
 
 export interface ISyncReader {
 	read: (root: string) => Entry[];

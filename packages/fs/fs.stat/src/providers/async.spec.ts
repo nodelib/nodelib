@@ -4,8 +4,8 @@ import * as sinon from 'sinon';
 import { Stats, StatsMode } from '@nodelib/fs.macchiato';
 import { describe, it } from 'mocha';
 
-import { Settings } from '../settings';
-import * as provider from './async';
+import { Settings } from '../settings.js';
+import * as provider from './async.js';
 
 describe('Providers → Async', () => {
 	describe('.read', () => {

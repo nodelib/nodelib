@@ -15,8 +15,8 @@ export function getMemory(): number {
 }
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-export function importCurrent(): Promise<typeof import('..')> {
-	return import('..');
+export function importCurrent(): Promise<typeof import('../index.js')> {
+	return import('../index.js');
 }
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports

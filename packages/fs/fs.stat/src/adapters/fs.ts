@@ -1,6 +1,6 @@
 import * as fs from 'node:fs';
 
-import type { ErrnoException } from '../types';
+import type { ErrnoException } from '../types/index.js';
 
 export type StatAsynchronousMethod = (path: string, callback: (error: ErrnoException | null, stats: fs.Stats) => void) => void;
 export type StatSynchronousMethod = (path: string) => fs.Stats;

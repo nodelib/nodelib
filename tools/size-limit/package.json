@@ -2,6 +2,7 @@
   "private": true,
   "name": "@nodelib-internal/tools.size-limit",
   "version": "0.0.0",
+  "type": "module",
   "bin": {
     "tools-size-limit": "size-limit.mjs"
   },

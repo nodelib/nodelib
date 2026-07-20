@@ -3,7 +3,7 @@ import * as fs from 'node:fs';
 
 import { describe, it } from 'mocha';
 
-import * as util from './fs';
+import * as util from './fs.js';
 
 describe('Utils → FS', () => {
 	describe('.createDirentFromStats', () => {

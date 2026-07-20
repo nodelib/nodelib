@@ -3,9 +3,9 @@ import * as path from 'node:path';
 
 import { describe, it } from 'mocha';
 
-import { Settings } from '../settings';
-import * as tests from '../tests';
-import * as common from './common';
+import { Settings } from '../settings.js';
+import * as tests from '../tests/index.js';
+import * as common from './common.js';
 
 describe('Readers → Common', () => {
 	describe('.isFatalError', () => {

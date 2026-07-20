@@ -1,6 +1,6 @@
 import * as fs from 'node:fs';
 
-import type { PrepareOptionsFromClass } from './types';
+import type { PrepareOptionsFromClass } from './types.js';
 
 const uid = process.getuid?.();
 const gid = process.getgid?.();

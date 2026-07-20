@@ -4,12 +4,12 @@ import * as fs from 'node:fs';
 import * as rimraf from 'rimraf';
 import { after, before, describe, it } from 'mocha';
 
-import { walk, walkSync, walkStream } from './walk';
-import { walk as walkPromise } from './walk-promises';
-import { Settings } from './settings';
+import { walk, walkSync, walkStream } from './walk.js';
+import { walk as walkPromise } from './walk-promises.js';
+import { Settings } from './settings.js';
 
 import type { Readable } from 'node:stream';
-import type { ErrnoException, Entry } from './types';
+import type { ErrnoException, Entry } from './types/index.js';
 
 const entryFilter = (entry: Entry): boolean => !entry.dirent.isDirectory();
 

@@ -2,6 +2,7 @@
   "private": true,
   "name": "@nodelib-internal/tools.npm-package-exports-linter",
   "version": "0.0.0",
+  "type": "module",
   "bin": {
     "npm-package-exports-linter": "npm-package-exports-linter.mjs"
   },

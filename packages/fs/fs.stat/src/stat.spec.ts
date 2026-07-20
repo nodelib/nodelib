@@ -4,9 +4,9 @@ import * as fs from 'node:fs';
 import * as rimraf from 'rimraf';
 import { after, before, describe, it } from 'mocha';
 
-import { stat, statSync } from './stat';
-import { stat as statPromise } from './stat-promises';
-import { Settings } from './settings';
+import { stat, statSync } from './stat.js';
+import { stat as statPromise } from './stat-promises.js';
+import { Settings } from './settings.js';
 
 describe('Stat', () => {
 	before(() => {

@@ -1,5 +1,5 @@
-import type { ISyncReader } from '../readers/sync';
-import type { Entry } from '../types';
+import type { ISyncReader } from '../readers/sync.js';
+import type { Entry } from '../types/index.js';
 
 export class SyncProvider {
 	readonly #reader: ISyncReader;

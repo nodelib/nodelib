@@ -2,7 +2,7 @@ import * as path from 'node:path';
 
 import * as fsStat from '@nodelib/fs.stat';
 
-import * as fs from './adapters/fs';
+import * as fs from './adapters/fs.js';
 
 export interface Options {
 	followSymbolicLinks?: boolean;

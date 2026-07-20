@@ -1,5 +1,5 @@
 import * as fs from 'node:fs';
-
+import * as process from 'node:process';
 import type { PrepareOptionsFromClass } from './types.js';
 
 const uid = process.getuid?.();
@@ -33,8 +33,8 @@ function createStats(options: StatsOptions = {}): Stats {
 	stats.ino = options.ino ?? 0;
 	stats.mode = options.mode ?? StatsMode.Unknown;
 	stats.nlink = options.nlink ?? 0;
-	stats.uid = ('uid' in options ? options.uid : uid) as number;
-	stats.gid = ('gid' in options ? options.gid : gid) as number;
+	stats.uid = ('uid' in options ? options.uid : uid)!;
+	stats.gid = ('gid' in options ? options.gid : gid)!;
 	stats.rdev = options.rdev ?? 0;
 	stats.size = options.size ?? 0;
 	stats.blksize = options.blksize ?? 0;
@@ -51,6 +51,6 @@ function createStats(options: StatsOptions = {}): Stats {
 	return stats;
 }
 
-// A value and a type intentionally share the public constructor name.
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const Stats = createStats as unknown as StatsConstructor;
+const statsConstructor = createStats as unknown as StatsConstructor;
+
+export { statsConstructor as Stats };

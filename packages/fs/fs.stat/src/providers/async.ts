@@ -1,6 +1,8 @@
 import type { Settings } from '../settings.js';
 import type { AsyncCallback, ErrnoException, Stats } from '../types/index.js';
 
+// Node-style callbacks report successful completion with null.
+// eslint-disable-next-line @typescript-eslint/no-restricted-types
 type FailureCallback = (error: ErrnoException | null) => void;
 
 export function read(path: string, settings: Settings, callback: AsyncCallback): void {
@@ -35,6 +37,8 @@ export function read(path: string, settings: Settings, callback: AsyncCallback):
 	});
 }
 
+// Node-style callbacks report successful completion with null.
+// eslint-disable-next-line @typescript-eslint/no-restricted-types
 function callFailureCallback(callback: AsyncCallback, error: ErrnoException | null): void {
 	(callback as FailureCallback)(error);
 }

@@ -1,15 +1,17 @@
 import * as assert from 'node:assert';
 import * as path from 'node:path';
-
 import * as sinon from 'sinon';
-import { Dirent, DirentType, Stats, StatsMode } from '@nodelib/fs.macchiato';
+import {
+	Dirent,
+	DirentType,
+	Stats,
+	StatsMode,
+} from '@nodelib/fs.macchiato';
 import { describe, it } from 'mocha';
-
 import { Settings } from '../settings.js';
 import * as fsUtils from '../utils/fs.js';
-import * as provider from './sync.js';
-
 import type { Entry } from '../types/index.js';
+import * as provider from './sync.js';
 
 describe('Providers → Sync', () => {
 	describe('.read', () => {

@@ -1,26 +1,23 @@
 import * as assert from 'node:assert';
 import * as path from 'node:path';
-
 import { describe, it } from 'mocha';
-
+import type * as sinon from 'sinon';
 import { Settings } from '../settings.js';
 import * as tests from '../tests/index.js';
+import type { FileSystemAdapterInterface } from '../adapters/fs.js';
+import type { Entry } from '../types/index.js';
 import { AsyncReader } from './async.js';
 
-import type { IFileSystemAdapter } from '../adapters/fs.js';
-import type * as sinon from 'sinon';
-import type { Entry } from '../types/index.js';
-
 class TestReader extends AsyncReader {
-	public readonly fs: sinon.SinonStubbedInstance<IFileSystemAdapter>;
+	public readonly fs: sinon.SinonStubbedInstance<FileSystemAdapterInterface>;
 
 	constructor(
 		settings: Settings = new Settings(),
-		fs: IFileSystemAdapter = new tests.TestFileSystemAdapter(),
+		fs: FileSystemAdapterInterface = new tests.TestFileSystemAdapter(),
 	) {
 		super(fs, settings);
 
-		this.fs = fs as sinon.SinonStubbedInstance<IFileSystemAdapter>;
+		this.fs = fs as sinon.SinonStubbedInstance<FileSystemAdapterInterface>;
 	}
 }
 
@@ -32,7 +29,7 @@ describe('Readers → Async', () => {
 			reader.fs.scandir.yields(tests.EPERM_ERRNO);
 
 			reader.onError((error) => {
-				assert.equal(error.code, 'EPERM');
+				assert.strictEqual(error.code, 'EPERM');
 				done();
 			});
 
@@ -43,7 +40,7 @@ describe('Readers → Async', () => {
 			const errorFromUserFilter = new Error('This is an error from user filter.');
 
 			const settings = new Settings({
-				entryFilter: () => {
+				entryFilter() {
 					throw errorFromUserFilter;
 				},
 			});
@@ -66,7 +63,7 @@ describe('Readers → Async', () => {
 			const errorFromUserFilter = new Error('This is an error from user filter.');
 
 			const settings = new Settings({
-				deepFilter: () => {
+				deepFilter() {
 					throw errorFromUserFilter;
 				},
 			});
@@ -89,11 +86,11 @@ describe('Readers → Async', () => {
 			const errorFromUserFilter = new Error('This is an error from user filter.');
 
 			const settings = new Settings({
-				deepFilter: () => {
+				deepFilter() {
 					throw errorFromUserFilter;
 				},
 				// When true, the error is filtered. Otherwise, the error will be emitted.
-				errorFilter: (error) => {
+				errorFilter(error) {
 					return error !== errorFromUserFilter;
 				},
 			});
@@ -141,7 +138,7 @@ describe('Readers → Async', () => {
 			 * If the behavior is broken, then a third scandir call will trigger an unhandled error.
 			 */
 			reader.onError((error) => {
-				assert.equal(error.code, 'EPERM');
+				assert.strictEqual(error.code, 'EPERM');
 				done();
 			});
 
@@ -171,11 +168,11 @@ describe('Readers → Async', () => {
 
 			reader.read('non-exist-directory');
 
-			assert.equal(calls, 1);
+			assert.strictEqual(calls, 1);
 			assert.throws(() => {
 				reader.read('non-exist-directory');
 			}, { code: 'EPERM' });
-			assert.equal(calls, 1);
+			assert.strictEqual(calls, 1);
 		});
 
 		it('should call end callback only once', (done) => {
@@ -193,7 +190,7 @@ describe('Readers → Async', () => {
 			reader.read('directory');
 
 			setImmediate(() => {
-				assert.equal(calls, 1);
+				assert.strictEqual(calls, 1);
 				done();
 			});
 		});
@@ -209,7 +206,9 @@ describe('Readers → Async', () => {
 
 			const entries: Entry[] = [];
 
-			reader.onEntry((entry) => entries.push(entry));
+			reader.onEntry((entry) => {
+				entries.push(entry);
+			});
 
 			reader.onEnd(() => {
 				assert.deepStrictEqual(entries, [fakeDirectoryEntry, fakeFileEntry]);
@@ -231,7 +230,9 @@ describe('Readers → Async', () => {
 
 			const entries: Entry[] = [];
 
-			reader.onEntry((entry) => entries.push(entry));
+			reader.onEntry((entry) => {
+				entries.push(entry);
+			});
 
 			reader.onEnd(() => {
 				assert.deepStrictEqual(entries, [fakeDirectoryEntry]);
@@ -253,7 +254,9 @@ describe('Readers → Async', () => {
 
 			const entries: Entry[] = [];
 
-			reader.onEntry((entry) => entries.push(entry));
+			reader.onEntry((entry) => {
+				entries.push(entry);
+			});
 
 			reader.onEnd(() => {
 				assert.deepStrictEqual(entries, [fakeDirectoryEntry]);
@@ -275,7 +278,9 @@ describe('Readers → Async', () => {
 
 			const entries: Entry[] = [];
 
-			reader.onEntry((entry) => entries.push(entry));
+			reader.onEntry((entry) => {
+				entries.push(entry);
+			});
 
 			reader.onEnd(() => {
 				assert.strictEqual(entries[0]?.path, path.join('base', fakeDirectoryEntry.name));
@@ -298,7 +303,9 @@ describe('Readers → Async', () => {
 
 			const entries: Entry[] = [];
 
-			reader.onEntry((entry) => entries.push(entry));
+			reader.onEntry((entry) => {
+				entries.push(entry);
+			});
 
 			reader.onEnd(() => {
 				assert.strictEqual(entries[0]?.path, path.join(fakeDirectoryEntry.name));
@@ -317,7 +324,7 @@ describe('Readers → Async', () => {
 				const reader = new TestReader(settings);
 
 				reader.onError((error) => {
-					assert.deepStrictEqual(error.name, 'AbortError');
+					assert.strictEqual(error.name, 'AbortError');
 
 					done();
 				});
@@ -338,7 +345,7 @@ describe('Readers → Async', () => {
 				const reader = new TestReader(settings);
 
 				reader.onError((error) => {
-					assert.deepStrictEqual(error.name, 'AbortError');
+					assert.strictEqual(error.name, 'AbortError');
 
 					done();
 				});
@@ -386,9 +393,7 @@ describe('Readers → Async', () => {
 
 			reader.destroy();
 
-			assert.doesNotThrow(() => {
-				reader.destroy();
-			});
+			reader.destroy();
 		});
 	});
 });

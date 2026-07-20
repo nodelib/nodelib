@@ -9,6 +9,8 @@ export function isFatalError(settings: Settings, error: ErrnoException): boolean
 	return !settings.errorFilter(error);
 }
 
+// Filters default to null when they are not configured.
+// eslint-disable-next-line @typescript-eslint/no-restricted-types
 export function isAppliedFilter<T>(filter: FilterFunction<T> | null, value: T): boolean {
 	return filter === null || filter(value);
 }

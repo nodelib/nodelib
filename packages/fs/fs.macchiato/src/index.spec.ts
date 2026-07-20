@@ -1,8 +1,6 @@
 import * as assert from 'node:assert';
 import * as fs from 'node:fs';
-
 import { describe, it } from 'mocha';
-
 import { Dirent, Stats } from './index.js';
 
 describe('Package', () => {

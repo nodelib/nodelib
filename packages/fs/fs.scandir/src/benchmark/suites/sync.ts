@@ -1,13 +1,11 @@
 import * as path from 'node:path';
-
+import * as process from 'node:process';
 import * as bencho from 'bencho';
-
+import type { Options } from '@nodelib/fs.scandir.previous';
 import * as utils from '../utils.js';
 
-import type { Options } from '@nodelib/fs.scandir.previous';
-
 type ScandirImplementation = 'current' | 'previous';
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 type ScandirImplFunction = (...args: any[]) => unknown[];
 
 class Scandir {
@@ -17,20 +15,6 @@ class Scandir {
 	constructor(cwd: string, options: Options) {
 		this.#cwd = cwd;
 		this.#options = options;
-	}
-
-	public async measurePreviousVersion(): Promise<void> {
-		const scandir = await utils.importAndMeasure(utils.importPrevious);
-		const settings = new scandir.Settings(this.#options);
-
-		this.#measure(() => scandir.scandirSync(this.#cwd, settings));
-	}
-
-	public async measureCurrentVersion(): Promise<void> {
-		const scandir = await utils.importAndMeasure(utils.importCurrent);
-		const settings = new scandir.Settings(this.#options);
-
-		this.#measure(() => scandir.scandirSync(this.#cwd, settings));
 	}
 
 	#measure(function_: ScandirImplFunction): void {
@@ -46,14 +30,27 @@ class Scandir {
 		bencho.memory('memory', memory);
 		bencho.value('entries', count);
 	}
+
+	public async measurePreviousVersion(): Promise<void> {
+		const scandir = await utils.importAndMeasure(utils.importPrevious);
+		const settings = new scandir.Settings(this.#options);
+
+		this.#measure(() => scandir.scandirSync(this.#cwd, settings));
+	}
+
+	public async measureCurrentVersion(): Promise<void> {
+		const scandir = await utils.importAndMeasure(utils.importCurrent);
+		const settings = new scandir.Settings(this.#options);
+
+		this.#measure(() => scandir.scandirSync(this.#cwd, settings));
+	}
 }
 
-// eslint-disable-next-line @typescript-eslint/no-floating-promises
 (async () => {
 	const args = process.argv.slice(2);
 
 	const impl = args[0] as ScandirImplementation;
-	const cwd = path.join(process.cwd(), args[1] as string);
+	const cwd = path.join(process.cwd(), args[1]!);
 	const options = JSON.parse(process.env['BENCHMARK_OPTIONS'] ?? '{}') as Options;
 
 	const scandir = new Scandir(cwd, options);
@@ -69,6 +66,7 @@ class Scandir {
 			break;
 		}
 
+		// eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
 		default: {
 			throw new TypeError('Unknown implementation');
 		}

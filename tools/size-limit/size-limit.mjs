@@ -1,18 +1,17 @@
 #!/usr/bin/env node
 
 import { exec } from 'node:child_process';
+import * as process from 'node:process';
 import { promisify } from 'node:util';
-
+import chalk from 'chalk';
 import prettyBytes from 'pretty-bytes';
-import { Chalk } from 'chalk';
 
-const chalk = new Chalk({ level: 1 });
+chalk.level = 1;
 
 const executeCommand = promisify(exec);
 
 const RATIO_LIMIT = 10;
-const LERNA_PACKAGE_NAME = process.env.LERNA_PACKAGE_NAME;
-const TOOLS_SIZE_LIMIT_SKIP = process.env.TOOLS_SIZE_LIMIT_SKIP;
+const { LERNA_PACKAGE_NAME, TOOLS_SIZE_LIMIT_SKIP } = process.env;
 
 async function main() {
 	const remote = await getPackageSize(`${LERNA_PACKAGE_NAME}@latest`);
@@ -33,19 +32,26 @@ async function main() {
 	if (sizeRatio > RATIO_LIMIT) {
 		const current = prettyBytes(local.size);
 		const previous = prettyBytes(remote.size);
+		const difference = chalk.yellow(`${sizeRatio.toFixed(2)}%`);
+		const message = `The size of the new version is ${chalk.red(current)} which is ${difference} more than the previous version (${chalk.green(previous)}).`;
 
-		lines.push(`The size of the new version is ${chalk.red(current)} which is ${chalk.yellow(`${sizeRatio.toFixed(2)}%`)} more than the previous version (${chalk.green(previous)}).`);
+		lines.push(message);
 	}
 
 	if (unpackedSizeRatio > RATIO_LIMIT) {
 		const current = prettyBytes(local.unpackedSize);
 		const previous = prettyBytes(remote.unpackedSize);
+		const difference = chalk.yellow(`${unpackedSizeRatio.toFixed(2)}%`);
+		const message = `The unpacked size of the new version is ${chalk.red(current)} which is ${difference} more than the previous version (${chalk.green(previous)}).`;
 
-		lines.push(`The unpacked size of the new version is ${chalk.red(current)} which is ${chalk.yellow(`${unpackedSizeRatio.toFixed(2)}%`)} more than the previous version (${chalk.green(previous)}).`);
+		lines.push(message);
 	}
 
 	if (entryCountRatio > RATIO_LIMIT) {
-		lines.push(`The number of files in the new version is ${chalk.red(local.entryCount)} which is ${chalk.yellow(`${entryCountRatio.toFixed(2)}%`)} more than the previous version (${chalk.green(remote.entryCount)}).`);
+		const difference = chalk.yellow(`${entryCountRatio.toFixed(2)}%`);
+		const message = `The number of files in the new version is ${chalk.red(local.entryCount)} which is ${difference} more than the previous version (${chalk.green(remote.entryCount)}).`;
+
+		lines.push(message);
 	}
 
 	if (lines.length > 0) {
@@ -60,8 +66,10 @@ async function main() {
 }
 
 /**
- * @param {string} name
- * @returns {Promise<PackageInfo | null>}
+ * Gets size details for a package published to npm.
+ *
+ * @param {string} name - Package name or path.
+ * @returns {Promise<PackageInfo | null>} Package details, or null if the package is unpublished.
  */
 async function getPackageSize(name) {
 	try {
@@ -94,8 +102,10 @@ async function getPackageSize(name) {
 })();
 
 /**
- * @typedef {Object} PackageInfo
- * @property {number} size
- * @property {number} unpackedSize
- * @property {number} entryCount
+ * Package size details reported by npm.
+ *
+ * @typedef {object} PackageInfo
+ * @property {number} size - Packed size in bytes.
+ * @property {number} unpackedSize - Unpacked size in bytes.
+ * @property {number} entryCount - Number of files in the package.
  */

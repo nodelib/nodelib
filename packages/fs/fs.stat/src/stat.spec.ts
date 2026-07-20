@@ -1,16 +1,18 @@
 import * as assert from 'node:assert';
 import * as fs from 'node:fs';
-
-import * as rimraf from 'rimraf';
-import { after, before, describe, it } from 'mocha';
-
+import {
+	after,
+	before,
+	describe,
+	it,
+} from 'mocha';
 import { stat, statSync } from './stat.js';
 import { stat as statPromise } from './stat-promises.js';
 import { Settings } from './settings.js';
 
 describe('Stat', () => {
 	before(() => {
-		rimraf.sync('fixtures');
+		fs.rmSync('fixtures', { recursive: true, force: true });
 
 		fs.mkdirSync('fixtures');
 		fs.mkdirSync('fixtures/a');
@@ -18,7 +20,7 @@ describe('Stat', () => {
 	});
 
 	after(() => {
-		rimraf.sync('fixtures');
+		fs.rmSync('fixtures', { recursive: true, force: true });
 	});
 
 	describe('.stat (promise)', () => {

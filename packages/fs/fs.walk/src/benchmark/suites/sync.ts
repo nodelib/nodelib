@@ -1,19 +1,17 @@
 import * as path from 'node:path';
-
+import * as process from 'node:process';
 import * as bencho from 'bencho';
-
+import type { Options } from '@nodelib/fs.walk.previous';
 import * as utils from '../utils.js';
 
-import type { Options } from '@nodelib/fs.walk.previous';
-
 type WalkImplementation = 'current' | 'previous';
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 type WalkImplFunction = (...args: any[]) => unknown[];
 
-interface WalkOptions extends Options {
+type WalkOptions = {
 	defaultFilter?: boolean;
 	depthFilter?: boolean;
-}
+} & Options;
 
 class Walk {
 	readonly #cwd: string;
@@ -32,20 +30,6 @@ class Walk {
 		}
 	}
 
-	public async measurePreviousVersion(): Promise<void> {
-		const walk = await utils.importAndMeasure(utils.importPrevious);
-		const settings = new walk.Settings(this.#options);
-
-		this.#measure(() => walk.walkSync(this.#cwd, settings));
-	}
-
-	public async measureCurrentVersion(): Promise<void> {
-		const walk = await utils.importAndMeasure(utils.importCurrent);
-		const settings = new walk.Settings(this.#options);
-
-		this.#measure(() => walk.walkSync(this.#cwd, settings));
-	}
-
 	#measure(function_: WalkImplFunction): void {
 		const timeStart = utils.timeStart();
 
@@ -59,14 +43,27 @@ class Walk {
 		bencho.memory('memory', memory);
 		bencho.value('entries', count);
 	}
+
+	public async measurePreviousVersion(): Promise<void> {
+		const walk = await utils.importAndMeasure(utils.importPrevious);
+		const settings = new walk.Settings(this.#options);
+
+		this.#measure(() => walk.walkSync(this.#cwd, settings));
+	}
+
+	public async measureCurrentVersion(): Promise<void> {
+		const walk = await utils.importAndMeasure(utils.importCurrent);
+		const settings = new walk.Settings(this.#options);
+
+		this.#measure(() => walk.walkSync(this.#cwd, settings));
+	}
 }
 
-// eslint-disable-next-line @typescript-eslint/no-floating-promises
 (async () => {
 	const args = process.argv.slice(2);
 
 	const impl = args[0] as WalkImplementation;
-	const cwd = path.resolve(args[1] as string);
+	const cwd = path.resolve(args[1]!);
 	const options = JSON.parse(process.env['BENCHMARK_OPTIONS'] ?? '{}') as WalkOptions;
 
 	const walk = new Walk(cwd, options);
@@ -82,6 +79,7 @@ class Walk {
 			break;
 		}
 
+		// eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
 		default: {
 			throw new TypeError('Unknown implementation');
 		}

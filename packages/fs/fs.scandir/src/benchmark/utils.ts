@@ -1,5 +1,5 @@
 import { performance } from 'node:perf_hooks';
-
+import * as process from 'node:process';
 import * as bencho from 'bencho';
 
 export function timeStart(): number {
@@ -15,12 +15,12 @@ export function getMemory(): number {
 }
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-export function importCurrent(): Promise<typeof import('../index.js')> {
+export async function importCurrent(): Promise<typeof import('../index.js')> {
 	return import('../index.js');
 }
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-export function importPrevious(): Promise<typeof import('@nodelib/fs.scandir.previous')> {
+export async function importPrevious(): Promise<typeof import('@nodelib/fs.scandir.previous')> {
 	return import('@nodelib/fs.scandir.previous');
 }
 

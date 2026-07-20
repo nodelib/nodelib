@@ -1,9 +1,7 @@
 import * as assert from 'node:assert';
-
 import * as sinon from 'sinon';
 import { Stats, StatsMode } from '@nodelib/fs.macchiato';
 import { describe, it } from 'mocha';
-
 import { Settings } from '../settings.js';
 import * as provider from './sync.js';
 

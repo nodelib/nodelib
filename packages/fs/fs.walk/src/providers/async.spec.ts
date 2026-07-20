@@ -1,22 +1,23 @@
 import * as assert from 'node:assert';
-
 import * as sinon from 'sinon';
 import { describe, it } from 'mocha';
-
 import * as tests from '../tests/index.js';
-import { AsyncProvider } from './async.js';
+import type { AsyncReaderInterface } from '../readers/async.js';
+import { AsyncProvider, type AsyncCallback } from './async.js';
 
-import type { IAsyncReader } from '../readers/async.js';
+function createCallback(stub: sinon.SinonStub): AsyncCallback {
+	return (...args): void => {
+		stub(...args);
+	};
+}
 
 class TestProvider extends AsyncProvider {
-	public readonly reader: sinon.SinonStubbedInstance<IAsyncReader>;
+	public readonly reader: sinon.SinonStubbedInstance<AsyncReaderInterface>;
 
-	constructor(
-		reader: IAsyncReader = new tests.TestAsyncReader(),
-	) {
+	constructor(reader: AsyncReaderInterface = new tests.TestAsyncReader()) {
 		super(reader);
 
-		this.reader = reader as sinon.SinonStubbedInstance<IAsyncReader>;
+		this.reader = reader as sinon.SinonStubbedInstance<AsyncReaderInterface>;
 	}
 }
 
@@ -26,7 +27,7 @@ describe('Providers → Async', () => {
 			const provider = new TestProvider();
 			const fakeCallback = sinon.stub();
 
-			provider.read('directory', fakeCallback);
+			provider.read('directory', createCallback(fakeCallback));
 
 			assert.ok(provider.reader.read.called);
 		});
@@ -37,7 +38,7 @@ describe('Providers → Async', () => {
 
 			provider.reader.onError.yields(tests.EPERM_ERRNO);
 
-			provider.read('directory', fakeCallback);
+			provider.read('directory', createCallback(fakeCallback));
 
 			assert.deepStrictEqual(fakeCallback.args, [[tests.EPERM_ERRNO]]);
 		});
@@ -50,7 +51,7 @@ describe('Providers → Async', () => {
 			provider.reader.onEntry.yields(fakeEntry);
 			provider.reader.onEnd.yields();
 
-			provider.read('directory', fakeCallback);
+			provider.read('directory', createCallback(fakeCallback));
 
 			assert.deepStrictEqual(fakeCallback.args, [[null, [fakeEntry]]]);
 		});

@@ -1,5 +1,4 @@
 import * as fs from 'node:fs';
-
 import type { Dirent } from '../types/index.js';
 
 type DirentStatsKeysIntersection = keyof fs.Dirent & keyof fs.Stats;

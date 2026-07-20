@@ -1,16 +1,12 @@
 import { build } from 'eslint-config-mrmlnc';
+import { defineConfig } from 'eslint/config';
 
-/** @type {import('eslint').Linter.Config[]} */
-const overrides = [
-	...build({}),
+export default defineConfig([
+	...build(),
 	{
-		name: 'overrides',
 		rules: {
-			// https://github.com/benmosher/eslint-plugin-import/issues/1174
-			// https://github.com/benmosher/eslint-plugin-import/issues/1214
-			'import/no-extraneous-dependencies': 'off',
+			'require-unicode-regexp': 'off',
+			'unicorn/prefer-top-level-await': 'off',
 		},
 	},
-];
-
-export default overrides;
+]);

@@ -1,15 +1,19 @@
 import * as fsStat from '@nodelib/fs.stat';
 import rpl from 'run-parallel';
-
 import * as fsUtils from '../utils/fs.js';
-import * as common from './common.js';
-
 import type { Settings } from '../settings.js';
 import type { AsyncCallback, Entry, ErrnoException } from '../types/index.js';
+import * as common from './common.js';
 
 type RplTaskEntry = rpl.Task<Entry>;
 type StatsAction = (callback: fsStat.AsyncCallback) => void;
 
+// `run-parallel` uses null to indicate successful completion.
+// eslint-disable-next-line @typescript-eslint/no-restricted-types
+type RplError = Error | null;
+
+// Node-style callbacks report successful completion with null.
+// eslint-disable-next-line @typescript-eslint/no-restricted-types
 type FailureCallback = (error: ErrnoException | null) => void;
 
 export function read(directory: string, settings: Settings, callback: AsyncCallback): void {
@@ -32,7 +36,7 @@ export function read(directory: string, settings: Settings, callback: AsyncCallb
 
 		const tasks = makeRplTasks(directory, entries, settings);
 
-		rpl(tasks, (rplError: Error | null) => {
+		rpl(tasks, (rplError: RplError) => {
 			if (rplError !== null) {
 				callFailureCallback(callback, rplError);
 				return;
@@ -104,6 +108,8 @@ function getStatsAction(entry: Entry, settings: Settings): StatsAction | undefin
 	return undefined;
 }
 
+// Node-style callbacks report successful completion with null.
+// eslint-disable-next-line @typescript-eslint/no-restricted-types
 function callFailureCallback(callback: AsyncCallback, error: ErrnoException | null): void {
 	(callback as FailureCallback)(error);
 }

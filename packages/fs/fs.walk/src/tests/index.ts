@@ -1,6 +1,5 @@
 import * as sinon from 'sinon';
 import { Dirent, DirentType } from '@nodelib/fs.macchiato';
-
 import type { Entry, ErrnoException } from '../types/index.js';
 
 export function buildFakeFileEntry(entry?: Partial<Entry>): Entry {
@@ -33,7 +32,7 @@ export class TestAsyncReader {
 	public onError: sinon.SinonStub = sinon.stub();
 	public onEntry: sinon.SinonStub = sinon.stub();
 	public onEnd: sinon.SinonStub = sinon.stub();
-	public isDestroyed: boolean = false;
+	public isDestroyed = false;
 }
 
 export class TestSyncReader {

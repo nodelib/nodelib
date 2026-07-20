@@ -1,25 +1,22 @@
-import { Settings } from './settings.js';
+import type { Readable } from 'node:stream';
+import { Settings, type Options } from './settings.js';
 import { FileSystemAdapter } from './adapters/fs.js';
-import { AsyncProvider } from './providers/async.js';
+import { AsyncProvider, type AsyncCallback } from './providers/async.js';
 import { AsyncReader } from './readers/async.js';
 import { SyncReader } from './readers/sync.js';
 import { SyncProvider } from './providers/sync.js';
 import { StreamProvider } from './providers/stream.js';
-
-import type { AsyncCallback } from './providers/async.js';
 import type { Entry } from './types/index.js';
-import type { Readable } from 'node:stream';
-import type { Options } from './settings.js';
 
 const fs = new FileSystemAdapter();
 
 export function walk(directory: string, callback: AsyncCallback): void;
 export function walk(directory: string, options: Options | Settings, callback: AsyncCallback): void;
 export function walk(directory: string, options: AsyncCallback | Options | Settings, callback?: AsyncCallback): void {
-	const optionsIsCallback = typeof options === 'function';
+	const isOptionsIsCallback = typeof options === 'function';
 
-	const callback_ = optionsIsCallback ? options : callback as AsyncCallback;
-	const settings = optionsIsCallback ? getSettings() : getSettings(options);
+	const callback_ = isOptionsIsCallback ? options : callback!;
+	const settings = isOptionsIsCallback ? getSettings() : getSettings(options);
 
 	const reader = new AsyncReader(fs, settings);
 	const provider = new AsyncProvider(reader);
@@ -27,7 +24,10 @@ export function walk(directory: string, options: AsyncCallback | Options | Setti
 	provider.read(directory, callback_);
 }
 
+// This declaration models Node's legacy `util.promisify` extension point.
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export declare namespace walk {
+	// eslint-disable-next-line @typescript-eslint/naming-convention
 	function __promisify__(directory: string, optionsOrSettings?: Options | Settings): Promise<Entry[]>;
 }
 

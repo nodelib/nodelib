@@ -1,16 +1,20 @@
 import * as assert from 'node:assert';
-
 import * as sinon from 'sinon';
 import { Stats, StatsMode } from '@nodelib/fs.macchiato';
 import { describe, it } from 'mocha';
-
 import { Settings } from '../settings.js';
 import * as provider from './async.js';
+
+function createStatMethod(stub: sinon.SinonStub): Settings['fs']['lstat'] {
+	return (...args): void => {
+		stub(...args);
+	};
+}
 
 describe('Providers → Async', () => {
 	describe('.read', () => {
 		it('should return lstat for non-symlink entry', (done) => {
-			const lstat = sinon.stub().yields(null, new Stats());
+			const lstat = createStatMethod(sinon.stub().yields(null, new Stats()));
 
 			const settings = new Settings({
 				fs: { lstat },
@@ -24,7 +28,7 @@ describe('Providers → Async', () => {
 		});
 
 		it('should return lstat for symlink entry when the "followSymbolicLink" option is disabled', (done) => {
-			const lstat = sinon.stub().yields(null, new Stats({ mode: StatsMode.Link }));
+			const lstat = createStatMethod(sinon.stub().yields(null, new Stats({ mode: StatsMode.Link })));
 
 			const settings = new Settings({
 				followSymbolicLink: false,
@@ -39,8 +43,8 @@ describe('Providers → Async', () => {
 		});
 
 		it('should return stat for symlink entry', (done) => {
-			const lstat = sinon.stub().yields(null, new Stats({ mode: StatsMode.Link }));
-			const stat = sinon.stub().yields(null, new Stats({ ino: 1 }));
+			const lstat = createStatMethod(sinon.stub().yields(null, new Stats({ mode: StatsMode.Link })));
+			const stat = createStatMethod(sinon.stub().yields(null, new Stats({ ino: 1 })));
 
 			const settings = new Settings({
 				fs: { lstat, stat },
@@ -54,8 +58,8 @@ describe('Providers → Async', () => {
 		});
 
 		it('should return marked stat for symlink entry when the "markSymbolicLink" option is enabled', (done) => {
-			const lstat = sinon.stub().yields(null, new Stats({ mode: StatsMode.Link }));
-			const stat = sinon.stub().yields(null, new Stats({ ino: 1 }));
+			const lstat = createStatMethod(sinon.stub().yields(null, new Stats({ mode: StatsMode.Link })));
+			const stat = createStatMethod(sinon.stub().yields(null, new Stats({ ino: 1 })));
 
 			const settings = new Settings({
 				fs: { lstat, stat },
@@ -70,8 +74,8 @@ describe('Providers → Async', () => {
 		});
 
 		it('should return lstat for broken symlink entry when the "throwErrorOnBrokenSymbolicLink" option is disabled', (done) => {
-			const lstat = sinon.stub().yields(null, new Stats({ mode: StatsMode.Link }));
-			const stat = sinon.stub().yields(new Error('error_message'));
+			const lstat = createStatMethod(sinon.stub().yields(null, new Stats({ mode: StatsMode.Link })));
+			const stat = createStatMethod(sinon.stub().yields(new Error('error_message')));
 
 			const settings = new Settings({
 				fs: { lstat, stat },
@@ -86,8 +90,8 @@ describe('Providers → Async', () => {
 		});
 
 		it('should throw an error when symlink entry is broken', (done) => {
-			const lstat = sinon.stub().yields(null, new Stats({ mode: StatsMode.Link }));
-			const stat = sinon.stub().yields(new Error('broken'));
+			const lstat = createStatMethod(sinon.stub().yields(null, new Stats({ mode: StatsMode.Link })));
+			const stat = createStatMethod(sinon.stub().yields(new Error('broken')));
 
 			const settings = new Settings({
 				fs: { lstat, stat },

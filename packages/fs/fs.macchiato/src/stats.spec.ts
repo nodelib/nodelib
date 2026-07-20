@@ -1,9 +1,13 @@
 import * as assert from 'node:assert';
 import * as fs from 'node:fs';
-
+import * as process from 'node:process';
 import * as sinon from 'sinon';
-import { after, before, describe, it } from 'mocha';
-
+import {
+	after,
+	before,
+	describe,
+	it,
+} from 'mocha';
 import { Stats, StatsMode } from './stats.js';
 
 const uid = process.getuid?.();

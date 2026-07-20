@@ -13,7 +13,7 @@ export enum DirentType {
 }
 
 export class Dirent extends fs.Dirent {
-	constructor(name: string = 'unknown.txt', type: DirentType = DirentType.Unknown) {
+	constructor(name = 'unknown.txt', type: DirentType = DirentType.Unknown) {
 		// @ts-expect-error Types do not provide arguments.
 		// https://github.com/nodejs/node/blob/6675505686310771b8016805a381945826aad887/lib/internal/fs/utils.js#L164
 		super(name, type);

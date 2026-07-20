@@ -1,7 +1,6 @@
 import { performance } from 'node:perf_hooks';
-
+import * as process from 'node:process';
 import * as bencho from 'bencho';
-
 import type { Options } from '@nodelib/fs.walk.previous';
 
 export function timeStart(): number {
@@ -17,12 +16,12 @@ export function getMemory(): number {
 }
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-export function importCurrent(): Promise<typeof import('../index.js')> {
+export async function importCurrent(): Promise<typeof import('../index.js')> {
 	return import('../index.js');
 }
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-export function importPrevious(): Promise<typeof import('@nodelib/fs.walk.previous')> {
+export async function importPrevious(): Promise<typeof import('@nodelib/fs.walk.previous')> {
 	return import('@nodelib/fs.walk.previous');
 }
 
@@ -52,7 +51,5 @@ export function assignDefaultFilter(options: Options): void {
 }
 
 export function assignDepthFilter(options: Options): void {
-	options.deepFilter = (entry) => {
-		return entry.path.split('/').length <= 5;
-	};
+	options.deepFilter = (entry) => entry.path.split('/').length <= 5;
 }

@@ -1,10 +1,18 @@
 import * as fs from 'node:fs';
-
 import type * as fsStat from '@nodelib/fs.stat';
 import type { Dirent, ErrnoException } from '../types/index.js';
 
-export type ReaddirAsynchronousMethod = (filepath: string, options: { withFileTypes: true }, callback: (error: ErrnoException | null, files: Dirent[]) => void) => void;
-export type ReaddirSynchronousMethod = (filepath: string, options: { withFileTypes: true }) => Dirent[];
+export type ReaddirAsynchronousMethod = (
+	filepath: string,
+	options: { withFileTypes: true },
+	// eslint-disable-next-line @typescript-eslint/no-restricted-types
+	callback: (error: ErrnoException | null, files: Dirent[]) => void,
+) => void;
+
+export type ReaddirSynchronousMethod = (
+	filepath: string,
+	options: { withFileTypes: true },
+) => Dirent[];
 
 export type FileSystemAdapter = {
 	readdir: ReaddirAsynchronousMethod;

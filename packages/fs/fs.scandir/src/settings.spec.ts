@@ -1,10 +1,8 @@
 import * as assert from 'node:assert';
 import * as path from 'node:path';
-
 import { Stats } from '@nodelib/fs.macchiato';
 import { describe, it } from 'mocha';
 import * as fsStat from '@nodelib/fs.stat';
-
 import * as fs from './adapters/fs.js';
 import { Settings } from './settings.js';
 

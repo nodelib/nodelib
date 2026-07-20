@@ -1,8 +1,6 @@
-import { Settings } from './settings.js';
+import { Settings, type Options } from './settings.js';
 import * as async from './providers/async.js';
 import * as sync from './providers/sync.js';
-
-import type { Options } from './settings.js';
 import type { AsyncCallback, Entry } from './types/index.js';
 
 export function scandir(path: string, callback: AsyncCallback): void;
@@ -13,10 +11,13 @@ export function scandir(path: string, optionsOrSettingsOrCallback: AsyncCallback
 		return;
 	}
 
-	async.read(path, getSettings(optionsOrSettingsOrCallback), callback as AsyncCallback);
+	async.read(path, getSettings(optionsOrSettingsOrCallback), callback!);
 }
 
+// This declaration models Node's legacy `util.promisify` extension point.
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export declare namespace scandir {
+	// eslint-disable-next-line @typescript-eslint/naming-convention
 	function __promisify__(path: string, optionsOrSettings?: Options | Settings): Promise<Entry[]>;
 }
 

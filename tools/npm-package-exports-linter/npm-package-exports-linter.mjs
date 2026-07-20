@@ -1,15 +1,13 @@
 #!/usr/bin/env node
 
-import { exec } from 'node:child_process';
 import path from 'node:path';
 import * as process from 'node:process';
-import { promisify } from 'node:util';
 import chalk from 'chalk';
+import { execa } from 'execa';
 
 const { LERNA_PACKAGE_NAME } = process.env;
 
 chalk.level = 1;
-const executeCommand = promisify(exec);
 
 async function main() {
 	const packageFiles = await getPackageFiles(LERNA_PACKAGE_NAME);
@@ -25,7 +23,7 @@ async function main() {
  * @returns {Promise<string[]>} Paths of the files included in the package.
  */
 async function getPackageFiles(name) {
-	const { stdout } = await executeCommand(`npm pack ${name} --dry --json`);
+	const { stdout } = await execa('npm', ['pack', name, '--dry-run', '--json']);
 
 	/** @type {[PackageInfo]} */
 	const [data] = JSON.parse(stdout);
@@ -40,7 +38,7 @@ async function getPackageFiles(name) {
  * @returns {Promise<string[]>} Paths referenced by the export map.
  */
 async function getPackageManifestExportFiles(name) {
-	const { stdout } = await executeCommand('npm pkg get exports --json');
+	const { stdout } = await execa('npm', ['pkg', 'get', 'exports', '--json']);
 
 	/** @type {Record<string, PackageInfo>} */
 	const manifests = JSON.parse(stdout);

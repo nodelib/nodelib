@@ -3,22 +3,26 @@ import { describe, it } from 'node:test';
 import * as common from './common.js';
 
 describe('Readers → Common', () => {
-	describe('.joinPathSegments', () => {
-		it('should return concatenated string', () => {
-			assert.strictEqual(common.joinPathSegments('.', 'a', '/'), './a');
+	describe('.getPathPrefix', () => {
+		it('should append the separator only when it is missing', () => {
+			const windowsPath = String.raw`C:\Users`;
+
+			assert.strictEqual(common.getPathPrefix('.', '/'), './');
+			assert.strictEqual(common.getPathPrefix('directory', '/'), 'directory/');
+			assert.strictEqual(common.getPathPrefix(windowsPath, '\\'), `${windowsPath}\\`);
 		});
 
-		it('should return correct string when the first segment ens with the separator symbol', () => {
+		it('should preserve paths that already end with the separator', () => {
 			// Unix
-			assert.strictEqual(common.joinPathSegments('/', 'a', '/'), '/a');
-			assert.strictEqual(common.joinPathSegments('//', 'a', '/'), '//a');
-			assert.strictEqual(common.joinPathSegments('/a/', 'b', '/'), '/a/b');
+			assert.strictEqual(common.getPathPrefix('/', '/'), '/');
+			assert.strictEqual(common.getPathPrefix('//', '/'), '//');
+			assert.strictEqual(common.getPathPrefix('/directory/', '/'), '/directory/');
 
 			// Windows
-			assert.strictEqual(common.joinPathSegments('C:/', 'Users', '/'), 'C:/Users');
-			assert.strictEqual(common.joinPathSegments('C:\\', 'Users', '\\'), String.raw`C:\Users`);
-			assert.strictEqual(common.joinPathSegments('//?/C:/', 'Users', '/'), '//?/C:/Users');
-			assert.strictEqual(common.joinPathSegments('\\\\?\\C:\\', 'Users', '\\'), String.raw`\\?\C:\Users`);
+			assert.strictEqual(common.getPathPrefix('C:/', '/'), 'C:/');
+			assert.strictEqual(common.getPathPrefix('C:\\', '\\'), 'C:\\');
+			assert.strictEqual(common.getPathPrefix('//?/C:/', '/'), '//?/C:/');
+			assert.strictEqual(common.getPathPrefix('\\\\?\\C:\\', '\\'), '\\\\?\\C:\\');
 		});
 	});
 });

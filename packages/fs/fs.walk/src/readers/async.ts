@@ -113,6 +113,8 @@ export class AsyncReader extends AsyncReaderCallbacks implements AsyncReaderInte
 				return;
 			}
 
+			const basePrefix = item.base === undefined ? undefined : common.getPathPrefix(item.base, this.#settings.pathSegmentSeparator);
+
 			/**
 			 * The user can define their own custom filtering and error handling functions.
 			 * If the user throws an error, we need to catch it and emit it to the user error handler.
@@ -129,7 +131,7 @@ export class AsyncReader extends AsyncReaderCallbacks implements AsyncReaderInte
 						break;
 					}
 
-					this.#handleEntry(entry, item.base);
+					this.#handleEntry(entry, basePrefix);
 				}
 			} catch (caughtError) {
 				done(caughtError as Error, undefined);
@@ -155,7 +157,7 @@ export class AsyncReader extends AsyncReaderCallbacks implements AsyncReaderInte
 		const fullpath = entry.path;
 
 		if (base !== undefined) {
-			entry.path = common.joinPathSegments(base, entry.name, this.#settings.pathSegmentSeparator);
+			entry.path = base + entry.name;
 		}
 
 		if (common.isAppliedFilter(this.#settings.entryFilter, entry)) {

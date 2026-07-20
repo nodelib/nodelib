@@ -1,8 +1,8 @@
-import cfg from 'eslint-config-mrmlnc';
+import { build } from 'eslint-config-mrmlnc';
 
 /** @type {import('eslint').Linter.Config[]} */
 const overrides = [
-	...cfg.build({}),
+	...build({}),
 	{
 		name: 'overrides',
 		rules: {

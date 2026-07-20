@@ -10,5 +10,9 @@
   },
   "dependencies": {
     "chalk": "^5.3.0"
+  },
+  "devDependencies": {
+    "eslint": "9.14.0",
+    "eslint-config-mrmlnc": "5.0.0"
   }
 }

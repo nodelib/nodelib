@@ -1,14 +1,11 @@
 #!/usr/bin/env node
 
-import { exec } from 'node:child_process';
 import * as process from 'node:process';
-import { promisify } from 'node:util';
 import chalk from 'chalk';
+import { execa } from 'execa';
 import prettyBytes from 'pretty-bytes';
 
 chalk.level = 1;
-
-const executeCommand = promisify(exec);
 
 const RATIO_LIMIT = 10;
 const { LERNA_PACKAGE_NAME, TOOLS_SIZE_LIMIT_SKIP } = process.env;
@@ -73,7 +70,7 @@ async function main() {
  */
 async function getPackageSize(name) {
 	try {
-		const { stdout } = await executeCommand(`npm pack ${name} --dry --json`);
+		const { stdout } = await execa('npm', ['pack', name, '--dry-run', '--json']);
 
 		const data = JSON.parse(stdout);
 

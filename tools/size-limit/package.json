@@ -10,8 +10,9 @@
     "lint": "eslint \"**/*.mjs\" --cache"
   },
   "dependencies": {
-    "chalk": "^5.3.0",
-    "pretty-bytes": "^7.1.1"
+    "chalk": "5.3.0",
+    "execa": "10.0.0",
+    "pretty-bytes": "7.1.1"
   },
   "devDependencies": {
     "eslint": "10.7.0",

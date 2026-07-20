@@ -1,5 +1,5 @@
-import type { Settings } from '../settings';
-import type { Stats } from '../types';
+import type { Settings } from '../settings.js';
+import type { Stats } from '../types/index.js';
 
 export function read(path: string, settings: Settings): Stats {
 	const lstat = settings.fs.lstatSync(path);

@@ -1,2 +1,2 @@
-export { Dirent, DirentType } from './dirent';
-export { Stats, StatsMode } from './stats';
+export { Dirent, DirentType } from './dirent.js';
+export { Stats, StatsMode } from './stats.js';

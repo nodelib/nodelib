@@ -1,25 +1,39 @@
 import * as assert from 'node:assert';
 import * as path from 'node:path';
 import * as util from 'node:util';
-
+import { describe, it } from 'node:test';
 import * as sinon from 'sinon';
-import { Dirent, DirentType, Stats, StatsMode } from '@nodelib/fs.macchiato';
-import { describe, it } from 'mocha';
-
-import { Settings } from '../settings';
-import * as fsUtils from '../utils/fs';
-import * as provider from './async';
-
-import type { Entry } from '../types';
+import {
+	Dirent,
+	DirentType,
+	Stats,
+	StatsMode,
+} from '@nodelib/fs.macchiato';
+import { Settings } from '../settings.js';
+import * as fsUtils from '../utils/fs.js';
+import type { Entry } from '../types/index.js';
+import * as provider from './async.js';
 
 const read = util.promisify(provider.read);
+
+function createReaddirMethod(stub: sinon.SinonStub): Settings['fs']['readdir'] {
+	return (...args): void => {
+		stub(...args);
+	};
+}
+
+function createStatMethod(stub: sinon.SinonStub): Settings['fs']['stat'] {
+	return (...args): void => {
+		stub(...args);
+	};
+}
 
 describe('Providers → Async', () => {
 	describe('.read', () => {
 		it('should return entries', async () => {
 			const dirent = new Dirent('file.txt', DirentType.File);
 
-			const readdir = sinon.stub().yields(null, [dirent]);
+			const readdir = createReaddirMethod(sinon.stub().yields(null, [dirent]));
 
 			const settings = new Settings({
 				fs: { readdir },
@@ -40,8 +54,8 @@ describe('Providers → Async', () => {
 			const dirent = new Dirent('file.txt', DirentType.File);
 			const stats = new Stats();
 
-			const readdir = sinon.stub().yields(null, [dirent]);
-			const lstat = sinon.stub().yields(null, stats);
+			const readdir = createReaddirMethod(sinon.stub().yields(null, [dirent]));
+			const lstat = createStatMethod(sinon.stub().yields(null, stats));
 
 			const settings = new Settings({
 				fs: { readdir, lstat },
@@ -64,9 +78,9 @@ describe('Providers → Async', () => {
 			const dirent = new Dirent('file.txt', DirentType.Link);
 			const stats = new Stats();
 
-			const readdir = sinon.stub().yields(null, [dirent]);
-			const lstat = sinon.stub().yields(null, new Stats({ mode: StatsMode.Link }));
-			const stat = sinon.stub().yields(null, stats);
+			const readdir = createReaddirMethod(sinon.stub().yields(null, [dirent]));
+			const lstat = createStatMethod(sinon.stub().yields(null, new Stats({ mode: StatsMode.Link })));
+			const stat = createStatMethod(sinon.stub().yields(null, stats));
 
 			const settings = new Settings({
 				fs: { readdir, lstat, stat },
@@ -90,8 +104,8 @@ describe('Providers → Async', () => {
 			const dirent = new Dirent('file.txt', DirentType.Link);
 			const stats = new Stats();
 
-			const readdir = sinon.stub().yields(null, [dirent]);
-			const stat = sinon.stub().yields(null, stats);
+			const readdir = createReaddirMethod(sinon.stub().yields(null, [dirent]));
+			const stat = createStatMethod(sinon.stub().yields(null, stats));
 
 			const settings = new Settings({
 				fs: { readdir, stat },
@@ -112,7 +126,7 @@ describe('Providers → Async', () => {
 		it('should do nothing with symbolic links when the "followSymbolicLinks" option is disabled', async () => {
 			const dirent = new Dirent('file.txt', DirentType.Link);
 
-			const readdir = sinon.stub().yields(null, [dirent]);
+			const readdir = createReaddirMethod(sinon.stub().yields(null, [dirent]));
 
 			const settings = new Settings({
 				fs: { readdir },
@@ -132,8 +146,8 @@ describe('Providers → Async', () => {
 		it('should return lstat for broken symbolic link when the "throwErrorOnBrokenSymbolicLink" option is disabled', async () => {
 			const dirent = new Dirent('file.txt', DirentType.Link);
 
-			const readdir = sinon.stub().yields(null, [dirent]);
-			const stat = sinon.stub().yields(new Error('error'));
+			const readdir = createReaddirMethod(sinon.stub().yields(null, [dirent]));
+			const stat = createStatMethod(sinon.stub().yields(new Error('error')));
 
 			const settings = new Settings({
 				followSymbolicLinks: true,
@@ -155,8 +169,8 @@ describe('Providers → Async', () => {
 		it('should throw an error for broken symbolic link when the "throwErrorOnBrokenSymbolicLink" option is enabled', async () => {
 			const dirent = new Dirent('file.txt', DirentType.Link);
 
-			const readdir = sinon.stub().yields(null, [dirent]);
-			const stat = sinon.stub().yields(new Error('error'));
+			const readdir = createReaddirMethod(sinon.stub().yields(null, [dirent]));
+			const stat = createStatMethod(sinon.stub().yields(new Error('error')));
 
 			const settings = new Settings({
 				followSymbolicLinks: true,

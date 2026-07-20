@@ -1,9 +1,7 @@
-import * as async from './providers/async';
-import * as sync from './providers/sync';
-import { Settings } from './settings';
-
-import type { Options } from './settings';
-import type { AsyncCallback, Stats } from './types';
+import * as async from './providers/async.js';
+import * as sync from './providers/sync.js';
+import { Settings, type Options } from './settings.js';
+import type { AsyncCallback, Stats } from './types/index.js';
 
 export function stat(path: string, callback: AsyncCallback): void;
 export function stat(path: string, optionsOrSettings: Options | Settings, callback: AsyncCallback): void;
@@ -13,10 +11,13 @@ export function stat(path: string, optionsOrSettingsOrCallback: AsyncCallback | 
 		return;
 	}
 
-	async.read(path, getSettings(optionsOrSettingsOrCallback), callback as AsyncCallback);
+	async.read(path, getSettings(optionsOrSettingsOrCallback), callback!);
 }
 
+// This declaration models Node's legacy `util.promisify` extension point.
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export declare namespace stat {
+	// eslint-disable-next-line @typescript-eslint/naming-convention
 	function __promisify__(path: string, optionsOrSettings?: Options | Settings): Promise<Stats>;
 }
 

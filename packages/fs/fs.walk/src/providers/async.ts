@@ -1,13 +1,15 @@
-import type { IAsyncReader } from '../readers/async';
-import type { Entry, ErrnoException } from '../types';
+import type { AsyncReaderInterface } from '../readers/async.js';
+import type { Entry, ErrnoException } from '../types/index.js';
 
+// Node-style callbacks report successful completion with null.
+// eslint-disable-next-line @typescript-eslint/no-restricted-types
 export type AsyncCallback = (error: ErrnoException | null, entries: Entry[]) => void;
 type FailureCallback = (error: ErrnoException) => void;
 
 export class AsyncProvider {
-	readonly #reader: IAsyncReader;
+	readonly #reader: AsyncReaderInterface;
 
-	constructor(reader: IAsyncReader) {
+	constructor(reader: AsyncReaderInterface) {
 		this.#reader = reader;
 	}
 

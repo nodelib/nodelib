@@ -1,16 +1,14 @@
 import * as path from 'node:path';
-
 import * as fsStat from '@nodelib/fs.stat';
+import * as fs from './adapters/fs.js';
 
-import * as fs from './adapters/fs';
-
-export interface Options {
+export type Options = {
 	followSymbolicLinks?: boolean;
 	fs?: Partial<fs.FileSystemAdapter>;
 	pathSegmentSeparator?: string;
 	stats?: boolean;
 	throwErrorOnBrokenSymbolicLink?: boolean;
-}
+};
 
 export class Settings {
 	public readonly followSymbolicLinks: boolean;

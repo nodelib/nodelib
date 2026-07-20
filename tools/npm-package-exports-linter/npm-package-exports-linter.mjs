@@ -1,15 +1,13 @@
 #!/usr/bin/env node
 
-import { exec } from 'node:child_process';
-import { promisify } from 'node:util';
-import * as path from 'node:path';
+import path from 'node:path';
+import * as process from 'node:process';
+import chalk from 'chalk';
+import { execa } from 'execa';
 
-import { Chalk } from 'chalk';
+const { LERNA_PACKAGE_NAME } = process.env;
 
-const LERNA_PACKAGE_NAME = process.env.LERNA_PACKAGE_NAME;
-
-const chalk = new Chalk({ level: 1 });
-const executeCommand = promisify(exec);
+chalk.level = 1;
 
 async function main() {
 	const packageFiles = await getPackageFiles(LERNA_PACKAGE_NAME);
@@ -19,11 +17,13 @@ async function main() {
 }
 
 /**
- * @param {string} name
- * @returns {Promise<string[]>}
+ * Gets files included in a package published to npm.
+ *
+ * @param {string} name - Package name or path.
+ * @returns {Promise<string[]>} Paths of the files included in the package.
  */
 async function getPackageFiles(name) {
-	const { stdout } = await executeCommand(`npm pack ${name} --dry --json`);
+	const { stdout } = await execa('npm', ['pack', name, '--dry-run', '--json']);
 
 	/** @type {[PackageInfo]} */
 	const [data] = JSON.parse(stdout);
@@ -32,11 +32,13 @@ async function getPackageFiles(name) {
 }
 
 /**
- * @param {string} name
- * @returns {Promise<string>}
+ * Gets files referenced by the package export map.
+ *
+ * @param {string} name - Identifier used to select a manifest from npm's output.
+ * @returns {Promise<string[]>} Paths referenced by the export map.
  */
 async function getPackageManifestExportFiles(name) {
-	const { stdout } = await executeCommand('npm pkg get exports --json');
+	const { stdout } = await execa('npm', ['pkg', 'get', 'exports', '--json']);
 
 	/** @type {Record<string, PackageInfo>} */
 	const manifests = JSON.parse(stdout);
@@ -49,8 +51,10 @@ async function getPackageManifestExportFiles(name) {
 }
 
 /**
- * @param {string[]} manifestExportFiles
- * @param {string[]} packageFiles
+ * Ensures every exported file is included in the published package.
+ *
+ * @param {string[]} manifestExportFiles - Paths referenced by the export map.
+ * @param {string[]} packageFiles - Paths included in the package.
  */
 function assertManifestExportFilesByPackageFiles(manifestExportFiles, packageFiles) {
 	const index = new Set(packageFiles);
@@ -73,12 +77,16 @@ function assertManifestExportFilesByPackageFiles(manifestExportFiles, packageFil
 })();
 
 /**
- * @typedef {Object} PackageInfo
- * @property {Record<string, Record<string, string>>} exports
- * @property {PackageFile[]} files
+ * Metadata reported by npm for a package.
+ *
+ * @typedef {object} PackageInfo
+ * @property {Record<string, Record<string, string>>} exports - Package export map.
+ * @property {PackageFile[]} files - Files included in the package.
  */
 
 /**
- * @typedef {Object} PackageFile
- * @property {string} path
+ * File included in a package.
+ *
+ * @typedef {object} PackageFile
+ * @property {string} path - Relative path inside the package.
  */

@@ -1,6 +1,6 @@
 import * as fs from 'node:fs';
-
-import type { PrepareOptionsFromClass } from './types';
+import * as process from 'node:process';
+import type { PrepareOptionsFromClass } from './types.js';
 
 const uid = process.getuid?.();
 const gid = process.getgid?.();
@@ -21,27 +21,36 @@ type StatsOptions = {
 	mode?: StatsMode;
 } & PrepareOptionsFromClass<fs.Stats>;
 
-export class Stats extends fs.Stats implements fs.Stats {
-	constructor(options: StatsOptions = {}) {
-		const date = new Date();
+type StatsConstructor = new (options?: StatsOptions) => Stats;
 
-		super(
-			// @ts-expect-error Types do not provide arguments.
-			// https://github.com/nodejs/node/blob/6675505686310771b8016805a381945826aad887/lib/internal/fs/utils.js#L501-L503
-			options.dev ?? 0,
-			options.mode ?? StatsMode.Unknown,
-			options.nlink ?? 0,
-			'uid' in options ? options.uid : uid,
-			'gid' in options ? options.gid : gid,
-			options.rdev ?? 0,
-			options.blksize ?? 0,
-			options.ino ?? 0,
-			options.size ?? 0,
-			options.blocks ?? 0,
-			options.atimeMs ?? date.getTime(),
-			options.mtimeMs ?? date.getTime(),
-			options.ctimeMs ?? date.getTime(),
-			options.birthtimeMs ?? date.getTime(),
-		);
-	}
+export type Stats = fs.Stats;
+
+function createStats(options: StatsOptions = {}): Stats {
+	const date = new Date();
+	const stats = fs.statSync(process.execPath);
+
+	stats.dev = options.dev ?? 0;
+	stats.ino = options.ino ?? 0;
+	stats.mode = options.mode ?? StatsMode.Unknown;
+	stats.nlink = options.nlink ?? 0;
+	stats.uid = ('uid' in options ? options.uid : uid)!;
+	stats.gid = ('gid' in options ? options.gid : gid)!;
+	stats.rdev = options.rdev ?? 0;
+	stats.size = options.size ?? 0;
+	stats.blksize = options.blksize ?? 0;
+	stats.blocks = options.blocks ?? 0;
+	stats.atimeMs = options.atimeMs ?? date.getTime();
+	stats.mtimeMs = options.mtimeMs ?? date.getTime();
+	stats.ctimeMs = options.ctimeMs ?? date.getTime();
+	stats.birthtimeMs = options.birthtimeMs ?? date.getTime();
+	stats.atime = options.atime ?? new Date(stats.atimeMs);
+	stats.mtime = options.mtime ?? new Date(stats.mtimeMs);
+	stats.ctime = options.ctime ?? new Date(stats.ctimeMs);
+	stats.birthtime = options.birthtime ?? new Date(stats.birthtimeMs);
+
+	return stats;
 }
+
+const statsConstructor = createStats as unknown as StatsConstructor;
+
+export { statsConstructor as Stats };

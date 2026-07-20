@@ -1,9 +1,7 @@
 import * as assert from 'node:assert';
-
+import { describe, it } from 'node:test';
 import * as fsScandir from '@nodelib/fs.scandir';
-import { describe, it } from 'mocha';
-
-import { Settings } from './settings';
+import { Settings } from './settings.js';
 
 describe('Settings', () => {
 	it('should return instance with default values', () => {
@@ -17,7 +15,7 @@ describe('Settings', () => {
 		});
 
 		assert.strictEqual(fsWalkSettings.basePath, undefined);
-		assert.strictEqual(fsWalkSettings.concurrency, Number.POSITIVE_INFINITY);
+		assert.strictEqual(fsWalkSettings.concurrency, Infinity);
 		assert.strictEqual(fsWalkSettings.deepFilter, null);
 		assert.strictEqual(fsWalkSettings.entryFilter, null);
 		assert.strictEqual(fsWalkSettings.errorFilter, null);
@@ -26,10 +24,10 @@ describe('Settings', () => {
 	});
 
 	it('should return instance with custom values', () => {
-		const filter = (): boolean => true;
+		const isEntryIncluded = (): boolean => true;
 
-		const fsWalkSettings = new Settings({ entryFilter: filter });
+		const fsWalkSettings = new Settings({ entryFilter: isEntryIncluded });
 
-		assert.strictEqual(fsWalkSettings.entryFilter, filter);
+		assert.strictEqual(fsWalkSettings.entryFilter, isEntryIncluded);
 	});
 });

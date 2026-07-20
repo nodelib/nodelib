@@ -1,10 +1,8 @@
 import * as assert from 'node:assert';
-
+import { describe, it } from 'node:test';
 import { Stats } from '@nodelib/fs.macchiato';
-import { describe, it } from 'mocha';
-
-import * as fs from './adapters/fs';
-import { Settings } from './settings';
+import * as fs from './adapters/fs.js';
+import { Settings } from './settings.js';
 
 describe('Settings', () => {
 	it('should return instance with default values', () => {

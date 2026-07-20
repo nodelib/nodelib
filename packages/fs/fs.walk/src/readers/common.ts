@@ -1,5 +1,5 @@
-import type { FilterFunction, Settings } from '../settings';
-import type { ErrnoException } from '../types';
+import type { FilterFunction, Settings } from '../settings.js';
+import type { ErrnoException } from '../types/index.js';
 
 export function isFatalError(settings: Settings, error: ErrnoException): boolean {
 	if (settings.errorFilter === null) {
@@ -9,6 +9,8 @@ export function isFatalError(settings: Settings, error: ErrnoException): boolean
 	return !settings.errorFilter(error);
 }
 
+// Filters default to null when they are not configured.
+// eslint-disable-next-line @typescript-eslint/no-restricted-types
 export function isAppliedFilter<T>(filter: FilterFunction<T> | null, value: T): boolean {
 	return filter === null || filter(value);
 }

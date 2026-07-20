@@ -1,25 +1,22 @@
 import * as assert from 'node:assert';
 import * as path from 'node:path';
-
-import { describe, it } from 'mocha';
-
-import { Settings } from '../settings';
-import * as tests from '../tests';
-import { SyncReader } from './sync';
-
-import type { IFileSystemAdapter } from '../adapters/fs';
+import { describe, it } from 'node:test';
 import type * as sinon from 'sinon';
+import { Settings } from '../settings.js';
+import * as tests from '../tests/index.js';
+import type { FileSystemAdapterInterface } from '../adapters/fs.js';
+import { SyncReader } from './sync.js';
 
 class TestReader extends SyncReader {
-	public readonly fs: sinon.SinonStubbedInstance<IFileSystemAdapter>;
+	public readonly fs: sinon.SinonStubbedInstance<FileSystemAdapterInterface>;
 
 	constructor(
 		settings: Settings = new Settings(),
-		fs: IFileSystemAdapter = new tests.TestFileSystemAdapter(),
+		fs: FileSystemAdapterInterface = new tests.TestFileSystemAdapter(),
 	) {
 		super(fs, settings);
 
-		this.fs = fs as sinon.SinonStubbedInstance<IFileSystemAdapter>;
+		this.fs = fs as sinon.SinonStubbedInstance<FileSystemAdapterInterface>;
 	}
 }
 
@@ -37,7 +34,7 @@ describe('Readers → Sync', () => {
 			const errorFromUserFilter = new Error('This is an error from user filter.');
 
 			const settings = new Settings({
-				entryFilter: () => {
+				entryFilter() {
 					throw errorFromUserFilter;
 				},
 			});
@@ -55,7 +52,7 @@ describe('Readers → Sync', () => {
 			const errorFromUserFilter = new Error('This is an error from user filter.');
 
 			const settings = new Settings({
-				deepFilter: () => {
+				deepFilter() {
 					throw errorFromUserFilter;
 				},
 			});
@@ -73,11 +70,11 @@ describe('Readers → Sync', () => {
 			const errorFromUserFilter = new Error('This is an error from user filter.');
 
 			const settings = new Settings({
-				deepFilter: () => {
+				deepFilter() {
 					throw errorFromUserFilter;
 				},
 				// When true, the error is filtered. Otherwise, the error will be emitted.
-				errorFilter: (error) => {
+				errorFilter(error) {
 					return error !== errorFromUserFilter;
 				},
 			});

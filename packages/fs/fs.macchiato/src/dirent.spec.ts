@@ -1,9 +1,7 @@
 import * as assert from 'node:assert';
 import * as fs from 'node:fs';
-
-import { describe, it } from 'mocha';
-
-import { Dirent, DirentType } from './dirent';
+import { describe, it } from 'node:test';
+import { Dirent, DirentType } from './dirent.js';
 
 describe('Dirent', () => {
 	it('should be instance of fs.Dirent', () => {

@@ -1,11 +1,11 @@
-import * as fs from './adapters/fs';
+import * as fs from './adapters/fs.js';
 
-export interface Options {
+export type Options = {
 	followSymbolicLink?: boolean;
 	fs?: Partial<fs.FileSystemAdapter>;
 	markSymbolicLink?: boolean;
 	throwErrorOnBrokenSymbolicLink?: boolean;
-}
+};
 
 export class Settings {
 	public readonly followSymbolicLink: boolean;

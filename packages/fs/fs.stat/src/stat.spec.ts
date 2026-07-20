@@ -1,16 +1,19 @@
 import * as assert from 'node:assert';
 import * as fs from 'node:fs';
-
-import * as rimraf from 'rimraf';
-import { after, before, describe, it } from 'mocha';
-
-import { stat, statSync } from './stat';
-import { stat as statPromise } from './stat-promises';
-import { Settings } from './settings';
+import {
+	after,
+	before,
+	describe,
+	it,
+	type TestContext,
+} from 'node:test';
+import { stat, statSync } from './stat.js';
+import { stat as statPromise } from './stat-promises.js';
+import { Settings } from './settings.js';
 
 describe('Stat', () => {
 	before(() => {
-		rimraf.sync('fixtures');
+		fs.rmSync('fixtures', { recursive: true, force: true });
 
 		fs.mkdirSync('fixtures');
 		fs.mkdirSync('fixtures/a');
@@ -18,7 +21,7 @@ describe('Stat', () => {
 	});
 
 	after(() => {
-		rimraf.sync('fixtures');
+		fs.rmSync('fixtures', { recursive: true, force: true });
 	});
 
 	describe('.stat (promise)', () => {
@@ -44,28 +47,28 @@ describe('Stat', () => {
 	});
 
 	describe('.stat', () => {
-		it('should work without options or settings', (done) => {
+		it('should work without options or settings', (t: TestContext, done) => {
 			stat('fixtures/b', (error, stats) => {
-				assert.strictEqual(error, null);
-				assert.ok(stats instanceof fs.Stats);
+				t.assert.strictEqual(error, null);
+				t.assert.ok(stats instanceof fs.Stats);
 				done();
 			});
 		});
 
-		it('should work with options', (done) => {
+		it('should work with options', (t: TestContext, done) => {
 			stat('fixtures/b', { markSymbolicLink: true }, (error, stats) => {
-				assert.strictEqual(error, null);
-				assert.strictEqual(stats.isSymbolicLink(), true);
+				t.assert.strictEqual(error, null);
+				t.assert.strictEqual(stats.isSymbolicLink(), true);
 				done();
 			});
 		});
 
-		it('should work with settings', (done) => {
+		it('should work with settings', (t: TestContext, done) => {
 			const settings = new Settings({ markSymbolicLink: true });
 
 			stat('fixtures/b', settings, (error, stats) => {
-				assert.strictEqual(error, null);
-				assert.strictEqual(stats.isSymbolicLink(), true);
+				t.assert.strictEqual(error, null);
+				t.assert.strictEqual(stats.isSymbolicLink(), true);
 				done();
 			});
 		});

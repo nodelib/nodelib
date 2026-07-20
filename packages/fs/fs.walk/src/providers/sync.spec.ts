@@ -1,22 +1,17 @@
 import * as assert from 'node:assert';
-
-import { describe, it } from 'mocha';
-
-import * as tests from '../tests';
-import { SyncProvider } from './sync';
-
+import { describe, it } from 'node:test';
 import type { SinonStubbedInstance } from 'sinon';
-import type { ISyncReader } from '../readers/sync';
+import * as tests from '../tests/index.js';
+import type { SyncReaderInterface } from '../readers/sync.js';
+import { SyncProvider } from './sync.js';
 
 class TestProvider extends SyncProvider {
-	public readonly reader: SinonStubbedInstance<ISyncReader>;
+	public readonly reader: SinonStubbedInstance<SyncReaderInterface>;
 
-	constructor(
-		reader: ISyncReader = new tests.TestSyncReader(),
-	) {
+	constructor(reader: SyncReaderInterface = new tests.TestSyncReader()) {
 		super(reader);
 
-		this.reader = reader as SinonStubbedInstance<ISyncReader>;
+		this.reader = reader as SinonStubbedInstance<SyncReaderInterface>;
 	}
 }
 

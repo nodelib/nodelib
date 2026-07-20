@@ -1,30 +1,33 @@
-import * as assert from 'node:assert';
-
+import { describe, it, type TestContext } from 'node:test';
 import * as sinon from 'sinon';
 import { Stats, StatsMode } from '@nodelib/fs.macchiato';
-import { describe, it } from 'mocha';
+import { Settings } from '../settings.js';
+import * as provider from './async.js';
 
-import { Settings } from '../settings';
-import * as provider from './async';
+function createStatMethod(stub: sinon.SinonStub): Settings['fs']['lstat'] {
+	return (...args): void => {
+		stub(...args);
+	};
+}
 
 describe('Providers → Async', () => {
 	describe('.read', () => {
-		it('should return lstat for non-symlink entry', (done) => {
-			const lstat = sinon.stub().yields(null, new Stats());
+		it('should return lstat for non-symlink entry', (t: TestContext, done) => {
+			const lstat = createStatMethod(sinon.stub().yields(null, new Stats()));
 
 			const settings = new Settings({
 				fs: { lstat },
 			});
 
 			provider.read('filepath', settings, (error, stats) => {
-				assert.strictEqual(error, null);
-				assert.strictEqual(stats.ino, 0);
+				t.assert.strictEqual(error, null);
+				t.assert.strictEqual(stats.ino, 0);
 				done();
 			});
 		});
 
-		it('should return lstat for symlink entry when the "followSymbolicLink" option is disabled', (done) => {
-			const lstat = sinon.stub().yields(null, new Stats({ mode: StatsMode.Link }));
+		it('should return lstat for symlink entry when the "followSymbolicLink" option is disabled', (t: TestContext, done) => {
+			const lstat = createStatMethod(sinon.stub().yields(null, new Stats({ mode: StatsMode.Link })));
 
 			const settings = new Settings({
 				followSymbolicLink: false,
@@ -32,30 +35,30 @@ describe('Providers → Async', () => {
 			});
 
 			provider.read('filepath', settings, (error, stats) => {
-				assert.strictEqual(error, null);
-				assert.strictEqual(stats.ino, 0);
+				t.assert.strictEqual(error, null);
+				t.assert.strictEqual(stats.ino, 0);
 				done();
 			});
 		});
 
-		it('should return stat for symlink entry', (done) => {
-			const lstat = sinon.stub().yields(null, new Stats({ mode: StatsMode.Link }));
-			const stat = sinon.stub().yields(null, new Stats({ ino: 1 }));
+		it('should return stat for symlink entry', (t: TestContext, done) => {
+			const lstat = createStatMethod(sinon.stub().yields(null, new Stats({ mode: StatsMode.Link })));
+			const stat = createStatMethod(sinon.stub().yields(null, new Stats({ ino: 1 })));
 
 			const settings = new Settings({
 				fs: { lstat, stat },
 			});
 
 			provider.read('filepath', settings, (error, stats) => {
-				assert.strictEqual(error, null);
-				assert.strictEqual(stats.ino, 1);
+				t.assert.strictEqual(error, null);
+				t.assert.strictEqual(stats.ino, 1);
 				done();
 			});
 		});
 
-		it('should return marked stat for symlink entry when the "markSymbolicLink" option is enabled', (done) => {
-			const lstat = sinon.stub().yields(null, new Stats({ mode: StatsMode.Link }));
-			const stat = sinon.stub().yields(null, new Stats({ ino: 1 }));
+		it('should return marked stat for symlink entry when the "markSymbolicLink" option is enabled', (t: TestContext, done) => {
+			const lstat = createStatMethod(sinon.stub().yields(null, new Stats({ mode: StatsMode.Link })));
+			const stat = createStatMethod(sinon.stub().yields(null, new Stats({ ino: 1 })));
 
 			const settings = new Settings({
 				fs: { lstat, stat },
@@ -63,15 +66,15 @@ describe('Providers → Async', () => {
 			});
 
 			provider.read('filepath', settings, (error, stats) => {
-				assert.strictEqual(error, null);
-				assert.strictEqual(stats.isSymbolicLink(), true);
+				t.assert.strictEqual(error, null);
+				t.assert.strictEqual(stats.isSymbolicLink(), true);
 				done();
 			});
 		});
 
-		it('should return lstat for broken symlink entry when the "throwErrorOnBrokenSymbolicLink" option is disabled', (done) => {
-			const lstat = sinon.stub().yields(null, new Stats({ mode: StatsMode.Link }));
-			const stat = sinon.stub().yields(new Error('error_message'));
+		it('should return lstat for broken symlink entry when the "throwErrorOnBrokenSymbolicLink" option is disabled', (t: TestContext, done) => {
+			const lstat = createStatMethod(sinon.stub().yields(null, new Stats({ mode: StatsMode.Link })));
+			const stat = createStatMethod(sinon.stub().yields(new Error('error_message')));
 
 			const settings = new Settings({
 				fs: { lstat, stat },
@@ -79,22 +82,22 @@ describe('Providers → Async', () => {
 			});
 
 			provider.read('filepath', settings, (error, stats) => {
-				assert.strictEqual(error, null);
-				assert.strictEqual(stats.ino, 0);
+				t.assert.strictEqual(error, null);
+				t.assert.strictEqual(stats.ino, 0);
 				done();
 			});
 		});
 
-		it('should throw an error when symlink entry is broken', (done) => {
-			const lstat = sinon.stub().yields(null, new Stats({ mode: StatsMode.Link }));
-			const stat = sinon.stub().yields(new Error('broken'));
+		it('should throw an error when symlink entry is broken', (t: TestContext, done) => {
+			const lstat = createStatMethod(sinon.stub().yields(null, new Stats({ mode: StatsMode.Link })));
+			const stat = createStatMethod(sinon.stub().yields(new Error('broken')));
 
 			const settings = new Settings({
 				fs: { lstat, stat },
 			});
 
 			provider.read('filepath', settings, (error) => {
-				assert.strictEqual(error?.message, 'broken');
+				t.assert.strictEqual(error?.message, 'broken');
 				done();
 			});
 		});

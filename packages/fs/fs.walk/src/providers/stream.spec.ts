@@ -1,10 +1,8 @@
 import * as assert from 'node:assert';
 import { Readable } from 'node:stream';
-
-import { describe, it } from 'mocha';
-
-import * as tests from '../tests';
-import { StreamProvider } from './stream';
+import { describe, it } from 'node:test';
+import * as tests from '../tests/index.js';
+import { StreamProvider } from './stream.js';
 
 describe('Providers → Stream', () => {
 	describe('.read', () => {
@@ -74,7 +72,7 @@ describe('Providers → Stream', () => {
 				});
 			});
 
-			assert.equal(actual, true);
+			assert.strictEqual(actual, true);
 		});
 
 		it('should do not destroy the reader when it has already been destroyed', () => {
@@ -88,9 +86,7 @@ describe('Providers → Stream', () => {
 			stream.destroy();
 
 			assert.ok(stream.destroyed);
-			assert.doesNotThrow(() => {
-				stream.destroy();
-			});
+			stream.destroy();
 		});
 
 		it('should support async iteration', async () => {
@@ -103,15 +99,12 @@ describe('Providers → Stream', () => {
 
 			const stream = provider.read('directory');
 
-			const results = [];
-			for await (const x of stream) {
-				results.push(x);
-			}
+			const iterator = (stream as AsyncIterable<unknown>)[Symbol.asyncIterator]();
+			const firstResult = await iterator.next();
+			const endResult = await iterator.next();
 
-			// Above loop will never complete, and cause a test timeout, if the stream
-			// is not properly closed.
-
-			assert.equal(results[0], fakeEntry);
+			assert.strictEqual(firstResult.value, fakeEntry);
+			assert.strictEqual(endResult.done, true);
 		});
 
 		it('should support errors during async iteration', async () => {
@@ -125,7 +118,7 @@ describe('Providers → Stream', () => {
 			const stream = provider.read('directory');
 
 			await assert.rejects(async () => {
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars,no-empty
+				// eslint-disable-next-line no-empty
 				for await (const _ of stream) {}
 			}, tests.EPERM_ERRNO);
 		});

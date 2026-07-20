@@ -1,12 +1,16 @@
-import * as fastq from 'fastq';
+import fastq from 'fastq';
+import type { FileSystemAdapterInterface } from '../adapters/fs.js';
+import type { Settings } from '../settings.js';
+import type {
+	EndEventCallback,
+	Entry,
+	EntryEventCallback,
+	ErrorEventCallback,
+	QueueItem,
+} from '../types/index.js';
+import * as common from './common.js';
 
-import * as common from './common';
-
-import type { IFileSystemAdapter } from '../adapters/fs';
-import type { Settings } from '../settings';
-import type { EndEventCallback, Entry, EntryEventCallback, ErrorEventCallback, QueueItem } from '../types';
-
-export interface IAsyncReader {
+export type AsyncReaderInterface = {
 	isDestroyed: boolean;
 
 	onError: (callback: ErrorEventCallback) => void;
@@ -14,9 +18,9 @@ export interface IAsyncReader {
 	onEnd: (callback: EndEventCallback) => void;
 	read: (root: string) => void;
 	destroy: () => void;
-}
+};
 
-const noop = (): void => { /* noop */ };
+const noop = (): void => {/* noop */};
 
 const throwError = (error: Error): void => {
 	throw error;
@@ -58,15 +62,15 @@ class AsyncReaderCallbacks {
 	}
 }
 
-export class AsyncReader extends AsyncReaderCallbacks implements IAsyncReader {
-	#isFatalError: boolean = false;
-	#isDestroyed: boolean = false;
+export class AsyncReader extends AsyncReaderCallbacks implements AsyncReaderInterface {
+	#isFatalError = false;
+	#isDestroyed = false;
 
-	readonly #fs: IFileSystemAdapter;
+	readonly #fs: FileSystemAdapterInterface;
 	readonly #settings: Settings;
 	readonly #queue: fastq.queue;
 
-	constructor(fs: IFileSystemAdapter, settings: Settings) {
+	constructor(fs: FileSystemAdapterInterface, settings: Settings) {
 		super();
 
 		const queue = fastq(this.#worker.bind(this), settings.concurrency);
@@ -82,32 +86,8 @@ export class AsyncReader extends AsyncReaderCallbacks implements IAsyncReader {
 		this.#queue = queue;
 	}
 
-	public read(root: string): void {
-		this.#isFatalError = false;
-		this.#isDestroyed = false;
-
-		this.#attachAbortSignal();
-
-		const directory = common.replacePathSegmentSeparator(root, this.#settings.pathSegmentSeparator);
-
-		this.#pushToQueue(directory, this.#settings.basePath);
-	}
-
-	public get isDestroyed(): boolean {
-		return this.#isDestroyed;
-	}
-
-	public destroy(): void {
-		if (this.#isDestroyed) {
-			return;
-		}
-
-		this.#isDestroyed = true;
-		this.#queue.killAndDrain();
-	}
-
 	#attachAbortSignal(): void {
-		const signal = this.#settings.signal;
+		const { signal } = this.#settings;
 
 		if (signal?.aborted === true) {
 			this.#handleError(signal.reason as Error);
@@ -151,8 +131,8 @@ export class AsyncReader extends AsyncReaderCallbacks implements IAsyncReader {
 
 					this.#handleEntry(entry, item.base);
 				}
-			} catch (error) {
-				done(error as Error, undefined);
+			} catch (caughtError) {
+				done(caughtError as Error, undefined);
 				return;
 			}
 
@@ -185,5 +165,29 @@ export class AsyncReader extends AsyncReaderCallbacks implements IAsyncReader {
 		if (entry.dirent.isDirectory() && common.isAppliedFilter(this.#settings.deepFilter, entry)) {
 			this.#pushToQueue(fullpath, base === undefined ? undefined : entry.path);
 		}
+	}
+
+	public read(root: string): void {
+		this.#isFatalError = false;
+		this.#isDestroyed = false;
+
+		this.#attachAbortSignal();
+
+		const directory = common.replacePathSegmentSeparator(root, this.#settings.pathSegmentSeparator);
+
+		this.#pushToQueue(directory, this.#settings.basePath);
+	}
+
+	public get isDestroyed(): boolean {
+		return this.#isDestroyed;
+	}
+
+	public destroy(): void {
+		if (this.#isDestroyed) {
+			return;
+		}
+
+		this.#isDestroyed = true;
+		this.#queue.killAndDrain();
 	}
 }

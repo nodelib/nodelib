@@ -1,11 +1,9 @@
 import * as assert from 'node:assert';
-
+import { describe, it } from 'node:test';
 import * as sinon from 'sinon';
 import { Stats, StatsMode } from '@nodelib/fs.macchiato';
-import { describe, it } from 'mocha';
-
-import { Settings } from '../settings';
-import * as provider from './sync';
+import { Settings } from '../settings.js';
+import * as provider from './sync.js';
 
 describe('Providers → Sync', () => {
 	describe('.read', () => {

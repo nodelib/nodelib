@@ -1,20 +1,18 @@
 import * as assert from 'node:assert';
 import * as path from 'node:path';
-
-import { describe, it } from 'mocha';
-
-import { Settings } from '../settings';
-import * as tests from '../tests';
-import * as common from './common';
+import { describe, it } from 'node:test';
+import { Settings } from '../settings.js';
+import * as tests from '../tests/index.js';
+import * as common from './common.js';
 
 describe('Readers → Common', () => {
 	describe('.isFatalError', () => {
 		it('should return true when filter is not defined', () => {
 			const settings = new Settings();
 
-			const actual = common.isFatalError(settings, tests.EPERM_ERRNO);
+			const isActual = common.isFatalError(settings, tests.EPERM_ERRNO);
 
-			assert.ok(actual);
+			assert.ok(isActual);
 		});
 
 		it('should return true when the error cannot be suppressed', () => {
@@ -22,9 +20,9 @@ describe('Readers → Common', () => {
 				errorFilter: (error) => error.code === 'ENOENT',
 			});
 
-			const actual = common.isFatalError(settings, tests.EPERM_ERRNO);
+			const isActual = common.isFatalError(settings, tests.EPERM_ERRNO);
 
-			assert.ok(actual);
+			assert.ok(isActual);
 		});
 
 		it('should return false when the error can be suppressed', () => {
@@ -32,9 +30,9 @@ describe('Readers → Common', () => {
 				errorFilter: (error) => error.code === 'EPERM',
 			});
 
-			const actual = common.isFatalError(settings, tests.EPERM_ERRNO);
+			const isActual = common.isFatalError(settings, tests.EPERM_ERRNO);
 
-			assert.ok(!actual);
+			assert.ok(!isActual);
 		});
 	});
 
@@ -43,9 +41,9 @@ describe('Readers → Common', () => {
 			const settings = new Settings();
 			const entry = tests.buildFakeFileEntry();
 
-			const actual = common.isAppliedFilter(settings.entryFilter, entry);
+			const isActual = common.isAppliedFilter(settings.entryFilter, entry);
 
-			assert.ok(actual);
+			assert.ok(isActual);
 		});
 
 		it('should return true when the entry will be applied', () => {
@@ -54,9 +52,9 @@ describe('Readers → Common', () => {
 			});
 			const fakeEntry = tests.buildFakeFileEntry();
 
-			const actual = common.isAppliedFilter(settings.entryFilter, fakeEntry);
+			const isActual = common.isAppliedFilter(settings.entryFilter, fakeEntry);
 
-			assert.ok(actual);
+			assert.ok(isActual);
 		});
 
 		it('should return false when the entry will be skipped', () => {
@@ -65,9 +63,9 @@ describe('Readers → Common', () => {
 			});
 			const fakeEntry = tests.buildFakeFileEntry();
 
-			const actual = common.isAppliedFilter(settings.entryFilter, fakeEntry);
+			const isActual = common.isAppliedFilter(settings.entryFilter, fakeEntry);
 
-			assert.ok(!actual);
+			assert.ok(!isActual);
 		});
 	});
 

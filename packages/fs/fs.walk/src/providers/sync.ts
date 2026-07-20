@@ -1,10 +1,10 @@
-import type { ISyncReader } from '../readers/sync';
-import type { Entry } from '../types';
+import type { SyncReaderInterface } from '../readers/sync.js';
+import type { Entry } from '../types/index.js';
 
 export class SyncProvider {
-	readonly #reader: ISyncReader;
+	readonly #reader: SyncReaderInterface;
 
-	constructor(reader: ISyncReader) {
+	constructor(reader: SyncReaderInterface) {
 		this.#reader = reader;
 	}
 

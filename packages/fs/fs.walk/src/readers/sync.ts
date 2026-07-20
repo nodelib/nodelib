@@ -1,31 +1,22 @@
-import * as common from './common';
 
-import type { IFileSystemAdapter } from '../adapters/fs';
-import type { Settings } from '../settings';
-import type { Entry, ErrnoException, QueueItem } from '../types';
+import type { FileSystemAdapterInterface } from '../adapters/fs.js';
+import type { Settings } from '../settings.js';
+import type { Entry, ErrnoException, QueueItem } from '../types/index.js';
+import * as common from './common.js';
 
-export interface ISyncReader {
+export type SyncReaderInterface = {
 	read: (root: string) => Entry[];
-}
+};
 
-export class SyncReader implements ISyncReader {
-	readonly #fs: IFileSystemAdapter;
+export class SyncReader implements SyncReaderInterface {
+	readonly #fs: FileSystemAdapterInterface;
 	readonly #settings: Settings;
 	readonly #queue = new Set<QueueItem>();
 	readonly #storage: Entry[] = [];
 
-	constructor(fs: IFileSystemAdapter, settings: Settings) {
+	constructor(fs: FileSystemAdapterInterface, settings: Settings) {
 		this.#fs = fs;
 		this.#settings = settings;
-	}
-
-	public read(root: string): Entry[] {
-		const directory = common.replacePathSegmentSeparator(root, this.#settings.pathSegmentSeparator);
-
-		this.#pushToQueue(directory, this.#settings.basePath);
-		this.#handleQueue();
-
-		return this.#storage;
 	}
 
 	#pushToQueue(directory: string, base: string | undefined): void {
@@ -33,7 +24,7 @@ export class SyncReader implements ISyncReader {
 	}
 
 	#handleQueue(): void {
-		for (const item of this.#queue.values()) {
+		for (const item of this.#queue) {
 			this.#handleDirectory(item.directory, item.base);
 		}
 	}
@@ -74,5 +65,14 @@ export class SyncReader implements ISyncReader {
 
 	#pushToStorage(entry: Entry): void {
 		this.#storage.push(entry);
+	}
+
+	public read(root: string): Entry[] {
+		const directory = common.replacePathSegmentSeparator(root, this.#settings.pathSegmentSeparator);
+
+		this.#pushToQueue(directory, this.#settings.basePath);
+		this.#handleQueue();
+
+		return this.#storage;
 	}
 }
